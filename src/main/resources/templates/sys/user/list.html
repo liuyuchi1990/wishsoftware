@@ -1,0 +1,217 @@
+<!--templates-->
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i> 用户列表
+                </div>
+                <div class="card-body">
+                    <div class=" form-horizontal">
+                        <div class="form-group  row">
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <span class="input-group-addon search-content">用户名</span>
+                                    <input type="text" id="username" name="username"
+                                           class="form-control search-content"/>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <span class="input-group-addon search-content">姓名</span>
+                                    <input type="text" id="name" name="name" class="form-control search-content"/>
+                                </div>
+                            </div>
+                            <a shiro:hasPermission="sys:user:query" style="margin-left:15px"
+                               class="opreate-btn layui-btn layui-btn-sm layui-btn-normal" href="#" data-type="reload"
+                               id="refreshTable"><i class="icon-magnifier"></i>查询</a>
+                            <a shiro:hasPermission="sys:user:query" style="margin-left:15px"
+                               class="opreate-btn layui-btn layui-btn-sm layui-btn-primary" href="#" data-type="reset"
+                               id="resetTable"><i class="icon-refresh"></i>重置</a>
+                        </div>
+                        <div class="row">
+                            <a shiro:hasPermission="sys:user:add" class="opreate-btn  layui-btn layui-btn-sm"
+                               id="addbtn" href="#"><i class="icon-plus"></i>新增</a>
+                            <a shiro:hasPermission="sys:user:edit" class="opreate-btn  layui-btn layui-btn-sm"
+                               id="editbtn" href="#"><i class="icon-plus"></i>修改</a>
+                            <a shiro:hasPermission="sys:user:delete"
+                               class="opreate-btn layui-btn layui-btn-sm layui-btn-danger" href="#" id="freezeIds"><i
+                                    class="icon-close"></i>冻结</a>
+                            <a shiro:hasPermission="sys:user:delete"
+                               class="opreate-btn layui-btn layui-btn-sm layui-btn-danger" href="#" id="deleteIds"><i
+                                    class="icon-close"></i>删除</a>
+                            <a shiro:hasPermission="sys:user:menuauth" style="width: 80px;"
+                               class="opreate-btn layui-btn layui-btn-sm" href="#" id="menuauthbtn"><i
+                                    class="icon-user-follow"></i>菜单赋值</a>
+                            <a shiro:hasPermission="sys:user:roleauth" style="width: 80px;"
+                               class="opreate-btn layui-btn layui-btn-sm" href="#" id="roleauthbtn"><i
+                                    class="icon-user-follow"></i>权限赋值</a>
+                        </div>
+                        <table class="layui-table table-responsive-sm" id="table" lay-filter="table"></table>
+                    </div>
+                </div>
+            </div>
+            <!--/.row-->
+        </div>
+    </div>
+</div>
+
+<!--js-->
+<script th:inline="javascript">
+
+    var dic_isAdmin = {"0": "否", "1": "是"};
+    var dic_status = {"0": "冻结", "1": "在用"};
+
+    layui.use('table', function () {
+        var table = layui.table, $ = layui.jquery;
+        var opt = {
+            elem: '#table'
+            , url: '/api/sys/user/getUserForPaging'
+            , height: 410
+            , page: true //开启分页,
+            , limit: 5
+            , limits: [5, 10, 20, 50]
+            , cols: [[
+                {type: 'checkbox'}
+                , {field: 'id', title: 'ID', sort: true}
+                , {field: 'username', title: '用户名'}
+                , {field: 'name', title: '姓名'}
+                , {field: 'sex', title: '性别', templet: '#sexTpl'}
+                , {field: 'status', title: '使用状态', sort: true, templet: '#statusTpl'}
+                , {field: 'email', title: 'email'}
+                , {field: 'idcard', title: '身份证'}
+                , {field: 'isAdmin', title: '是否管理员', sort: true, templet: '#adminTpl'}
+                , {field: 'mobile', title: '联系方式'}
+            ]],
+            request: {
+                pageName: 'pageNumber', //页码的参数名称，默认：page
+                limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            },
+            response: {
+                countName: 'total', //数据总数的字段名称，默认：count
+                dataName: 'rows' //数据列表的字段名称，默认：data
+            }
+        };
+        var tableIns = table.render(opt);
+        table.on('sort(table)', function (obj) {
+            debugger;
+            tableIns.reload({
+                initSort: obj,
+                where: {
+                    sortName: obj.field,
+                    sortOrder: obj.type,
+                    pageName: 'pageNumber', //页码的参数名称，默认：page
+                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                }
+            })
+        });
+
+        $('#addbtn').on('click', function () {
+            setUpUrl("sys/user/getListPage@sys/user/addPage");
+        });
+
+        $('#editbtn').on('click', function () {
+            var checkStatus = table.checkStatus('table')
+                , data = checkStatus.data;
+            if (data.length != 1) {
+                layer.alert("请选择一条记录!", {icon: 0});
+            } else {
+                setUpUrl("sys/user/getListPage@sys/user/editPage?userId=" + data[0].id);
+            }
+        });
+
+        $('#refreshTable').on('click', function () {
+            tableIns.reload({
+                where: {
+                    username: $('#username').val(),
+                    name: $('#name').val()
+                }
+            });
+        });
+
+        $('#resetTable').on('click', function () {
+            $('#username').val("");
+            $('#name').val("");
+            tableIns.reload({
+                where: {
+                    username: $('#username').val(),
+                    name: $('#name').val()
+                }
+            });
+        });
+
+        $('#freezeIds').on('click', function () {
+            var checkStatus = table.checkStatus('table')
+                , data = checkStatus.data;
+            layer.alert(JSON.stringify(data));
+        });
+
+        $('#deleteIds').on('click', function () {
+            var checkStatus = table.checkStatus('table')
+                , data = checkStatus.data;
+            layer.alert(JSON.stringify(data));
+        });
+
+        $('#menuauthbtn').on('click', function () {
+            var checkStatus = table.checkStatus('table')
+                , data = checkStatus.data;
+            if (data.length != 1) {
+                layer.alert("请选择一条记录!", {icon: 0});
+            } else {
+                setUpUrl("sys/user/getListPage@sys/user/menuAuthPage?UserId=" + data[0].id);
+            }
+
+        });
+
+        $('#roleauthbtn').on('click', function () {
+            var checkStatus = table.checkStatus('table')
+                , data = checkStatus.data;
+            if (data.length != 1) {
+                layer.alert("请选择一条记录!", {icon: 0});
+            } else {
+                setUpUrl("sys/user/getListPage@sys/user/roleAuthPage?UserId=" + data[0].id);
+            }
+
+        });
+
+    });
+
+
+</script>
+<!--模板 js start-->
+<script type="text/html" id="sexTpl">
+    {{#  if(d.sex === '0'){ }}
+    <span style="color: #F581B1;">女</span>
+    {{#  } else { }}
+    <span style="color:#8DB6CD;"> 男 </span>
+    {{#  } }}
+</script>
+<script type="text/html" id="statusTpl">
+    {{#   for (var key in dic_status) { }}
+    {{#      if (key == d.status) { }}
+    {{             dic_status[key]}}
+    {{#      } }}
+    {{#  } }}
+</script>
+<script type="text/html" id="adminTpl">
+    {{#   for (var key in dic_isAdmin) { }}
+    {{#      if (key == d.isAdmin) { }}
+    {{             dic_isAdmin[key]}}
+    {{#      } }}
+    {{#  } }}
+</script>
+<!--模板 end-->
+
+<!--css-->
+<style type="text/css">
+    .search-content {
+        height: 30px;
+        margin-bottom: 5px;
+    }
+
+    .opreate-btn {
+        width: 60px;
+        margin: 0 0 10px 15px;
+        text-decoration: none;
+    }
+</style>

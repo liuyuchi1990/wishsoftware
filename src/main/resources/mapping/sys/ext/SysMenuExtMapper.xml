@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--suppress ALL -->
+<mapper namespace="com.goku.coreui.sys.mapper.ext.SysMenuExtMapper">
+    <resultMap id="SysMenuMap" type="com.goku.coreui.sys.model.SysMenu">
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="module_id" jdbcType="VARCHAR" property="moduleId" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
+        <result column="isparent" jdbcType="VARCHAR" property="isparent" />
+        <result column="sort" jdbcType="INTEGER" property="sort" />
+        <result column="icon" jdbcType="VARCHAR" property="icon" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="if_show" jdbcType="VARCHAR" property="ifShow" />
+        <result column="is_leaf" jdbcType="VARCHAR" property="isLeaf" />
+        <result column="permission" jdbcType="VARCHAR" property="permission" />
+        <result column="url" jdbcType="VARCHAR" property="url" />
+    </resultMap>
+    <select id="getModuleMenus" parameterType="java.lang.String" resultMap="SysMenuMap">
+      select * from (  select m.* from sys_menu m
+            left join sys_module md on m.module_id=md.id
+            left join sys_user_auth sua on m.id=sua.menu_id
+        where md.id= #{ModuleId,jdbcType=VARCHAR} and m.if_show='1'
+        and sua.user_id=#{UserId,jdbcType=VARCHAR}
+        union
+        select m.* from sys_menu m
+            left join sys_module md on m.module_id=md.id
+            left join sys_role_auth sra on m.id=sra.menu_id
+            left join sys_user_role sur on sra.role_id=sur.role_id
+        where md.id= #{ModuleId,jdbcType=VARCHAR} and m.if_show='1'
+        and sur.user_id=#{UserId,jdbcType=VARCHAR}) m ORDER  BY sort
+    </select>
+    <select id="getMenuByUrl" parameterType="java.lang.String" resultMap="SysMenuMap">
+        select m.* from sys_menu m where url= #{Url,jdbcType=VARCHAR}
+    </select>
+    <select id="getMenuByUserId" parameterType="java.lang.String" resultMap="SysMenuMap">
+          select * from (  select m.* from sys_menu m
+            left join sys_module md on m.module_id=md.id
+            left join sys_user_auth sua on m.id=sua.menu_id
+        where  sua.user_id=#{UserId,jdbcType=VARCHAR}
+        union
+        select m.* from sys_menu m
+            left join sys_module md on m.module_id=md.id
+            left join sys_role_auth sra on m.id=sra.menu_id
+            left join sys_user_role sur on sra.role_id=sur.role_id
+        where sur.user_id=#{UserId,jdbcType=VARCHAR}) m ORDER  BY sort
+    </select>
+    <select id="getMenuForPaging" resultMap="SysMenuMap">
+        select *
+        from sys_menu where module_id= #{ModuleId,jdbcType=VARCHAR} ORDER BY sort
+    </select>
+    <update id="updateMenuIsLeaf" parameterType="java.lang.String">
+        update sys_menu set  isparent = '1', is_leaf ='0'  where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateMenuIsParent" parameterType="java.lang.String">
+        update sys_menu set  isparent = '0', is_leaf ='1'  where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <select id="getCountByParentId" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select COUNT(m.id) from sys_menu m where parent_id= #{id,jdbcType=VARCHAR}
+    </select>
+    <select id="getUserModuleMenus" parameterType="java.lang.String" resultMap="SysMenuMap">
+        select m.* from sys_menu m
+        left join sys_module md on m.module_id=md.id
+        left join sys_role_auth sra on m.id=sra.menu_id
+        where md.id= #{ModuleId,jdbcType=VARCHAR}
+        and sra.role_id=#{roleId,jdbcType=VARCHAR} ORDER  BY sort
+    </select>
+    <select id="getUserModuleMenus2" parameterType="java.lang.String" resultMap="SysMenuMap">
+       select m.* from sys_menu m
+        left join sys_module md on m.module_id=md.id
+        left join sys_user_auth sua on m.id=sua.menu_id
+        where md.id= #{ModuleId,jdbcType=VARCHAR}
+        and sua.user_id=#{userid,jdbcType=VARCHAR} ORDER  BY sort
+    </select>
+</mapper>
