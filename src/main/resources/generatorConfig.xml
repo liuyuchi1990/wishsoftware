@@ -39,5 +39,7 @@
         <!-- !!!! Table Configurations !!!! -->
         <table tableName="sys_log" domainObjectName="SysLog" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                enableUpdateByExample="false"/>
+
+        <!-- 123 -->
     </context>
 </generatorConfiguration>
