@@ -1,4 +1,4 @@
-# Goku.Framework.CoreUI
+# wishsoftware
 基于 SpringBoot + Spring + SpringMvc+Mybatis+CoreUI 开发后台管理程序
 
 # 演示地址:
