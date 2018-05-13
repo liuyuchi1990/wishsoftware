@@ -22,3 +22,4 @@
 | Thymeleaf| 页面模板  |
 | Websocket| 消息推送 |
 | Layui| 前端框架 |
+https://github.com/liuyuchi1990/wishsoftware/invitations
