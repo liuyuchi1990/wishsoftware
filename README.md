@@ -1,10 +1,6 @@
 # wishsoftware
 基于 SpringBoot + Spring + SpringMvc+Mybatis+CoreUI 开发后台管理程序
 
-# 演示地址:
-
-http://www.nbfujx.cn:8080/</br>
-
 账号:admin</br>
 密码:12345
 
