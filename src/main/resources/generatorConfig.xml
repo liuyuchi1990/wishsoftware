@@ -16,6 +16,7 @@
         <!-- !!!! Database Configurations !!!! -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://47.97.198.227/goku_coredb" userId="root" password="fjxBB123zdhbda!"/>
 
+
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
