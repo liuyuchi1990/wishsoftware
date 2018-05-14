@@ -21,7 +21,7 @@ public class PrizeRestController {
     @RequestMapping("/getListPage")
     @RequiresPermissions(value={"sys:log:query"})
     public String  list() {
-        List<Breadcrumb> Breadcrumbs= breadcrumbUtil.getBreadcrumbPath("sys/log/getListPage");
+        List<Breadcrumb> Breadcrumbs= breadcrumbUtil.getBreadcrumbPath("prize/getListPage");
         return JSON.toJSONString(Breadcrumbs);
     }
 }
