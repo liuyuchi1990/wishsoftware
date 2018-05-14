@@ -23,3 +23,4 @@
 | Websocket| 消息推送 |
 | Layui| 前端框架 |
 https://github.com/liuyuchi1990/wishsoftware/invitations
+https://github.com/babylikebird/common-admin
