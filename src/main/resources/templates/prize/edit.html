@@ -1,0 +1,120 @@
+<!--templates-->
+<div class="animated fadeIn" >
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header" th:inline="text">
+                    <i class="fa fa-align-justify"></i> [[${pageTitle}]]
+                </div>
+                <div class="card-body">
+                    <div class=" form-horizontal">
+                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                            <legend>权限基本信息</legend>
+                        </fieldset>
+                        <form  id="prizeform" class="layui-form">
+                            <input type="hidden" name="prize_id" th:field="${prize.prize_id}"></input>
+
+                            <div class="layui-form-item row">
+                                <label class="layui-form-label">是否发送</label>
+                                <div class="layui-input-block col-md-9"><!--${prize.prize_status == null ? 0 : prize.prize_status}-->
+                                    <select name="prize_status" lay-verify="required">
+                                        <option value="0" th:selected="${prize.prize_status == 0}">未发送</option>
+                                        <option value="1" th:selected="${prize.prize_status == 1}">已发送</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item row">
+                                <label class="layui-form-label">收货人</label>
+                                <div class="layui-input-block col-md-4">
+                                    <input type="text" autocomplete="off" disabled="disabled" placeholder="收货人" class="layui-input" th:field="${prize.user_name}"></input>
+                                </div>
+
+                                <label class="layui-form-label">发送时间</label>
+                                <div class="layui-input-block col-md-4">
+                                    <input type="text" class="layui-input" id="sendTime" name="send_time_str"></input>
+                                </div>
+                            </div>
+
+
+
+                            <div class="layui-form-item row">
+                                <label class="layui-form-label">收获地址</label>
+                                <div class="layui-input-block col-md-9">
+                                    <textarea class="layui-textarea" name="send_address"   th:field="${prize.send_address}"></textarea>
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="margin-left:30px">
+                                <div class="layui-input-block">
+                                    <button type="reset" class="layui-btn" lay-submit=""  id="save" lay-filter="save">立即提交</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!--/.row-->
+        </div>
+    </div>
+</div>
+
+<!--js-->
+<script th:inline="javascript">
+
+    /*<![CDATA[*/
+    var pageTitle=/*[[${pageTitle}]]*/;//取值
+    /*]]>*/
+
+    layui.use(['layer','form', 'layedit', 'laydate'], function(){
+        var form = layui.form,
+            layer = layui.layer,
+            layedit = layui.layedit,
+            laydate = layui.laydate
+
+        laydate.render({
+            elem: '#sendTime', //指定元素
+            type: 'datetime',
+            value : [[${prize.send_time_str}]]
+        });
+        form.render();
+
+
+        form.on('submit(save)',function(data){
+            var from= $("#prizeform");
+            var model= serializeObject(from);
+
+            var url = [[${prize.prize_id}]] ? '/api/prize/edit' : '/api/prize/save';
+            postJSON(url,model).catch(error => {})
+                .then(value =>{
+                    if(value==undefined) {
+                        layer.alert(pageTitle+"失败!", {icon: 2});
+                    }else{
+                        var result=JSON.parse(value);
+                        if (result == true) {
+                            layer.alert( pageTitle+'成功!',{
+                                icon: 6
+                                ,btn: ['确认']
+                                ,yes: function(index) {
+                                    layer.close(index);
+                                    setUpUrl("prize/getListPage");
+                                }
+                            });
+                        } else {
+                            layer.alert(pageTitle+"失败!", {icon: 2});
+                        }
+                    }
+                });
+
+            return false;
+        });
+    });
+
+</script>
+<!--模板 js start-->
+<!--模板 end-->
+
+<!--css-->
+<style type="text/css">
+
+</style>

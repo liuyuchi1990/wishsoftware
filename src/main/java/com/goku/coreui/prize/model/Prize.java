@@ -1,5 +1,7 @@
 package com.goku.coreui.prize.model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -22,6 +24,7 @@ public class Prize {
 
     private String prize_qr;
 
+    private String user_name;
 
     public String getPrize_id() {
         return prize_id;
@@ -43,9 +46,27 @@ public class Prize {
         return send_time;
     }
 
+    public String getSend_time_str(){
+        if(this.send_time == null)
+            return null;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(this.send_time);
+    }
+
     public void setSend_time(Date send_time) {
         this.send_time = send_time;
     }
+
+    public void setSend_time_str(String send_time) throws ParseException {
+        if(!send_time.equals("") && send_time != null){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date time = sdf.parse(send_time);
+            this.setSend_time(time);
+        }
+    }
+
+
 
     public String getUser_id() {
         return user_id;
@@ -69,5 +90,13 @@ public class Prize {
 
     public void setPrize_qr(String prize_qr) {
         this.prize_qr = prize_qr;
+    }
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
     }
 }
