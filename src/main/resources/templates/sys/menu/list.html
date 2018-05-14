@@ -84,7 +84,6 @@
         });
 
         table.on('tool(module)', function(obj){
-            debugger;
             var data = obj.data;
             var event=obj.event;
             if(event=="setName"){
@@ -93,7 +92,6 @@
                         .catch( error => {
 
                         }).then( value => {
-                    debugger;
                     var rows=JSON.parse(value);
                     checkedtreegrid=treegrid.createNew({
                         elem: 'menuTable',

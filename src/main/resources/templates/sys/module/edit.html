@@ -81,7 +81,6 @@
         form.render();
 
         form.on('submit(save)',function(data){
-            debugger;
             var from= $("#moduleform");
             var model= serializeObject(from);
             postJSON("/api/sys/module/save",model)

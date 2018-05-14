@@ -1,0 +1,73 @@
+package com.goku.coreui.prize.model;
+
+import java.util.Date;
+
+/**
+ * Created by liwenlong on 2018/5/14.
+ */
+public class Prize {
+
+    private String prize_id;
+
+    //发货地址
+    private String send_address;
+
+    //发货时间
+    private Date send_time;
+
+    private String user_id;
+
+    //0 未发送  1 已发送
+    private Integer prize_status;
+
+    private String prize_qr;
+
+
+    public String getPrize_id() {
+        return prize_id;
+    }
+
+    public void setPrize_id(String prize_id) {
+        this.prize_id = prize_id;
+    }
+
+    public String getSend_address() {
+        return send_address;
+    }
+
+    public void setSend_address(String send_address) {
+        this.send_address = send_address;
+    }
+
+    public Date getSend_time() {
+        return send_time;
+    }
+
+    public void setSend_time(Date send_time) {
+        this.send_time = send_time;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public Integer getPrize_status() {
+        return prize_status;
+    }
+
+    public void setPrize_status(Integer prize_status) {
+        this.prize_status = prize_status;
+    }
+
+    public String getPrize_qr() {
+        return prize_qr;
+    }
+
+    public void setPrize_qr(String prize_qr) {
+        this.prize_qr = prize_qr;
+    }
+}

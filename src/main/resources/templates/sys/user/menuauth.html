@@ -120,7 +120,6 @@
         });
 
         table.on('tool(module)', function(obj){
-            debugger;
             var data = obj.data;
             var event=obj.event;
             if(event=="setName"){
@@ -129,7 +128,6 @@
                         .catch( error => {
 
                         }).then( value => {
-                    debugger;
                     var rows=JSON.parse(value);
                     checkedtreegrid=treegrid.createNew({
                         elem: 'menuTable',
@@ -159,9 +157,7 @@
         });
 
         $('#authbtn').on('click', function(){
-            debugger;
             var row =checkedtreegrid.selectRow();
-            debugger;
             postJSON("/api/sys/user/menuauth",{"sysMenus":row,"userid":userid,"moduleId":checkedMudleId})
                     .catch(error => {
 
@@ -181,7 +177,6 @@
                                                 .catch( error => {
 
                                                 }).then( value => {
-                                            debugger;
                                             var rows=JSON.parse(value);
                                             checkedtreegrid=treegrid.createNew({
                                                 elem: 'menuTable',

@@ -11,7 +11,6 @@ function getJSON (url) {
         xhr.onreadystatechange = function () {
             if (this.readyState === 4) {
                 if (this.status === 200) {
-                    debugger;
                     if(this.responseText!="401") {
                         resolve(this.responseText, this)
                     }else{

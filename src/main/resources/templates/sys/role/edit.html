@@ -64,8 +64,6 @@
                 ,layer = layui.layer
                 ,treeselect = layui.treeselect;
 
-        debugger;
-
         treeselect.render({
             elem: "#parentId",
             data: "api/sys/role/getRoleForTree",
@@ -75,7 +73,6 @@
         form.render();
 
         form.on('submit(save)',function(data){
-            debugger;
             var from= $("#roleform");
             var model= serializeObject(from);
             postJSON("/api/sys/role/save",model)

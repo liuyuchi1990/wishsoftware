@@ -139,7 +139,6 @@
         form.render();
 
         form.on('submit(save)',function(data){
-            debugger;
             var from= $("#menuform");
             var model= serializeObject(from);
             postJSON("/api/sys/menu/save",model)
