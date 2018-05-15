@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.goku.coreui.beaut.mapper.BeautMapper">
+
+    <select id="queryPage" resultType="com.goku.coreui.beaut.model.Beaut">
+        select
+           t.img_id,t.img_name,t.img_path,t.img_status,t.user_id ,s.username user_name
+        from tb_imgs t
+        where img_status = 1
+        left join sys_user s on s.id = t.user_id
+    </select>
+
+    <delete id="delete">
+        delete from tb_imgs
+        where img_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id,jdbcType=VARCHAR}
+        </foreach>
+
+    </delete>
+</mapper>
