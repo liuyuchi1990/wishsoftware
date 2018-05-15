@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.goku.coreui.order.mapper.OrderMapper">
+
+    <insert id="insert" parameterType="com.goku.coreui.order.model.Order">
+        insert into tb_order (order_id,device_id,cargo_lane,user_id,create_time,order_status)
+        value(
+          #{order_id,jdbcType=VARCHAR},
+          #{device_id,jdbcType=VARCHAR},
+          #{cargo_lane,jdbcType=VARCHAR},
+          #{user_id,jdbcType=VARCHAR},
+          SYSDATE(),
+          #{order_status,jdbcType=VARCHAR}
+          )
+    </insert>
+
+
+    <update id="edit" parameterType="com.goku.coreui.order.model.Order">
+        update tb_order
+        <set>
+            <if test="order_status != null">
+                order_status = #{order_status,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where order_id = #{order_id,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="delete">
+        delete from tb_order
+        where order_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id,jdbcType=VARCHAR}
+        </foreach>
+    </delete>
+
+    <select id="queryById" parameterType="java.lang.String" resultType="com.goku.coreui.order.model.Order">
+        select
+            t.order_id,t.device_id,t.cargo_lane,t.user_id,t.create_time,t.order_status
+        from tb_order t
+        left join sys_user s on t.user_id = s.id
+        where t.order_id = #{order_id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryPage" resultType="com.goku.coreui.order.model.Order">
+        select
+        t.order_id,t.device_id,t.cargo_lane,t.user_id,t.create_time,t.order_status,s.username user_name
+        from tb_order t
+        left join sys_user s on t.user_id = s.id
+        <where>
+            <if test="user_name != null and user_name != ''">
+                <bind name="user_name" value="'%' + user_name + '%'" />
+                and s.username LIKE #{user_name}
+            </if>
+            <if test="begindate != null">
+                <![CDATA[  and  t.send_time >= #{begindate,jdbcType=DATE}]]>
+            </if>
+            <if test="enddate != null">
+                <![CDATA[  and t.send_time <= #{enddate,jdbcType=DATE}]]>
+            </if>
+            <if test="prize_status != null and prize_status != ''">
+               and t.prize_status = ${prize_status}
+            </if>
+        </where>
+
+        order by  create_time desc
+    </select>
+</mapper>
