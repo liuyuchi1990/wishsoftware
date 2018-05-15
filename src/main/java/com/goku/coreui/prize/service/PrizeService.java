@@ -2,7 +2,6 @@ package com.goku.coreui.prize.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.goku.coreui.common.FileUtils;
 import com.goku.coreui.common.QRCodeUtils;
 import com.goku.coreui.prize.mapper.PrizeMapper;
 import com.goku.coreui.prize.model.Prize;
