@@ -57,8 +57,8 @@
             <if test="enddate != null">
                 <![CDATA[  and t.send_time <= #{enddate,jdbcType=DATE}]]>
             </if>
-            <if test="prize_status != null and prize_status != ''">
-               and t.prize_status = ${prize_status}
+            <if test="order_status != null and order_status != ''">
+               and t.order_status = ${order_status}
             </if>
         </where>
 

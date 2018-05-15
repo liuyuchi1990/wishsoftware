@@ -1,0 +1,186 @@
+<!--templates-->
+<div class="animated fadeIn" >
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i> 订单列表
+                </div>
+                <div class="card-body">
+                    <div class=" form-horizontal">
+
+                        <div class="form-group  row">
+
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <span class="input-group-addon search-content">订单状态</span>
+                                    <select id="order_status" name="order_status" class="form-control search-content" style="height: 30px;padding: 0 6px">
+                                        <option value=""></option>
+                                        <option value="1">成功</option>
+                                        <option value="2">失败</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <span class="input-group-addon search-content">用户名</span>
+                                    <input type="text" id="user_name" name="user_name" class="form-control search-content"/>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <span class="input-group-addon search-content">操作日期</span>
+                                    <input type="text" class="layui-input form-control search-content" id="createdate" name="createdate" placeholder=" - "/>
+                                </div>
+                            </div>
+                            <a style="margin-left:15px" class="opreate-btn layui-btn layui-btn-sm layui-btn-normal" href="#" data-type="reload" id="refreshTable" ><i class="icon-magnifier"></i>查询</a>
+                            <a style="margin-left:15px" class="opreate-btn layui-btn layui-btn-sm layui-btn-primary" href="#" data-type="reset" id="resetTable"><i class="icon-refresh"></i>重置</a>
+
+                        </div>
+
+                        <div class="row">
+                            <a class="opreate-btn  layui-btn layui-btn-sm" id="addbtn" href="#"><i class="icon-plus"></i>新增</a>
+                            <a class="opreate-btn  layui-btn layui-btn-sm" id="editbtn" href="#"><i class="icon-plus"></i>修改</a>
+                            <a class="opreate-btn layui-btn layui-btn-sm layui-btn-danger" href="#" id="deleteIds"><i class="icon-close"></i>删除</a>
+                        </div>
+                        <table class="layui-table table-responsive-sm" id="table" lay-filter="table"></table>
+                    </div>
+                </div>
+            </div>
+            <!--/.row-->
+        </div>
+    </div>
+</div>
+
+<!--js-->
+<script th:inline="javascript">
+    layui.use(['table', 'laydate'], function(){
+        var table = layui.table,
+            $ = layui.jquery,
+            laydate=layui.laydate;
+
+
+        var opt={
+            elem: '#table'
+            ,url:'/api/order/queryPage'
+            ,height: 410
+            ,page: true //开启分页,
+            ,limit:5
+            ,limits:[5,10,20,50]
+            ,cols: [[
+                {type:'checkbox'},
+                {field:'user_name', title: '收货人'},
+                {field:'device_name', title: '货架名'},
+                {field:'device_address', title: '货架地址'},
+                {field:'cargo_lane', title: '货道组'},
+                {field:'create_time', title: '订单创建时间'},
+                {field:'order_status', title: '订单状态', templet: '#statusTpl'}
+            ]],
+            request: {
+                pageName: 'pageNumber', //页码的参数名称，默认：page
+                limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            },
+            response: {
+                countName: 'total', //数据总数的字段名称，默认：count
+                dataName: 'rows' //数据列表的字段名称，默认：data
+            }
+        };
+        var tableIns = table.render(opt);
+
+        //日期范围
+        laydate.render({
+            elem: '#createdate'
+            ,range: true
+        });
+
+        $('#refreshTable').on('click', function(){
+            var daterange = $('#createdate').val().split(' - ')
+            tableIns.reload({ where: {
+                    user_name:$('#user_name').val(),
+                    order_status : $("#order_status").val(),
+                    begindate:daterange[0],
+                    enddate:daterange[1]
+                }});
+        });
+
+        $('#resetTable').on('click', function(){
+            $('#user_name').val("");
+            $('#createdate').val("");
+            $('#order_status').val("");
+            tableIns.reload({ where: {
+                    user_name:"",
+                    order_status : "",
+                    begindate:"",
+                    enddate:""
+                }});
+        });
+
+        $('#addbtn').on('click', function () {
+            setUpUrl("order/getListPage@order/addPage");
+        });
+
+        $("#editbtn").on("click",function(){
+            var checkStatus = table.checkStatus('table')
+                , data = checkStatus.data;
+            if (data.length != 1) {
+                layer.alert("请选择一条记录!", {icon: 0});
+            } else {
+                setUpUrl("order/getListPage@order/editPage?id=" + data[0].order_id);
+            }
+
+        })
+
+        $("#deleteIds").on("click",function(){
+            var checkStatus = table.checkStatus('table'),
+                data = checkStatus.data;
+            if (data.length == 0) {
+                layer.alert("请选择一条记录!", {icon: 0});
+            } else {
+                layer.alert( '请确认是否删除该订单!',{
+                    icon: 3,
+                    btn: ['确认'],
+                    yes: function(index) {
+                        layer.close(index);
+                        postJSON("api/order/delete", data.map(item =>item.order_id).join(",")).catch(error => {})
+                            .then(value => {
+                                var result=JSON.parse(value);
+                                if (result == true) {
+                                    var tabOpt = table.render(opt);
+                                    tabOpt.reload();
+                                } else {
+                                    layer.alert("订单删除失败!", {icon: 2});
+                                }
+                            });
+                    }})
+                data[0].order_id
+            }
+
+        })
+    });
+
+</script>
+<!--模板 js start-->
+<script type="text/html" id="statusTpl">
+    {{#  if(d.order_status === 1){ }}
+    <span style="color: #F581B1;">成功</span>
+    {{#  } else { }}
+    <span style="color:#8DB6CD;">失败</span>
+    {{#  } }}
+</script>
+<!--模板 end-->
+
+<!--css-->
+<style type="text/css">
+    .search-content
+    {
+        height:30px;
+        margin-bottom: 5px;
+    }
+    .opreate-btn
+    {
+        width: 60px;
+        margin:0 0 10px 15px;
+        text-decoration : none;
+    }
+</style>
