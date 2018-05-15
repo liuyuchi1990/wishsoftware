@@ -2,12 +2,14 @@ package com.goku.coreui.prize.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.goku.coreui.common.QRCodeUtils;
 import com.goku.coreui.prize.mapper.PrizeMapper;
 import com.goku.coreui.prize.model.Prize;
 import com.goku.coreui.sys.model.SysLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -21,8 +23,13 @@ public class PrizeService {
     @Autowired
     PrizeMapper prizeMapper;
 
+    String qrPath = System.getProperty("user.dir") + "/src/main/resources/static/qr_code/";
+    String imgLogo = System.getProperty("user.dir") + "/src/main/resources/static/img/qr_logo.jpg";
+
     public int insert(Prize prize){
-        prize.setPrize_id(UUID.randomUUID().toString().replaceAll("-", ""));
+        String id = UUID.randomUUID().toString().replaceAll("-", "");
+        prize.setPrize_id(id);
+        QRCodeUtils.createQRCode("http://www.baidu.com?id=" + id,qrPath + id + ".png",imgLogo);
         return prizeMapper.insert(prize);
     }
 
@@ -31,7 +38,9 @@ public class PrizeService {
     }
 
     public int delete(String ids){
-        return prizeMapper.delete(ids.split(","));
+        String[] idArr = ids.split(",");
+        this.removeQr(idArr);
+        return prizeMapper.delete(idArr);
     }
 
     public Prize queryById(String prize_id){
@@ -43,5 +52,12 @@ public class PrizeService {
         List<Prize> list = prizeMapper.queryPage(user_name,begindate,enddate,prize_status);
         PageInfo page = new PageInfo(list);
         return page;
+    }
+
+    private void removeQr(String[] ids){
+        for(int i = 0 ; i < ids.length; i++){
+            File file = new File(ids[i]);
+            file.delete();
+        }
     }
 }
