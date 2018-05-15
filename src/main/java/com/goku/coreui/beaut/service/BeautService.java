@@ -4,11 +4,13 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.goku.coreui.beaut.mapper.BeautMapper;
 import com.goku.coreui.beaut.model.Beaut;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by liwenlong on 2018/5/15.
@@ -19,9 +21,9 @@ public class BeautService {
     @Autowired
     BeautMapper beautMapper;
 
-    public PageInfo queryPage(int pageindex, int pagenum){
+    public PageInfo queryPage(String user_name, Date begindate, Date enddate,int pageindex, int pagenum){
         PageHelper.startPage(pageindex, pagenum);
-        List<Beaut> list = beautMapper.queryPage();
+        List<Beaut> list = beautMapper.queryPage(user_name,begindate,enddate);
         PageInfo page = new PageInfo(list);
         return page;
     }
@@ -29,4 +31,19 @@ public class BeautService {
     public int delete(String ids){
         return beautMapper.delete(ids.split(","));
     }
+
+    public int add(Beaut beaut){
+        String id = UUID.randomUUID().toString().replaceAll("-", "");
+        beaut.setImg_id(id);
+        return beautMapper.add(beaut);
+    }
+
+    public int delImgStatus(String ids){
+        return beautMapper.delImgStatus(ids.split(","));
+    }
+
+    public int setFabulous(String type,String id){
+        return beautMapper.setFabulous(type,id);
+    }
+
 }

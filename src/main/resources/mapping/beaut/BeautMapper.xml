@@ -4,10 +4,22 @@
 
     <select id="queryPage" resultType="com.goku.coreui.beaut.model.Beaut">
         select
-           t.img_id,t.img_name,t.img_path,t.img_status,t.user_id ,s.username user_name
+           t.img_id,t.img_name,t.img_path,t.img_status,t.create_time,
+           t.fabulous, s.username user_name
         from tb_imgs t
-        where img_status = 1
         left join sys_user s on s.id = t.user_id
+        where img_status = 1
+        <if test="user_name != null and user_name != ''">
+            <bind name="user_name" value="'%' + user_name + '%'" />
+            and s.username LIKE #{user_name}
+        </if>
+        <if test="begindate != null">
+            <![CDATA[  and  t.create_time >= #{begindate,jdbcType=DATE}]]>
+        </if>
+        <if test="enddate != null">
+            <![CDATA[  and t.create_time <= #{enddate,jdbcType=DATE}]]>
+        </if>
+        order by t.create_time desc
     </select>
 
     <delete id="delete">
@@ -16,6 +28,39 @@
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id,jdbcType=VARCHAR}
         </foreach>
-
     </delete>
+
+    <update id="delImgStatus">
+        update tb_imgs
+        set img_status = 0
+        where img_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
+
+    <insert id="add" parameterType="com.goku.coreui.beaut.model.Beaut">
+        insert into tb_imgs(img_id,img_name,img_path,img_status,user_id,create_time,fabulous)
+        values(
+          #{img_id,jdbcType=VARCHAR},
+          #{img_name,jdbcType=VARCHAR},
+          #{img_path,jdbcType=VARCHAR},
+          1,
+          #{user_id,jdbcType=VARCHAR},
+          SYSDATE(),
+          0
+        )
+    </insert>
+
+    <update id="setFabulous">
+        update tb_imgs
+        <if test="type == 'add'">
+            set fabulous = fabulous + 1
+        </if>
+        <if test="type == 'minus'">
+            set fabulous = fabulous - 1
+        </if>
+        where img_id = #{id,jdbcType=VARCHAR}
+    </update>
 </mapper>

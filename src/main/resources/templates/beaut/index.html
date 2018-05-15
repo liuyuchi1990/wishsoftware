@@ -10,21 +10,9 @@
                     <div class=" form-horizontal">
 
                         <div class="form-group  row">
-
                             <div class="col-md-3">
                                 <div class="input-group">
-                                    <span class="input-group-addon search-content">是否发送</span>
-                                    <select id="prize_status" name="prize_status" class="form-control search-content" style="height: 30px;padding: 0 6px">
-                                        <option value=""></option>
-                                        <option value="0">未发送</option>
-                                        <option value="1">已发送</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="input-group">
-                                    <span class="input-group-addon search-content">用户名</span>
+                                    <span class="input-group-addon search-content">上传用户</span>
                                     <input type="text" id="user_name" name="user_name" class="form-control search-content"/>
                                 </div>
                             </div>
@@ -40,8 +28,6 @@
                         </div>
 
                         <div class="row">
-                            <a class="opreate-btn  layui-btn layui-btn-sm" id="addbtn" href="#"><i class="icon-plus"></i>新增</a>
-                            <a class="opreate-btn  layui-btn layui-btn-sm" id="editbtn" href="#"><i class="icon-plus"></i>修改</a>
                             <a class="opreate-btn layui-btn layui-btn-sm layui-btn-danger" href="#" id="deleteIds"><i class="icon-close"></i>删除</a>
                         </div>
                         <table class="layui-table table-responsive-sm" id="table" lay-filter="table"></table>
@@ -63,17 +49,18 @@
 
         var opt={
             elem: '#table'
-            ,url:'/api/prize/queryPage'
+            ,url:'/api/beaut/queryPage'
             ,height: 410
             ,page: true //开启分页,
             ,limit:5
             ,limits:[5,10,20,50]
             ,cols: [[
                 {type:'checkbox'},
-                {field:'prize_status', title: '是否发送', templet: '#statusTpl'},
-                {field:'user_name', title: '收货人'},
-                {field:'send_time_str', title: '发送时间'},
-                {field:'send_address', title: '收获地址'}
+                {field:'img_name', title: '图片名称'},
+                {field:'img_path', title: '图片', templet: '#imgTpl'},
+                {field:'user_name', title: '上传用户'},
+                {field:'create_time_str', title: '上传时间'},
+                {field:'fabulous', title: '点赞数量'},
             ]],
             request: {
                 pageName: 'pageNumber', //页码的参数名称，默认：page
@@ -96,7 +83,6 @@
             var daterange = $('#createdate').val().split(' - ')
             tableIns.reload({ where: {
                 user_name:$('#user_name').val(),
-                prize_status : $("#prize_status").val(),
                 begindate:daterange[0],
                 enddate:daterange[1]
             }});
@@ -105,66 +91,53 @@
         $('#resetTable').on('click', function(){
             $('#user_name').val("");
             $('#createdate').val("");
-            $('#prize_status').val("");
             tableIns.reload({ where: {
                 user_name:"",
-                prize_status : "",
                 begindate:"",
                 enddate:""
             }});
         });
 
-        $('#addbtn').on('click', function () {
-            setUpUrl("prize/getListPage@prize/addPage");
-        });
 
-        $("#editbtn").on("click",function(){
-            var checkStatus = table.checkStatus('table')
-                    , data = checkStatus.data;
-            if (data.length != 1) {
-                layer.alert("请选择一条记录!", {icon: 0});
-            } else {
-                setUpUrl("prize/getListPage@prize/editPage?id=" + data[0].prize_id);
-            }
-
-        })
-
-        $("#deleteIds").on("click",function(){
+        $("#deleteIds").on("click", function () {
             var checkStatus = table.checkStatus('table'),
-                    data = checkStatus.data;
+                data = checkStatus.data;
             if (data.length == 0) {
                 layer.alert("请选择一条记录!", {icon: 0});
             } else {
-                layer.alert( '请确认是否删除该奖品!',{
+                layer.alert('请确认是否删除该数据!', {
                     icon: 3,
                     btn: ['确认'],
-                    yes: function(index) {
+                    yes: function (index) {
                         layer.close(index);
-                        postJSON("api/prize/delete", data.map(item =>item.prize_id).join(",")).catch(error => {})
-                        .then(value => {
-                            var result=JSON.parse(value);
-                        if (result == true) {
-                            var tabOpt = table.render(opt);
-                            tabOpt.reload();
-                        } else {
-                            layer.alert("奖品除失败!", {icon: 2});
-                        }
-                    });
-            }})
-        data[0].prize_id
-    }
+                        postJSON("api/beaut/delImgStatus", data.map(item => item.img_id).join(",")).catch(error => {
+                        })
+                            .then(value => {
+                                var result = JSON.parse(value);
+                                if (result == true) {
+                                    layer.alert('删除成功!', {
+                                        icon: 6, btn: ['确认'], yes: function (index) {
+                                            layer.close(index);
+                                            var tabOpt = table.render(opt);
+                                            tabOpt.reload();
+                                        }
+                                    });
 
-    })
+                                } else {
+                                    layer.alert("删除失败!", {icon: 2});
+                                }
+                            });
+                    }
+                })
+            }
+
+        })
     });
 
 </script>
 <!--模板 js start-->
-<script type="text/html" id="statusTpl">
-    {{#  if(d.prize_status === 0){ }}
-    <span style="color: #F581B1;">未发送</span>
-    {{#  } else { }}
-    <span style="color:#8DB6CD;">已发送</span>
-    {{#  } }}
+<script type="text/html" id="imgTpl">
+    <img src="{{d.img_path}}" width="40" />
 </script>
 <!--模板 end-->
 

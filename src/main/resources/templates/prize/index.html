@@ -144,14 +144,18 @@
                             .then(value => {
                                 var result=JSON.parse(value);
                                 if (result == true) {
-                                    var tabOpt = table.render(opt);
-                                    tabOpt.reload();
+                                    layer.alert('该奖品删除成功!', {
+                                        icon: 6, btn: ['确认'], yes: function (index) {
+                                            layer.close(index);
+                                            var tabOpt = table.render(opt);
+                                            tabOpt.reload();
+                                        }
+                                    });
                                 } else {
                                     layer.alert("奖品除失败!", {icon: 2});
                                 }
                             });
                     }})
-                data[0].prize_id
             }
 
         })

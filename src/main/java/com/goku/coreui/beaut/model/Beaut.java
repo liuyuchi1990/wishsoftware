@@ -1,5 +1,8 @@
 package com.goku.coreui.beaut.model;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by liwenlong on 2018/5/15.
  */
@@ -16,6 +19,10 @@ public class Beaut {
     private String user_id;
 
     private String user_name;
+
+    private Date create_time;
+
+    private Integer fabulous;
 
 
     public String getImg_id() {
@@ -64,5 +71,29 @@ public class Beaut {
 
     public void setUser_name(String user_name) {
         this.user_name = user_name;
+    }
+
+    public Date getCreate_time() {
+        return create_time;
+    }
+
+    public String getCreate_time_str(){
+        if(this.create_time == null)
+            return null;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(this.create_time);
+    }
+
+    public void setCreate_time(Date create_time) {
+        this.create_time = create_time;
+    }
+
+    public Integer getFabulous() {
+        return fabulous;
+    }
+
+    public void setFabulous(Integer fabulous) {
+        this.fabulous = fabulous;
     }
 }
