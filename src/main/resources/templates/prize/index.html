@@ -16,7 +16,7 @@
                                         <span class="input-group-addon search-content">是否发送</span>
                                         <select id="prize_status" name="prize_status" class="form-control search-content" style="height: 30px;padding: 0 6px">
                                             <option value=""></option>
-                                            <option value="0">未发送</option>
+                                            <option value="0">待发送</option>
                                             <option value="1">已发送</option>
                                         </select>
                                     </div>
@@ -165,7 +165,7 @@
 <!--模板 js start-->
 <script type="text/html" id="statusTpl">
     {{#  if(d.prize_status === 0){ }}
-    <span style="color: #F581B1;">未发送</span>
+    <span style="color: #F581B1;">待发送</span>
     {{#  } else { }}
     <span style="color:#8DB6CD;">已发送</span>
     {{#  } }}

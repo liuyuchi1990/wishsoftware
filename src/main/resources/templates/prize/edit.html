@@ -18,7 +18,7 @@
                                 <label class="layui-form-label">是否发送</label>
                                 <div class="layui-input-block col-md-9"><!--${prize.prize_status == null ? 0 : prize.prize_status}-->
                                     <select name="prize_status" lay-verify="required">
-                                        <option value="0" th:selected="${prize.prize_status == 0}">未发送</option>
+                                        <option value="0" th:selected="${prize.prize_status == 0}">待发送</option>
                                         <option value="1" th:selected="${prize.prize_status == 1}">已发送</option>
                                     </select>
                                 </div>
