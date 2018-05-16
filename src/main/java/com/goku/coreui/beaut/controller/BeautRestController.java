@@ -16,8 +16,11 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -35,6 +38,10 @@ public class BeautRestController {
     BeautService beautService;
     @Autowired
     PageUtil pageUtil;
+    @Value("${root.img.path.beaut}")
+    String filePath;
+    @Value("${root.img.url}")
+    String url;
 
     @RequestMapping("/getListPage")
     @RequiresPermissions(value={"beaut:query"})
@@ -65,13 +72,35 @@ public class BeautRestController {
         }
     }
 
-    @RequestMapping("/add")
-    public String add(@RequestBody Beaut beaut){
-        int result = beautService.add(beaut);
-        if(result>0) {
-            return JSON.toJSONString ("true");
-        }else{
-            return JSON.toJSONString ("false");
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public String add(@RequestParam("file") MultipartFile[] files,Beaut beaut){
+        String id = UUID.randomUUID().toString().replaceAll("-", "");
+        beaut.setImg_id(id);
+        Map<String,Object> map = new HashedMap();
+
+        try{
+            //判断file数组不能为空并且长度大于0
+            if(files != null && files.length > 0){
+                //循环获取file数组中得文件
+                for(int i = 0;i < files.length;i++){
+                    MultipartFile file = files[i];
+                    //保存文件
+                    String fileName = saveFile(file, filePath,id);
+
+                    beaut.setImg_name(fileName);
+                    beaut.setImg_path(url + fileName);
+                    beautService.add(beaut);
+                }
+            }
+
+            map.put("status","success");
+            map.put("msg","添加成功");
+            return JSON.toJSONString (map);
+        }catch (Exception e){
+            e.printStackTrace();
+            map.put("status","success");
+            map.put("msg","添加失败");
+            return JSON.toJSONString (map);
         }
     }
 
@@ -105,6 +134,38 @@ public class BeautRestController {
             map.put("msg","修改失败");
             return JSON.toJSONString (map);
         }
+    }
+
+
+    /**
+     * 保存图片
+     * @param file
+     * @param path
+     * @return
+     */
+    private String saveFile(MultipartFile file, String path,String name) {
+        // 判断文件是否为空
+        if (!file.isEmpty()) {
+            try {
+                File filepath = new File(path);
+                if (!filepath.exists())
+                    filepath.mkdirs();
+                // 文件保存路径
+
+                String fileName = file.getOriginalFilename();
+                int index = fileName.lastIndexOf(".");
+                fileName = name + fileName.substring(index);
+
+
+                String savePath = path + fileName;
+                // 转存文件
+                file.transferTo(new File(savePath));
+                return fileName;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
 }

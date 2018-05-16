@@ -7,6 +7,7 @@ import com.goku.coreui.prize.mapper.PrizeMapper;
 import com.goku.coreui.prize.model.Prize;
 import com.goku.coreui.sys.model.SysLog;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -23,13 +24,13 @@ public class PrizeService {
     @Autowired
     PrizeMapper prizeMapper;
 
-    String qrPath = System.getProperty("user.dir") + "/src/main/resources/static/qr_code/";
-    String imgLogo = System.getProperty("user.dir") + "/src/main/resources/static/img/qr_logo.jpg";
+    @Value("${root.img.path.qr}")
+    String qrPath;
 
     public int insert(Prize prize){
         String id = UUID.randomUUID().toString().replaceAll("-", "");
         prize.setPrize_id(id);
-        QRCodeUtils.createQRCode("http://www.baidu.com?id=" + id,qrPath + id + ".png",imgLogo);
+        QRCodeUtils.createQRCode("http://www.baidu.com?id=" + id,qrPath + id + ".png");
         return prizeMapper.insert(prize);
     }
 
@@ -56,7 +57,7 @@ public class PrizeService {
 
     private void removeQr(String[] ids){
         for(int i = 0 ; i < ids.length; i++){
-            File file = new File(ids[i]);
+            File file = new File(qrPath + ids[i] + ".png");
             file.delete();
         }
     }

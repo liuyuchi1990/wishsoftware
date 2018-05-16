@@ -33,8 +33,6 @@ public class BeautService {
     }
 
     public int add(Beaut beaut){
-        String id = UUID.randomUUID().toString().replaceAll("-", "");
-        beaut.setImg_id(id);
         return beautMapper.add(beaut);
     }
 
