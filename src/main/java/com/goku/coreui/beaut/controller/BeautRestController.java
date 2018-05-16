@@ -72,6 +72,38 @@ public class BeautRestController {
         }
     }
 
+    @RequestMapping("/delImgStatus")
+    @RequiresPermissions(value={"beaut:query"})
+    public String  delImgStatus(@RequestBody String ids){
+        int result = beautService.delImgStatus(ids.replaceAll("\"", ""));
+        if(result>0) {
+            return JSON.toJSONString ("true");
+        }else{
+            return JSON.toJSONString ("false");
+        }
+    }
+
+    @RequestMapping(value = "/queryPageList/{pageNumber}/{pageSize}", method = RequestMethod.POST)
+    public String queryPageList(@PathVariable("pageNumber") Integer pageNumber,@PathVariable("pageSize") Integer pageSize){
+        TablePage tp = pageUtil.getDataForPaging(beautService.queryPage(null,null,null,pageNumber,pageSize));
+        return JSON.toJSONString (tp);
+    }
+
+    @RequestMapping(value = "/fabulous/{id}/{type}", method = RequestMethod.POST)
+    public String fabulous1(@PathVariable("type") String type,@PathVariable("id") String id){
+        int result = beautService.setFabulous(type,id);
+        Map<String,Object> map = new HashedMap();
+        if(result>0) {
+            map.put("status","success");
+            map.put("msg","修改成功");
+            return JSON.toJSONString (map);
+        }else{
+            map.put("status","fail");
+            map.put("msg","修改失败");
+            return JSON.toJSONString (map);
+        }
+    }
+
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String add(@RequestParam("file") MultipartFile[] files,Beaut beaut){
         String id = UUID.randomUUID().toString().replaceAll("-", "");
@@ -98,40 +130,8 @@ public class BeautRestController {
             return JSON.toJSONString (map);
         }catch (Exception e){
             e.printStackTrace();
-            map.put("status","success");
-            map.put("msg","添加失败");
-            return JSON.toJSONString (map);
-        }
-    }
-
-    @RequestMapping("/delImgStatus")
-    @RequiresPermissions(value={"beaut:query"})
-    public String  delImgStatus(@RequestBody String ids){
-        int result = beautService.delImgStatus(ids.replaceAll("\"", ""));
-        if(result>0) {
-            return JSON.toJSONString ("true");
-        }else{
-            return JSON.toJSONString ("false");
-        }
-    }
-
-    @RequestMapping("/queryPageList/{pageNumber}/{pageSize}")
-    public String queryPageList(@PathVariable("pageNumber") Integer pageNumber,@PathVariable("pageSize") Integer pageSize){
-        TablePage tp = pageUtil.getDataForPaging(beautService.queryPage(null,null,null,pageNumber,pageSize));
-        return JSON.toJSONString (tp);
-    }
-
-    @RequestMapping("/fabulous/{id}/{type}")
-    public String fabulous1(@PathVariable("type") String type,@PathVariable("id") String id){
-        int result = beautService.setFabulous(type,id);
-        Map<String,Object> map = new HashedMap();
-        if(result>0) {
-            map.put("status","success");
-            map.put("msg","修改成功");
-            return JSON.toJSONString (map);
-        }else{
             map.put("status","fail");
-            map.put("msg","修改失败");
+            map.put("msg","添加失败");
             return JSON.toJSONString (map);
         }
     }

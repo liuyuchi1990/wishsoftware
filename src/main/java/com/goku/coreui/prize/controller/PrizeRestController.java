@@ -14,10 +14,7 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
@@ -112,7 +109,7 @@ public class PrizeRestController {
      * @param prize
      * @return
      */
-    @RequestMapping("/bind")
+    @RequestMapping(value = "/bind", method = RequestMethod.POST)
     public String  bind(@RequestBody Prize prize){
         prize.setSend_time(new Date());
         int result = prizeService.edit(prize);
@@ -122,7 +119,7 @@ public class PrizeRestController {
             map.put("msg","绑定成功");
             return JSON.toJSONString (map);
         }else{
-            map.put("status","success");
+            map.put("status","fail");
             map.put("msg","绑定失败");
             return JSON.toJSONString (map);
         }
