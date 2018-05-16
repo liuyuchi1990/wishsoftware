@@ -72,7 +72,7 @@
 
         table.render({
             elem: '#moduleTable'
-            ,url:'/api/sys/module/getModuleForPaging'
+            ,url:'api/sys/module/getModuleForPaging'
             ,page: false
             ,cols: [[
                 {field:'name',title: '模块名称',event: 'setName',width:'90%'}
@@ -86,7 +86,7 @@
                     if(checkedMudleId==null) {
                         checkedMudleId=res.rows[0].id;
                     }
-                    getJSON("/api/sys/menu/getMenuForPaging?moduleId=" + checkedMudleId)
+                    getJSON("api/sys/menu/getMenuForPaging?moduleId=" + checkedMudleId)
                             .catch(error => {
 
                             }).then(value => {
@@ -102,7 +102,7 @@
                         });
                         checkedtreegrid.build();
                         /*<![CDATA[*/
-                        getJSON("/api/sys/menu/getUserMenuForTree2?moduleId="+checkedMudleId+"&userid="+userid)
+                        getJSON("api/sys/menu/getUserMenuForTree2?moduleId="+checkedMudleId+"&userid="+userid)
                                 .catch( error => {
 
                                 }).then( value => {
@@ -124,7 +124,7 @@
             var event=obj.event;
             if(event=="setName"){
                 checkedMudleId=data.id;
-                getJSON("/api/sys/menu/getMenuForPaging?moduleId="+checkedMudleId)
+                getJSON("api/sys/menu/getMenuForPaging?moduleId="+checkedMudleId)
                         .catch( error => {
 
                         }).then( value => {
@@ -140,7 +140,7 @@
                     });
                     checkedtreegrid.build();
                     /*<![CDATA[*/
-                    getJSON("/api/sys/menu/getUserMenuForTree2?moduleId="+checkedMudleId+"&userid="+userid)
+                    getJSON("api/sys/menu/getUserMenuForTree2?moduleId="+checkedMudleId+"&userid="+userid)
                             .catch( error => {
 
                             }).then( value => {
@@ -158,7 +158,7 @@
 
         $('#authbtn').on('click', function(){
             var row =checkedtreegrid.selectRow();
-            postJSON("/api/sys/user/menuauth",{"sysMenus":row,"userid":userid,"moduleId":checkedMudleId})
+            postJSON("api/sys/user/menuauth",{"sysMenus":row,"userid":userid,"moduleId":checkedMudleId})
                     .catch(error => {
 
                     })
@@ -173,7 +173,7 @@
                                     ,btn: ['确认']
                                     ,yes: function(index) {
                                         layer.close(index);
-                                        getJSON("/api/sys/menu/getMenuForPaging?moduleId="+checkedMudleId)
+                                        getJSON("api/sys/menu/getMenuForPaging?moduleId="+checkedMudleId)
                                                 .catch( error => {
 
                                                 }).then( value => {
@@ -189,7 +189,7 @@
                                             });
                                             checkedtreegrid.build();
                                             /*<![CDATA[*/
-                                            getJSON("/api/sys/menu/getUserMenuForTree2?moduleId="+checkedMudleId+"&userid="+userid)
+                                            getJSON("api/sys/menu/getUserMenuForTree2?moduleId="+checkedMudleId+"&userid="+userid)
                                                     .catch( error => {
 
                                                     }).then( value => {

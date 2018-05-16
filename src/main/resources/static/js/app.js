@@ -7,7 +7,7 @@ $.ajaxLoad = true;
 
 //required when $.ajaxLoad = true
 //$.defaultPage = "main";
-$.subPagesDirectory = '/';
+$.subPagesDirectory = '';
 $.page404 = '404';
 $.mainContent = $('#ui-view');
 $.breadcrumbContent = $('#breadcrumb-view');

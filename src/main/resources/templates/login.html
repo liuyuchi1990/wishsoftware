@@ -5,17 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta name="description" content="CoreUI Admin "/>
-    <meta name="author" content="nbfujx"/>
     <meta name="keyword" content="CoreUI Admin"/>
     <!-- <link rel="shortcut icon" href="assets/ico/favicon.png"> -->
     <title>CoreUI Admin </title>
     <!-- Icons -->
-    <link rel="stylesheet" type="text/css" href="/lib/font-awesome/css/font-awesome.min.css"></link>
-    <link rel="stylesheet" type="text/css" href="/lib/simple-line-icons/css/simple-line-icons.css"></link>
+    <link rel="stylesheet" type="text/css" href="lib/font-awesome/css/font-awesome.min.css"></link>
+    <link rel="stylesheet" type="text/css" href="lib/simple-line-icons/css/simple-line-icons.css"></link>
     <!--layui and necessary plugins-->
-    <link rel="stylesheet" type="text/css" href="/lib/layui/css/layui.css"  media="all"></link>
+    <link rel="stylesheet" type="text/css" href="lib/layui/css/layui.css"  media="all"></link>
     <!-- Main styles for this application -->
-    <link rel="stylesheet" type="text/css" href="/css/style.css"></link>
+    <link rel="stylesheet" type="text/css" href="css/style.css"></link>
 </head>
 
 <body class="app flex-row align-items-center">
@@ -27,7 +26,7 @@
                     <div class="card-body">
                         <h1>登录</h1>
                         <p class="text-muted">登录到您的帐户</p>
-                        <form action="/doLogin" method="post">
+                        <form action="doLogin" method="post">
                             <div class="input-group mb-3">
                                 <span class="input-group-addon"><i class="icon-user"></i></span>
                                 <input type="text" name="username" class="form-control" placeholder="账号"/>
@@ -56,10 +55,10 @@
 </div>
 
 <!-- Bootstrap and necessary plugins -->
-<script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
-<script type="text/javascript" src="/lib/popper.js/popper.min.js"></script>
-<script type="text/javascript" src="/lib/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="/lib/layer/layer.js"></script>
+<script type="text/javascript" src="lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="lib/popper.js/popper.min.js"></script>
+<script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="lib/layer/layer.js"></script>
 <script th:inline="javascript">
     /*<![CDATA[*/
     var error=/*[[${error}]]*/;//取值

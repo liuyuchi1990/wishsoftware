@@ -83,7 +83,7 @@
         form.on('submit(save)',function(data){
             var from= $("#moduleform");
             var model= serializeObject(from);
-            postJSON("/api/sys/module/save",model)
+            postJSON("api/sys/module/save",model)
                     .catch(error => {
 
                     })

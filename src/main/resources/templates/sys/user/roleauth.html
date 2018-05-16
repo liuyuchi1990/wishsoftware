@@ -64,7 +64,7 @@
             return laytpl(view).render(data) || '';
         };
 
-        getJSON("/api/sys/role/getRoleForPaging")
+        getJSON("api/sys/role/getRoleForPaging")
                 .catch( error => {
 
                 }).then( value => {
@@ -81,7 +81,7 @@
             checkedtreegrid.build();
 
             /*<![CDATA[*/
-            getJSON("/api/sys/role/getUserRoleForTree?userid="+userid)
+            getJSON("api/sys/role/getUserRoleForTree?userid="+userid)
                     .catch( error => {
 
                     }).then( value => {
@@ -96,7 +96,7 @@
 
             $('#authbtn').on('click', function(){
                 var row =checkedtreegrid.selectRow();
-                postJSON("/api/sys/user/roleauth",{"sysRoles":row,"userid":userid})
+                postJSON("api/sys/user/roleauth",{"sysRoles":row,"userid":userid})
                         .catch(error => {
 
                         })
@@ -111,7 +111,7 @@
                                         ,btn: ['确认']
                                         ,yes: function(index) {
                                             layer.close(index);
-                                            getJSON("/api/sys/role/getRoleForPaging")
+                                            getJSON("api/sys/role/getRoleForPaging")
                                                     .catch( error => {
 
                                                     }).then( value => {
@@ -128,7 +128,7 @@
                                                 checkedtreegrid.build();
 
                                                 /*<![CDATA[*/
-                                                getJSON("/api/sys/role/getUserRoleForTree?userid="+userid)
+                                                getJSON("api/sys/role/getUserRoleForTree?userid="+userid)
                                                         .catch( error => {
 
                                                         }).then( value => {

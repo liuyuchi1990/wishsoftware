@@ -84,7 +84,7 @@
             var from= $("#prizeform");
             var model= serializeObject(from);
 
-            var url = [[${prize.prize_id}]] ? '/api/prize/edit' : '/api/prize/save';
+            var url = [[${prize.prize_id}]] ? 'api/prize/edit' : 'api/prize/save';
             postJSON(url,model).catch(error => {})
                 .then(value =>{
                     if(value==undefined) {

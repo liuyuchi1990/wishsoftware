@@ -49,7 +49,7 @@
 
         table.render({
             elem: '#moduleTable'
-            ,url:'/api/sys/module/getModuleForPaging'
+            ,url:'api/sys/module/getModuleForPaging'
             ,page: false
             ,cols: [[
                 {field:'name',title: '模块名称',event: 'setName',width:230}
@@ -63,7 +63,7 @@
                     if(checkedMudleId==null) {
                         checkedMudleId=res.rows[0].id;
                     }
-                    getJSON("/api/sys/menu/getMenuForPaging?moduleId=" + checkedMudleId)
+                    getJSON("api/sys/menu/getMenuForPaging?moduleId=" + checkedMudleId)
                             .catch(error => {
 
                             }).then(value => {
@@ -88,7 +88,7 @@
             var event=obj.event;
             if(event=="setName"){
                 checkedMudleId=data.id;
-                getJSON("/api/sys/menu/getMenuForPaging?moduleId="+checkedMudleId)
+                getJSON("api/sys/menu/getMenuForPaging?moduleId="+checkedMudleId)
                         .catch( error => {
 
                         }).then( value => {
@@ -119,7 +119,7 @@
                         ,btn: ['确认']
                         ,yes: function(index) {
                             layer.close(index);
-                            postJSON("/api/sys/menu/delete", menuid)
+                            postJSON("api/sys/menu/delete", menuid)
                                     .catch(error => {
 
                                     })
@@ -129,7 +129,7 @@
                                             layer.alert('该菜单删除成功!', {
                                                 icon: 6, btn: ['确认'], yes: function (index) {
                                                     layer.close(index);
-                                                    getJSON("/api/sys/menu/getMenuForPaging?moduleId=" + checkedMudleId)
+                                                    getJSON("api/sys/menu/getMenuForPaging?moduleId=" + checkedMudleId)
                                                             .catch(error => {
 
                                                             }).then(value => {

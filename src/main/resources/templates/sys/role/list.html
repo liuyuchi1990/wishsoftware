@@ -35,7 +35,7 @@
             return laytpl(view).render(data) || '';
         };
 
-        getJSON("/api/sys/role/getRoleForPaging")
+        getJSON("api/sys/role/getRoleForPaging")
                 .catch( error => {
 
                 }).then( value => {
@@ -78,7 +78,7 @@
                         ,btn: ['确认']
                         ,yes: function(index) {
                             layer.close(index);
-                            postJSON("/api/sys/role/delete", roleId)
+                            postJSON("api/sys/role/delete", roleId)
                                     .catch(error => {
 
                                     })
@@ -88,7 +88,7 @@
                                             layer.alert('该权限删除成功!', {
                                                 icon: 6, btn: ['确认'], yes: function (index) {
                                                     layer.close(index);
-                                                    getJSON("/api/sys/role/getRoleForPaging")
+                                                    getJSON("api/sys/role/getRoleForPaging")
                                                             .catch( error => {
 
                                                             }).then( value => {

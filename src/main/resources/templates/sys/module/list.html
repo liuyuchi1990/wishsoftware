@@ -34,7 +34,7 @@
         var table = layui.table,$ = layui.jquery;
         var opt={
             elem: '#table'
-            ,url:'/api/sys/module/getModuleForPaging'
+            ,url:'api/sys/module/getModuleForPaging'
             ,height: 410
             ,page: false //开启分页,
             ,cols: [[
@@ -72,7 +72,7 @@
 
                 }else {
                     $.each(data,function(key,value){
-                        getJSON("/api/sys/menu/getMenuForPaging?moduleId="+data[key].id)
+                        getJSON("api/sys/menu/getMenuForPaging?moduleId="+data[key].id)
                                 .catch( error => {
 
                                 })
@@ -94,7 +94,7 @@
                 icon: 3, btn: ['确认'], yes: function (index) {
                     layer.close(index);
                     if(deleteFlag) {
-                        postJSON("/api/sys/module/delete", ids.toString())
+                        postJSON("api/sys/module/delete", ids.toString())
                                 .catch(error => {
 
                                 })

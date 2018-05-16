@@ -75,7 +75,7 @@
         form.on('submit(save)',function(data){
             var from= $("#roleform");
             var model= serializeObject(from);
-            postJSON("/api/sys/role/save",model)
+            postJSON("api/sys/role/save",model)
                     .catch(error => {
 
                     })
