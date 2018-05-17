@@ -3,7 +3,9 @@ package com.goku.coreui.prize.controller;
 import com.alibaba.fastjson.JSON;
 import com.goku.coreui.prize.model.Prize;
 import com.goku.coreui.prize.service.PrizeService;
+import com.goku.coreui.sys.mapper.SysUserMapper;
 import com.goku.coreui.sys.model.SysMenu;
+import com.goku.coreui.sys.model.SysUser;
 import com.goku.coreui.sys.model.ext.Breadcrumb;
 import com.goku.coreui.sys.model.ext.TablePage;
 import com.goku.coreui.sys.util.BreadcrumbUtil;
@@ -30,6 +32,8 @@ public class PrizeRestController {
     BreadcrumbUtil breadcrumbUtil;
     @Autowired
     PrizeService prizeService;
+    @Autowired
+    SysUserMapper sysUserMapper;
     @Autowired
     PageUtil pageUtil;
 
@@ -112,6 +116,12 @@ public class PrizeRestController {
     @RequestMapping(value = "/bind", method = RequestMethod.POST)
     public String  bind(@RequestBody Prize prize){
         prize.setSend_time(new Date());
+
+        SysUser sysUser = new SysUser();
+        sysUser.setId(prize.getUser_id());
+        sysUser.setAddress(prize.getSend_address());
+        sysUserMapper.updateByPrimaryKey(sysUser);
+
         int result = prizeService.edit(prize);
         Map<String,Object> map = new HashedMap();
         if(result>0) {

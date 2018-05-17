@@ -121,6 +121,22 @@ public class SysUser {
      */
     private String deptid;
 
+
+    //微信id
+    private String openId;
+
+    //地址
+    private String address;
+
+    //积分
+    private Integer integral;
+
+    //精度
+    private String longitude;
+
+    //纬度
+    private String latitude;
+
     private List<SysRole> sysRoleList;
 
     public List<SysRole> getSysRoleList() {
@@ -453,5 +469,45 @@ public class SysUser {
      */
     public void setStationid(String deptid) {
         this.deptid = deptid == null ? null : deptid.trim();
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Integer getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(Integer integral) {
+        this.integral = integral;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
     }
 }

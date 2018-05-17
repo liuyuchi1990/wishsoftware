@@ -27,10 +27,16 @@ public class PrizeService {
     @Value("${root.img.path.qr}")
     String qrPath;
 
+    @Value("${root.rq.url}")
+    String qrUrl;
+
     public int insert(Prize prize){
         String id = UUID.randomUUID().toString().replaceAll("-", "");
         prize.setPrize_id(id);
-        QRCodeUtils.createQRCode("http://www.baidu.com?id=" + id,qrPath + id + ".png");
+
+        String url = qrUrl.replace("{prizeId}",id);
+
+        QRCodeUtils.createQRCode(url,qrPath + id + ".png");
         return prizeMapper.insert(prize);
     }
 

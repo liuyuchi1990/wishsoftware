@@ -19,6 +19,11 @@
     <result column="is_admin" jdbcType="VARCHAR" property="isAdmin" />
     <result column="sort" jdbcType="BIGINT" property="sort" />
     <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="open_id" jdbcType="VARCHAR" property="openId" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="integral" jdbcType="INTEGER" property="integral" />
+    <result column="longitude" jdbcType="VARCHAR" property="longitude" />
+    <result column="latitude" jdbcType="VARCHAR" property="latitude" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--
@@ -212,6 +217,23 @@
       <if test="stationid != null">
         stationid = #{stationid,jdbcType=LONGVARCHAR},
       </if>
+      <if test="openId != null">
+        open_id = #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="integral != null">
+        integral = #{integral,jdbcType=INTEGER},
+      </if>
+      <if test="longitude != null">
+        longitude = #{longitude,jdbcType=VARCHAR},
+      </if>
+      <if test="latitude != null">
+        latitude = #{latitude,jdbcType=VARCHAR},
+      </if>
+
+
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
