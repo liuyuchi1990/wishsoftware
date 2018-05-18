@@ -2,11 +2,13 @@ package com.goku.coreui.sys.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.goku.coreui.sys.mapper.SysUserMapper;
 import com.goku.coreui.sys.mapper.ext.SysUserAuthExtMapper;
 import com.goku.coreui.sys.mapper.ext.SysUserExtMapper;
 import com.goku.coreui.sys.mapper.ext.SysUserRoleExtMapper;
 import com.goku.coreui.sys.model.*;
 import com.goku.coreui.sys.service.SysUserService;
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,9 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Autowired
     SysUserRoleExtMapper sysUserRoleExtMapper;
+
+    @Autowired
+    SysUserMapper sysUserMapper;
 
     @Override
     public PageInfo getUserForPaging(String username, String name, String orderFiled, String orderSort, int pageindex, int pagenum) {
@@ -65,10 +70,10 @@ public class SysUserServiceImpl implements SysUserService {
                 sua.setMenuId(sr.getId());
                 addResult = sysUserAuthExtMapper.insert(sua);
             }
-        }else
-        {
+        }else{
             addResult = 1;
         }
+
         if (addResult == 1 && deleteResult >= 0) {
             return 1;
         }
@@ -97,5 +102,21 @@ public class SysUserServiceImpl implements SysUserService {
             return 1;
         }
         return 0;
+    }
+
+    @Override
+    public int insert(SysUser sysUser) {
+        String id = UUID.randomUUID().toString().replaceAll("-", "");
+        sysUser.setId(id);
+        return sysUserMapper.insert(sysUser);
+    }
+
+    @Override
+    public int edit(SysUser user) {
+        SysUser u = this.selectByPrimaryKey(user.getId());
+        if(!u.getPassword().equals(user.getPassword())){
+            user.setPassword(new Md5Hash(user.getPassword(), "2").toString());
+        }
+        return sysUserMapper.updateByPrimaryKeySelective(user);
     }
 }

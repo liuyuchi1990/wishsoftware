@@ -5,6 +5,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.goku.coreui.sys.controller.sysuser.UserRestController;
 import com.goku.coreui.sys.model.SysMenu;
 import com.goku.coreui.sys.model.SysRole;
+import com.goku.coreui.sys.model.SysUser;
 import com.goku.coreui.sys.model.ext.Breadcrumb;
 import com.goku.coreui.sys.model.ext.TablePage;
 import com.goku.coreui.sys.service.SysUserService;
@@ -116,4 +117,30 @@ public class UserRestControllerImpl implements UserRestController {
             return JSON.toJSONString ("false");
         }
     }
+
+
+    @RequestMapping("/add")
+    @RequiresRoles("admin_sys")
+    @RequiresPermissions(value={"sys:user:query"})
+    public String add(@RequestBody SysUser sysUser) {
+        int result = sysUserService.insert(sysUser);
+        if(result>0) {
+            return JSON.toJSONString ("true");
+        }else{
+            return JSON.toJSONString ("false");
+        }
+    }
+
+    @RequestMapping("/edit")
+    @RequiresRoles("admin_sys")
+    @RequiresPermissions(value={"sys:user:query"})
+    public String edit(@RequestBody SysUser sysUser) {
+        int result = sysUserService.edit(sysUser);
+        if(result>0) {
+            return JSON.toJSONString ("true");
+        }else{
+            return JSON.toJSONString ("false");
+        }
+    }
+
 }

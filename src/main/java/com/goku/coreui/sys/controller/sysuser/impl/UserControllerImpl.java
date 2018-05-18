@@ -33,8 +33,8 @@ public class UserControllerImpl implements UserController {
     @RequiresPermissions(value={"sys:user:add"})
     public String  add(Model model) {
         model.addAttribute("pageTitle","用户新增");
-        SysUser sysUser=new SysUser();
-        model.addAttribute("sysUser",sysUser);
+        SysUser sysUser = new SysUser();
+        model.addAttribute("user",sysUser);
         return  "sys/user/edit";
     }
 

@@ -53,9 +53,7 @@ public class HomeControllerImpl implements HomeController,ErrorController {
     @RequestMapping("/doLogin")
     public String doLogin(
         @RequestParam(value = "username", required = true) String userName,
-        @RequestParam(value = "password", required = true) String password,
-        Model model)
-    {
+        @RequestParam(value = "password", required = true) String password, Model model){
          String passwordmd5 = new Md5Hash(password, "2").toString();
          Subject subject = SecurityUtils.getSubject();
          UsernamePasswordToken token = new UsernamePasswordToken(userName, passwordmd5);

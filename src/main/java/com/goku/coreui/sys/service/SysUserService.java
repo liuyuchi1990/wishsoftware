@@ -17,4 +17,7 @@ public interface SysUserService {
     int saveUser(SysUser sysUser);
     int menuAuth(List<SysMenu> sysMenus, String userid, String moduleId);
     int roleauth(List<SysRole> sysRoles, String userid);
+
+    int insert(SysUser sysUser);
+    int edit(SysUser user);
 }

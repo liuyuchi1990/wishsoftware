@@ -72,16 +72,17 @@
             , limit: 5
             , limits: [5, 10, 20, 50]
             , cols: [[
-                {type: 'checkbox'}
-                , {field: 'id', title: 'ID', sort: true}
-                , {field: 'username', title: '用户名'}
-                , {field: 'name', title: '姓名'}
-                , {field: 'sex', title: '性别', templet: '#sexTpl'}
-                , {field: 'status', title: '使用状态', sort: true, templet: '#statusTpl'}
-                , {field: 'email', title: 'email'}
-                , {field: 'idcard', title: '身份证'}
-                , {field: 'isAdmin', title: '是否管理员', sort: true, templet: '#adminTpl'}
-                , {field: 'mobile', title: '联系方式'}
+                {type: 'checkbox'},
+                {field: 'id', title: 'ID', sort: true},
+                {field: 'username', title: '用户名'},
+                {field: 'name', title: '姓名'},
+                {field: 'sex', title: '性别', templet: '#sexTpl'},
+                /*{field: 'status', title: '使用状态', sort: true, templet: '#statusTpl'},
+                {field: 'email', title: 'email'},
+                {field: 'idcard', title: '身份证'},*/
+
+                {field: 'openId', title: '类型', sort: true, templet: '#sysTypeTpl'},
+                {field: 'mobile', title: '联系方式'}
             ]],
             request: {
                 pageName: 'pageNumber', //页码的参数名称，默认：page
@@ -192,11 +193,11 @@
     {{#      } }}
     {{#  } }}
 </script>
-<script type="text/html" id="adminTpl">
-    {{#   for (var key in dic_isAdmin) { }}
-    {{#      if (key == d.isAdmin) { }}
-    {{             dic_isAdmin[key]}}
-    {{#      } }}
+<script type="text/html" id="sysTypeTpl">
+    {{#  if(d.openId == '' || d.openId == null){ }}
+    <span style="color:#8DB6CD;">系统</span>
+    {{#  } else { }}
+    <span style="color: #F581B1;">微信</span>
     {{#  } }}
 </script>
 <!--模板 end-->

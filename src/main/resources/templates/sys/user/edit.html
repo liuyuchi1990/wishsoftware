@@ -8,9 +8,47 @@
                 </div>
                 <div class="card-body">
                     <div class=" form-horizontal">
-                        <div class="row">
+                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                            <legend>用户基本信息</legend>
+                        </fieldset>
+                        <form id="userform" class="layui-form" autocomplete="off">
+                            <input type="hidden" name="id" th:field="${user.id}"></input>
+                            <input type="hidden" name="status" th:field="${user.status}"></input>
 
-                        </div>
+                            <div class="layui-form-item row">
+                                <label class="layui-form-label">用户名</label>
+                                <div class="layui-input-block col-md-4">
+                                    <input type="text" name="username" autocomplete="off" placeholder="用户名" class="layui-input" th:field="${user.username}"></input>
+                                </div>
+
+                                <label class="layui-form-label">姓名</label>
+                                <div class="layui-input-block col-md-4">
+                                    <input type="text" name="name" autocomplete="off" placeholder="姓名" class="layui-input" th:field="${user.name}"></input>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item row">
+                                <label class="layui-form-label">密码</label>
+                                <div class="layui-input-block col-md-4">
+                                    <input type="password" name="password" autocomplete="off" placeholder="密码" class="layui-input" th:field="${user.password}"></input>
+                                </div>
+
+                                <label class="layui-form-label">性别</label>
+                                <div class="layui-input-block col-md-4">
+                                    <select name="sex" lay-verify="required">
+                                        <option value="0" th:selected="${user.sex == 0}">女</option>
+                                        <option value="1" th:selected="${user.sex == 1}">男</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item row">
+                                <label class="layui-form-label">联系方式</label>
+                                <div class="layui-input-block col-md-4">
+                                    <input type="text" name="mobile" autocomplete="off" placeholder="联系方式" class="layui-input" th:field="${user.mobile}"></input>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -21,12 +59,55 @@
 
 <!--js-->
 <script th:inline="javascript">
+    /*<![CDATA[*/
+    var pageTitle=/*[[${pageTitle}]]*/;//取值
+    /*]]>*/
 
+    layui.use(['layer','form', 'layedit', 'laydate'], function(){
+        var form = layui.form,
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate
+
+        form.render();
+
+
+        form.on('submit(save)',function(data){
+            var from= $("#userform");
+            var model= serializeObject(from);
+
+            var url = [[${user.id}]] ? '/api/sys/user/edit' : '/api/sys/user/save';
+            postJSON(url,model).catch(error => {})
+                    .then(value =>{
+                        if(value==undefined) {
+                            layer.alert(pageTitle+"失败!", {icon: 2});
+                        }else{
+                            var result=JSON.parse(value);
+                            if (result == true) {
+                                layer.alert( pageTitle+'成功!',{
+                                    icon: 6
+                                    ,btn: ['确认']
+                                    ,yes: function(index) {
+                                        layer.close(index);
+                                        setUpUrl("sys/user/getListPage");
+                                    }
+                                });
+                            } else {
+                                layer.alert(pageTitle+"失败!", {icon: 2});
+                            }
+                        }
+                    });
+
+            return false;
+        });
+    });
 </script>
 <!--模板 js start-->
 <!--模板 end-->
 
 <!--css-->
 <style type="text/css">
-
+    input:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0px 1000px white inset;
+    }
 </style>
