@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.goku.coreui.device.mapper.DeviceMapper">
+
+    <insert id="insert" parameterType="com.goku.coreui.device.model.Device">
+INSERT INTO tb_device (
+		device_id,
+		device_name,
+		device_address,
+		device_status,
+		cargo_lane_1,
+		cargo_lane_2,
+		cargo_lane_3,
+		cargo_lane_4,
+		cargo_lane_5,
+		cargo_lane_6,
+		cargo_lane_7,
+		cargo_lane_8,
+		cargo_lane_9,
+		cargo_lane_10,
+		cargo_lane_11,
+		cargo_lane_12,
+		cargo_lane_13,
+		cargo_lane_14,
+		cargo_lane_15,
+		cargo_lane_16,
+		cargo_lane_17,
+		cargo_lane_18,
+		cargo_lane_19,
+		cargo_lane_20,
+		create_time
+	)
+VALUES
+	(
+		#{device_id,jdbcType=VARCHAR},
+		#{device_name,jdbcType=VARCHAR},
+		#{device_address,jdbcType=VARCHAR},
+		#{device_status,jdbcType=VARCHAR},
+		#{cargo_lane_1,jdbcType=INTEGER},
+		#{cargo_lane_2,jdbcType=INTEGER},
+		#{cargo_lane_3,jdbcType=INTEGER},
+		#{cargo_lane_4,jdbcType=INTEGER},
+		#{cargo_lane_5,jdbcType=INTEGER},
+		#{cargo_lane_6,jdbcType=INTEGER},
+		#{cargo_lane_7,jdbcType=INTEGER},
+		#{cargo_lane_8,jdbcType=INTEGER},
+		#{cargo_lane_9,jdbcType=INTEGER},
+		#{cargo_lane_10,jdbcType=INTEGER},
+		#{cargo_lane_11,jdbcType=INTEGER},
+		#{cargo_lane_12,jdbcType=INTEGER},
+		#{cargo_lane_13,jdbcType=INTEGER},
+		#{cargo_lane_14,jdbcType=INTEGER},
+		#{cargo_lane_15,jdbcType=INTEGER},
+		#{cargo_lane_16,jdbcType=INTEGER},
+		#{cargo_lane_17,jdbcType=INTEGER},
+		#{cargo_lane_18,jdbcType=INTEGER},
+		#{cargo_lane_19,jdbcType=INTEGER},
+		#{cargo_lane_20,jdbcType=INTEGER},
+		SYSDATE()
+	)
+    </insert>
+
+
+    <update id="editDeviceStatus" parameterType="com.goku.coreui.device.model.Device">
+        update tb_device
+        <set>
+            <if test="device_status != null">
+                device_status = #{device_status,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where device_id = #{device_id,jdbcType=VARCHAR}
+    </update>
+
+	<update id="edit" parameterType="com.goku.coreui.device.model.Device">
+		update tb_device
+		<set>
+			<if test="device_name != null">
+				device_name = #{device_name,jdbcType=VARCHAR},
+			</if>
+			<if test="device_address != null">
+				device_address = #{device_address,jdbcType=VARCHAR},
+			</if>
+
+			<if test="cargo_lane_1 != null">
+				cargo_lane_1 = #{cargo_lane_1,jdbcType=INTEGER},
+			</if>
+
+			<if test="cargo_lane_2 != null">
+				cargo_lane_2 = #{cargo_lane_2,jdbcType=INTEGER},
+			</if>
+
+			<if test="cargo_lane_3 != null">
+				cargo_lane_3 = #{cargo_lane_3,jdbcType=INTEGER},
+			</if>
+
+			<if test="cargo_lane_4 != null">
+				cargo_lane_4 = #{cargo_lane_4,jdbcType=INTEGER},
+			</if>
+
+			<if test="cargo_lane_5 != null">
+				cargo_lane_5 = #{cargo_lane_5,jdbcType=INTEGER},
+			</if>
+
+			<if test="cargo_lane_6!= null">
+				cargo_lane_6 = #{cargo_lane_6,jdbcType=INTEGER},
+			</if>
+
+			<if test="cargo_lane_7 != null">
+				cargo_lane_7 = #{cargo_lane_7,jdbcType=INTEGER},
+			</if>
+
+			<if test="cargo_lane_8 != null">
+				cargo_lane_8 = #{cargo_lane_8,jdbcType=INTEGER},
+			</if>
+
+			<if test="cargo_lane_9 != null">
+				cargo_lane_9 = #{cargo_lane_9,jdbcType=INTEGER},
+			</if>
+
+			<if test="cargo_lane_10 != null">
+				cargo_lane_10 = #{cargo_lane_10,jdbcType=INTEGER},
+			</if>
+
+			<if test="cargo_lane_11 != null">
+				cargo_lane_11 = #{cargo_lane_11,jdbcType=INTEGER},
+			</if>
+
+			<if test="cargo_lane_12 != null">
+				cargo_lane_12 = #{cargo_lane_12,jdbcType=INTEGER},
+			</if>
+
+			<if test="cargo_lane_13 != null">
+				cargo_lane_13 = #{cargo_lane_13,jdbcType=INTEGER},
+			</if>
+
+			<if test="cargo_lane_14 != null">
+				cargo_lane_14 = #{cargo_lane_14,jdbcType=INTEGER},
+			</if>
+
+			<if test="cargo_lane_15 != null">
+				cargo_lane_15 = #{cargo_lane_15,jdbcType=INTEGER},
+			</if>
+
+			<if test="cargo_lane_16 != null">
+				cargo_lane_16 = #{cargo_lane_16,jdbcType=INTEGER},
+			</if>
+
+			<if test="cargo_lane_17 != null">
+				cargo_lane_17 = #{cargo_lane_17,jdbcType=INTEGER},
+			</if>
+
+			<if test="cargo_lane_18 != null">
+				cargo_lane_18 = #{cargo_lane_18,jdbcType=INTEGER},
+			</if>
+
+			<if test="cargo_lane_19 != null">
+				cargo_lane_19 = #{cargo_lane_19,jdbcType=INTEGER},
+			</if>
+
+			<if test="cargo_lane_20 != null">
+				cargo_lane_20 = #{cargo_lane_20,jdbcType=INTEGER},
+			</if>
+
+			<if test="update_user_id != null">
+				update_user_id = #{update_user_id,jdbcType=VARCHAR},
+			</if>
+				update_time = SYSDATE()
+		</set>
+		where device_id = #{device_id,jdbcType=VARCHAR}
+	</update>
+
+    <delete id="delete">
+        delete from tb_device
+        where device_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id,jdbcType=VARCHAR}
+        </foreach>
+    </delete>
+
+    <select id="queryById" parameterType="java.lang.String" resultType="com.goku.coreui.device.model.Device">
+        select
+		device_id,
+		device_name,
+		device_address,
+		device_status,
+		cargo_lane_1,
+		cargo_lane_2,
+		cargo_lane_3,
+		cargo_lane_4,
+		cargo_lane_5,
+		cargo_lane_6,
+		cargo_lane_7,
+		cargo_lane_8,
+		cargo_lane_9,
+		cargo_lane_10,
+		cargo_lane_11,
+		cargo_lane_12,
+		cargo_lane_13,
+		cargo_lane_14,
+		cargo_lane_15,
+		cargo_lane_16,
+		cargo_lane_17,
+		cargo_lane_18,
+		cargo_lane_19,
+		cargo_lane_20,
+		create_time,
+		user_name
+        from tb_device t
+        left join sys_user s on s.id = t.update_user_id
+        where device_id = #{device_id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryPage" resultType="com.goku.coreui.device.model.Device">
+        select
+		t.device_id,
+		t.device_name,
+		t.device_address,
+		t.device_status,
+		t.cargo_lane_1,
+		t.cargo_lane_2,
+		t.cargo_lane_3,
+		t.cargo_lane_4,
+		t.cargo_lane_5,
+		t.cargo_lane_6,
+		t.cargo_lane_7,
+		t.cargo_lane_8,
+		t.cargo_lane_9,
+		t.cargo_lane_10,
+		t.cargo_lane_11,
+		t.cargo_lane_12,
+		t.cargo_lane_13,
+		t.cargo_lane_14,
+		t.cargo_lane_15,
+		t.cargo_lane_16,
+		t.cargo_lane_17,
+		t.cargo_lane_18,
+		t.cargo_lane_19,
+		t.cargo_lane_20,
+		t.create_time,s.username user_name
+        from tb_device t
+        left join sys_user s on t.update_user_id = s.id
+        <where>
+            <if test="user_name != null and user_name != ''">
+                <bind name="user_name" value="'%' + user_name + '%'" />
+                and s.username LIKE #{user_name}
+            </if>
+            <if test="begindate != null">
+                <![CDATA[  and  t.send_time >= #{begindate,jdbcType=DATE}]]>
+            </if>
+            <if test="enddate != null">
+                <![CDATA[  and t.send_time <= #{enddate,jdbcType=DATE}]]>
+            </if>
+            <if test="device_status != null and device_status != ''">
+               and t.device_status = ${device_status}
+            </if>
+        </where>
+        order by  create_time desc
+    </select>
+</mapper>
