@@ -15,6 +15,7 @@
     <result column="is_admin" jdbcType="VARCHAR" property="isAdmin" />
     <result column="sort" jdbcType="BIGINT" property="sort" />
     <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="open_id" jdbcType="VARCHAR" property="openId" />
     <association property="sysUserInfo" column="id" select="getUserInfoById"/>
     <collection  property="sysRoleList"  column="id" select="getRoleById" />
   </resultMap>
@@ -68,7 +69,7 @@
   </select>
   <select id="getUserForPaging" resultMap="SysUserMap">
     select
-     id, username, password, name, sex, status, orgid, deptid,email, idcard, is_admin, sort,mobile
+     id, username, password, name, sex, status, orgid, deptid,email, idcard, is_admin, sort,mobile,open_id
     from sys_user
     <where>
       <if test="username != null and username != ''">

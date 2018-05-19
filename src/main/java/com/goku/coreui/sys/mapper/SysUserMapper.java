@@ -51,4 +51,7 @@ public interface SysUserMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(SysUser record);
+
+
+    int delete(String[] ids);
 }

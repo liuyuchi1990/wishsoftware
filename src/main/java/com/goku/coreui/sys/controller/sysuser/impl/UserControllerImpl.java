@@ -34,18 +34,27 @@ public class UserControllerImpl implements UserController {
     public String  add(Model model) {
         model.addAttribute("pageTitle","用户新增");
         SysUser sysUser = new SysUser();
-        model.addAttribute("user",sysUser);
+        model.addAttribute("sysUser",sysUser);
         return  "sys/user/edit";
     }
 
     @Override
     @RequestMapping("/editPage")
     @RequiresPermissions(value={"sys:user:edit"})
-    public String  edit(@PathParam("userId") String UserId, Model model) {
+    public String edit(@PathParam("userId") String userId, Model model) {
         model.addAttribute("pageTitle","用户修改");
-        SysUser sysUser=sysUserService.selectByPrimaryKey(UserId);
+        SysUser sysUser=sysUserService.selectByPrimaryKey(userId);
         model.addAttribute("sysUser",sysUser);
         return  "sys/user/edit";
+    }
+
+    @RequestMapping("/vxEditPage")
+    @RequiresPermissions(value={"sys:user:edit"})
+    public String vxEditPage(@PathParam("userId") String userId, Model model) {
+        model.addAttribute("pageTitle","用户微信修改");
+        SysUser sysUser=sysUserService.selectByPrimaryKey(userId);
+        model.addAttribute("sysUser",sysUser);
+        return  "sys/user/vxedit";
     }
 
     @Override

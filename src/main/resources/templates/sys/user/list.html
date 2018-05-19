@@ -35,9 +35,6 @@
                             <a shiro:hasPermission="sys:user:edit" class="opreate-btn  layui-btn layui-btn-sm"
                                id="editbtn" href="#"><i class="icon-plus"></i>修改</a>
                             <a shiro:hasPermission="sys:user:delete"
-                               class="opreate-btn layui-btn layui-btn-sm layui-btn-danger" href="#" id="freezeIds"><i
-                                    class="icon-close"></i>冻结</a>
-                            <a shiro:hasPermission="sys:user:delete"
                                class="opreate-btn layui-btn layui-btn-sm layui-btn-danger" href="#" id="deleteIds"><i
                                     class="icon-close"></i>删除</a>
                             <a shiro:hasPermission="sys:user:menuauth" style="width: 80px;"
@@ -73,15 +70,22 @@
             , limits: [5, 10, 20, 50]
             , cols: [[
                 {type: 'checkbox'},
-                {field: 'id', title: 'ID', sort: true},
                 {field: 'username', title: '用户名'},
-                {field: 'name', title: '姓名'},
+                {field: 'name', title: '姓名/昵称'},
                 {field: 'sex', title: '性别', templet: '#sexTpl'},
                 /*{field: 'status', title: '使用状态', sort: true, templet: '#statusTpl'},
                 {field: 'email', title: 'email'},
                 {field: 'idcard', title: '身份证'},*/
 
-                {field: 'openId', title: '类型', sort: true, templet: '#sysTypeTpl'},
+                {field: 'openId', title: '类型', sort: true,
+                        templet: function(d){
+                            if(d.openId){
+                                return '微信';
+                            }else{
+                                return '系统';
+                            }
+                       }
+                },
                 {field: 'mobile', title: '联系方式'}
             ]],
             request: {
@@ -116,7 +120,13 @@
             if (data.length != 1) {
                 layer.alert("请选择一条记录!", {icon: 0});
             } else {
-                setUpUrl("sys/user/getListPage@sys/user/editPage?userId=" + data[0].id);
+                if(!data[0].openId){
+                    setUpUrl("sys/user/getListPage@sys/user/editPage?userId=" + data[0].id);
+                }else{
+                    setUpUrl("sys/user/getListPage@sys/user/vxEditPage?userId=" + data[0].id);
+                }
+
+
             }
         });
 
@@ -141,15 +151,43 @@
         });
 
         $('#freezeIds').on('click', function () {
-            var checkStatus = table.checkStatus('table')
-                , data = checkStatus.data;
+            var checkStatus = table.checkStatus('table'),
+                data = checkStatus.data;
             layer.alert(JSON.stringify(data));
         });
 
         $('#deleteIds').on('click', function () {
             var checkStatus = table.checkStatus('table')
                 , data = checkStatus.data;
-            layer.alert(JSON.stringify(data));
+
+            if (data.length == 0) {
+                layer.alert("请选择一条用户信息!", {icon: 0});
+            } else {
+                layer.alert( '请确认是否删除该用户吗!',{
+                    icon: 3,
+                    btn: ['确认'],
+                    yes: function(index) {
+                        layer.close(index);
+                        postJSON("api/sys/user/delete", data.map(item =>item.id).join(",")).catch(error => {})
+                            .then(value => {
+                                var result=JSON.parse(value);
+                                if (result == true) {
+                                    layer.alert('该用户删除成功!', {
+                                        icon: 6, btn: ['确认'], yes: function (index) {
+                                            layer.close(index);
+                                            var tabOpt = table.render(opt);
+                                            tabOpt.reload();
+                                        }
+                                    });
+                                } else {
+                                    layer.alert("奖品除失败!", {icon: 2});
+                                }
+                            });
+                    }})
+            }
+
+
+
         });
 
         $('#menuauthbtn').on('click', function () {
@@ -191,13 +229,6 @@
     {{#      if (key == d.status) { }}
     {{             dic_status[key]}}
     {{#      } }}
-    {{#  } }}
-</script>
-<script type="text/html" id="sysTypeTpl">
-    {{#  if(d.openId == '' || d.openId == null){ }}
-    <span style="color:#8DB6CD;">系统</span>
-    {{#  } else { }}
-    <span style="color: #F581B1;">微信</span>
     {{#  } }}
 </script>
 <!--模板 end-->

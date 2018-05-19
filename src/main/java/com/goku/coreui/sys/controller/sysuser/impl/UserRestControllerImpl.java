@@ -12,13 +12,11 @@ import com.goku.coreui.sys.service.SysUserService;
 import com.goku.coreui.sys.util.BreadcrumbUtil;
 import com.goku.coreui.sys.util.CamelUtil;
 import com.goku.coreui.sys.util.PageUtil;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -59,6 +57,13 @@ public class UserRestControllerImpl implements UserRestController {
     @RequestMapping("/editPage")
     @RequiresPermissions(value={"sys:user:edit"})
     public String  edit() {
+        List<Breadcrumb> Breadcrumbs= breadcrumbUtil.getBreadcrumbPath("sys/user/editPage");
+        return JSON.toJSONString(Breadcrumbs);
+    }
+
+    @RequestMapping("/vxEditPage")
+    @RequiresPermissions(value={"sys:user:edit"})
+    public String  vxEditPage() {
         List<Breadcrumb> Breadcrumbs= breadcrumbUtil.getBreadcrumbPath("sys/user/editPage");
         return JSON.toJSONString(Breadcrumbs);
     }
@@ -136,6 +141,33 @@ public class UserRestControllerImpl implements UserRestController {
     @RequiresPermissions(value={"sys:user:query"})
     public String edit(@RequestBody SysUser sysUser) {
         int result = sysUserService.edit(sysUser);
+        if(result>0) {
+            return JSON.toJSONString ("true");
+        }else{
+            return JSON.toJSONString ("false");
+        }
+    }
+
+    @RequestMapping(value = "/bind", method = RequestMethod.GET)
+    public String bind(@RequestBody SysUser sysUser) {
+        Map<String,Object> map = new HashedMap();
+        int result = sysUserService.insert(sysUser);
+        if(result>0) {
+            map.put("status","success");
+            map.put("msg","添加成功");
+            return JSON.toJSONString (map);
+        }else{
+            map.put("status","fail");
+            map.put("msg","添加失败");
+            return JSON.toJSONString (map);
+        }
+    }
+
+    @RequestMapping("/delete")
+    @RequiresRoles("admin_sys")
+    @RequiresPermissions(value={"sys:user:query"})
+    public String  delete(@RequestBody String ids){
+        int result = sysUserService.delete(ids.replaceAll("\"", ""));
         if(result>0) {
             return JSON.toJSONString ("true");
         }else{

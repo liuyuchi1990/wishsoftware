@@ -8,6 +8,7 @@ import com.goku.coreui.sys.mapper.ext.SysUserExtMapper;
 import com.goku.coreui.sys.mapper.ext.SysUserRoleExtMapper;
 import com.goku.coreui.sys.model.*;
 import com.goku.coreui.sys.service.SysUserService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -108,15 +109,28 @@ public class SysUserServiceImpl implements SysUserService {
     public int insert(SysUser sysUser) {
         String id = UUID.randomUUID().toString().replaceAll("-", "");
         sysUser.setId(id);
+        if(StringUtils.isEmpty(sysUser.getOpenId())){
+            sysUser.setPassword(new Md5Hash(sysUser.getPassword(), "2").toString());
+        }
+
         return sysUserMapper.insert(sysUser);
     }
 
     @Override
     public int edit(SysUser user) {
-        SysUser u = this.selectByPrimaryKey(user.getId());
-        if(!u.getPassword().equals(user.getPassword())){
-            user.setPassword(new Md5Hash(user.getPassword(), "2").toString());
+        if(user.getOpenId() != null && user.getOpenId() != ""){
+            SysUser u = this.selectByPrimaryKey(user.getId());
+            if(!u.getPassword().equals(user.getPassword())){
+                user.setPassword(new Md5Hash(user.getPassword(), "2").toString());
+            }
         }
+
         return sysUserMapper.updateByPrimaryKeySelective(user);
+    }
+
+    @Override
+    public int delete(String ids) {
+        String[] idArr = ids.split(",");
+        return sysUserMapper.delete(idArr);
     }
 }

@@ -20,4 +20,5 @@ public interface SysUserService {
 
     int insert(SysUser sysUser);
     int edit(SysUser user);
+    int delete(String ids);
 }
