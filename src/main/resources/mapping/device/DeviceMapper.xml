@@ -236,7 +236,7 @@ VALUES
 		t.cargo_lane_18,
 		t.cargo_lane_19,
 		t.cargo_lane_20,
-		t.create_time,s.username user_name
+		t.create_time,s.username update_user
         from tb_device t
         left join sys_user s on t.update_user_id = s.id
         <where>

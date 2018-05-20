@@ -22,6 +22,7 @@ public class DeviceService {
 
     public int insert(Device device) {
         device.setDevice_id(UUID.randomUUID().toString().replaceAll("-", ""));
+        device.setDevice_status("1");
         Arrays.asList(device.getClass().getDeclaredFields()).forEach(f -> {
             if (f.getName().contains("cargo_lane_")) {
                 f.setAccessible(true);

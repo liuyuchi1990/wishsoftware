@@ -32,6 +32,7 @@ public class Device {
     private Integer cargo_lane_19;
     private Integer cargo_lane_20;
     private String create_time;
+    private String update_user;
     private String update_time;
     private String update_user_id;
 
@@ -251,4 +252,11 @@ public class Device {
         this.update_user_id = update_user_id;
     }
 
+    public String getUpdate_user() {
+        return update_user;
+    }
+
+    public void setUpdate_user(String update_user) {
+        this.update_user = update_user;
+    }
 }
