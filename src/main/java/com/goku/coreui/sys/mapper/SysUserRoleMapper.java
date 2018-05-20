@@ -50,4 +50,6 @@ public interface SysUserRoleMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(SysUserRole record);
+
+    int updateRoleIdByUserId(SysUserRole record);
 }

@@ -46,7 +46,7 @@
                             </div>
                             <div class="layui-form-item" style="margin-left:30px">
                                 <div class="layui-input-block">
-                                    <button type="reset" class="layui-btn" lay-submit=""  id="save" lay-filter="save">立即提交</button>
+                                    <button type="button" class="layui-btn" lay-submit=""  id="save" lay-filter="save">立即提交</button>
                                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                                 </div>
                             </div>
@@ -83,6 +83,10 @@
         form.on('submit(save)',function(data){
             var from= $("#prizeform");
             var model= serializeObject(from);
+
+            if(model.send_address.length > 100){
+                return layer.alert("收获地址输入过长", {icon: 2});
+            }
 
             var url = [[${prize.prize_id}]] ? 'api/prize/edit' : 'api/prize/save';
             postJSON(url,model).catch(error => {})

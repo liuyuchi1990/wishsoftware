@@ -2,7 +2,9 @@ package com.goku.coreui.sys.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.goku.coreui.sys.mapper.SysUserInfoMapper;
 import com.goku.coreui.sys.mapper.SysUserMapper;
+import com.goku.coreui.sys.mapper.SysUserRoleMapper;
 import com.goku.coreui.sys.mapper.ext.SysUserAuthExtMapper;
 import com.goku.coreui.sys.mapper.ext.SysUserExtMapper;
 import com.goku.coreui.sys.mapper.ext.SysUserRoleExtMapper;
@@ -32,7 +34,16 @@ public class SysUserServiceImpl implements SysUserService {
     SysUserRoleExtMapper sysUserRoleExtMapper;
 
     @Autowired
+    SysUserRoleMapper sysUserRoleMapper;
+
+    @Autowired
+    SysUserInfoMapper sysUserInfoMapper;
+
+
+    @Autowired
     SysUserMapper sysUserMapper;
+
+    String ROLE_ADMIN_ID = "28c3ef4eefb111e7a2360a0027000038";
 
     @Override
     public PageInfo getUserForPaging(String username, String name, String orderFiled, String orderSort, int pageindex, int pagenum) {
@@ -111,21 +122,40 @@ public class SysUserServiceImpl implements SysUserService {
         sysUser.setId(id);
         if(StringUtils.isEmpty(sysUser.getOpenId())){
             sysUser.setPassword(new Md5Hash(sysUser.getPassword(), "2").toString());
+            sysUser.setIsAdmin(sysUser.getRoleId().equals(ROLE_ADMIN_ID) ? "1" : "0");
+
+            SysUserRole sysUserRole = new SysUserRole();
+            sysUserRole.setId(UUID.randomUUID().toString().replaceAll("-", ""));
+            sysUserRole.setUserId(id);
+            sysUserRole.setRoleId(sysUser.getRoleId());
+            sysUserRoleMapper.insert(sysUserRole);
+
+            SysUserInfo sysUserInfo = new SysUserInfo();
+            sysUserInfo.setId(UUID.randomUUID().toString().replaceAll("-", ""));
+            sysUserInfo.setUserId(id);
+            sysUserInfo.setHomepage("28c3ef4eefb111e7a2360a0027000038");
+            sysUserInfoMapper.insert(sysUserInfo);
         }
 
         return sysUserMapper.insert(sysUser);
     }
 
     @Override
-    public int edit(SysUser user) {
-        if(user.getOpenId() != null && user.getOpenId() != ""){
-            SysUser u = this.selectByPrimaryKey(user.getId());
-            if(!u.getPassword().equals(user.getPassword())){
-                user.setPassword(new Md5Hash(user.getPassword(), "2").toString());
+    public int edit(SysUser sysUser) {
+        if(StringUtils.isEmpty(sysUser.getOpenId())){
+            SysUser u = this.selectByPrimaryKey(sysUser.getId());
+            if(!u.getPassword().equals(sysUser.getPassword())){
+                sysUser.setPassword(new Md5Hash(sysUser.getPassword(), "2").toString());
+                sysUser.setIsAdmin(sysUser.getRoleId().equals(ROLE_ADMIN_ID) ? "1" : "0");
             }
+
+            SysUserRole sysUserRole = new SysUserRole();
+            sysUserRole.setUserId(sysUser.getId());
+            sysUserRole.setRoleId(sysUser.getRoleId());
+            sysUserRoleMapper.updateRoleIdByUserId(sysUserRole);
         }
 
-        return sysUserMapper.updateByPrimaryKeySelective(user);
+        return sysUserMapper.updateByPrimaryKeySelective(sysUser);
     }
 
     @Override

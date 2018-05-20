@@ -1,7 +1,9 @@
 package com.goku.coreui.sys.controller.sysuser.impl;
 
 import com.goku.coreui.sys.controller.sysuser.UserController;
+import com.goku.coreui.sys.model.SysRole;
 import com.goku.coreui.sys.model.SysUser;
+import com.goku.coreui.sys.service.SysRoleService;
 import com.goku.coreui.sys.service.SysUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.websocket.server.PathParam;
+import java.util.List;
 
 /**
  * Created by nbfujx on 2017/12/25.
@@ -20,6 +23,9 @@ public class UserControllerImpl implements UserController {
 
     @Autowired
     SysUserService sysUserService;
+
+    @Autowired
+    SysRoleService sysRoleService;
 
     @Override
     @RequestMapping("/getListPage")
@@ -35,6 +41,8 @@ public class UserControllerImpl implements UserController {
         model.addAttribute("pageTitle","用户新增");
         SysUser sysUser = new SysUser();
         model.addAttribute("sysUser",sysUser);
+        List<SysRole> sysRoles = sysRoleService.getRoleForPaging();
+        model.addAttribute("sysRoles",sysRoles);
         return  "sys/user/edit";
     }
 
@@ -45,6 +53,8 @@ public class UserControllerImpl implements UserController {
         model.addAttribute("pageTitle","用户修改");
         SysUser sysUser=sysUserService.selectByPrimaryKey(userId);
         model.addAttribute("sysUser",sysUser);
+        List<SysRole> sysRoles = sysRoleService.getRoleForPaging();
+        model.addAttribute("sysRoles",sysRoles);
         return  "sys/user/edit";
     }
 

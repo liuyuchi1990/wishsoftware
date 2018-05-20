@@ -1,0 +1,10 @@
+html,body{
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-color: #242645;
+    color: #fff;
+    height: 99%;
+    font-family: 'Source Sans Pro';
+    background-size: 100%;
+    background-image: url(../img/Starry.jpg);
+}

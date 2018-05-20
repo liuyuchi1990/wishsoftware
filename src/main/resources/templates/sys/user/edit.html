@@ -18,19 +18,21 @@
                                 <label class="layui-form-label">用户名</label>
                                 <div class="layui-input-block col-md-4">
                                     <input type="text" name="username" autocomplete="off" placeholder="用户名" class="layui-input" th:field="${sysUser.username}"
-                                        th:disabled="${sysUser.id != null}"></input>
+                                        maxlength="25" th:disabled="${sysUser.id != null}" ></input>
                                 </div>
 
                                 <label class="layui-form-label">姓名</label>
                                 <div class="layui-input-block col-md-4">
-                                    <input type="text" name="name" autocomplete="off" placeholder="姓名" class="layui-input" th:field="${sysUser.name}"></input>
+                                    <input type="text" name="name" autocomplete="off" placeholder="姓名" class="layui-input" th:field="${sysUser.name}"
+                                           maxlength="25"></input>
                                 </div>
                             </div>
 
                             <div class="layui-form-item row">
                                 <label class="layui-form-label">密码</label>
                                 <div class="layui-input-block col-md-4">
-                                    <input type="password" name="password" autocomplete="off" placeholder="密码" class="layui-input" th:field="${sysUser.password}"></input>
+                                    <input type="password" name="password" autocomplete="off" placeholder="密码"
+                                           maxlength="20" class="layui-input" th:field="${sysUser.password}"></input>
                                 </div>
 
                                 <label class="layui-form-label">性别</label>
@@ -43,13 +45,18 @@
                             </div>
 
                             <div class="layui-form-item row">
-                                <label class="layui-form-label">管理员</label>
+                                <label class="layui-form-label">角色</label>
                                 <div class="layui-input-block col-md-4">
-                                    <select name="isAdmin" lay-verify="required">
-                                        <option value="0" th:selected="${sysUser.isAdmin == '1'}">否</option>
-                                        <option value="1" th:selected="${sysUser.isAdmin == '1'}">是</option>
+                                    <select name="roleId" lay-verify="required" >
+                                        <option th:each="role ,roleStat: ${sysRoles}"
+                                                th:value="${role.id}"
+                                                th:selected="${sysUser.roleId == role.id}"
+                                                th:text="${role.name}"
+                                                >
+                                        </option>
                                     </select>
                                 </div>
+
 
                                 <label class="layui-form-label">联系方式</label>
                                 <div class="layui-input-block col-md-4">
@@ -59,8 +66,8 @@
 
                             <div class="layui-form-item" style="margin-left:30px">
                                 <div class="layui-input-block">
-                                    <button type="reset" class="layui-btn" lay-submit=""  id="save" lay-filter="save">立即提交</button>
-                                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                    <button type="button" class="layui-btn" lay-submit=""  id="save" lay-filter="save">立即提交</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary" onclick="rt()">重置</button>
                                 </div>
                             </div>
                         </form>
@@ -86,10 +93,23 @@
 
         form.render();
 
-
         form.on('submit(save)',function(data){
             var from= $("#userform");
             var model= serializeObject(from);
+
+            if(!model.username){
+                layer.alert("用户名不能为空", {icon: 2});
+                return false;
+            }else if(!model.password){
+                layer.alert("密码不能为空", {icon: 2});
+                return false;
+            }else if(!model.sex){
+                return layer.alert("性别不能为空", {icon: 2});
+            }else if(!model.roleId){
+                return layer.alert("角色不能为空", {icon: 2});
+            }else if(!/^[1][3,4,5,7,8][0-9]{9}$/.test(model.mobile || "13111111111")){
+                return layer.alert("联系方式格式不正确", {icon: 2});
+            }
 
             var url = [[${sysUser.id}]] ? 'api/sys/user/edit' : 'api/sys/user/add';
             postJSON(url,model).catch(error => {})
@@ -119,13 +139,17 @@
 
     var id = [[${sysUser.id}]],
         password = [[${sysUser.password}]];
-    setTimeout(function(){
-        if(!id){
-            $("input").val("");
-        }else{
-            $("input[name=password]").val(password);
-        }
-    },500)
+    function rt(){
+        setTimeout(function(){
+            if(!id){
+                $("input").val("");
+            }else{
+                $("input[name=password]").val(password);
+            }
+        },500)
+    }
+
+    rt();
 
 </script>
 <!--模板 js start-->

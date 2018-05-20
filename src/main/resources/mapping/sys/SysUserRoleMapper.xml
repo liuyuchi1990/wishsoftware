@@ -100,4 +100,10 @@
       role_id = #{roleId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+  <update id="updateRoleIdByUserId" parameterType="com.goku.coreui.sys.model.SysUserRole">
+      update sys_user_role
+      set role_id = #{roleId,jdbcType=VARCHAR}
+      where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
 </mapper>

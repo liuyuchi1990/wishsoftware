@@ -137,6 +137,9 @@ public class SysUser {
     //纬度
     private String latitude;
 
+    //角色Id
+    private String roleId;
+
     private List<SysRole> sysRoleList;
 
     public List<SysRole> getSysRoleList() {
@@ -509,5 +512,13 @@ public class SysUser {
 
     public void setLatitude(String latitude) {
         this.latitude = latitude;
+    }
+
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
     }
 }
