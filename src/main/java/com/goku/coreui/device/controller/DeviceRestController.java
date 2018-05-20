@@ -3,11 +3,14 @@ package com.goku.coreui.device.controller;
 import com.alibaba.fastjson.JSON;
 import com.goku.coreui.device.model.Device;
 import com.goku.coreui.device.service.DeviceService;
+import com.goku.coreui.sys.model.SysUser;
 import com.goku.coreui.sys.model.ext.Breadcrumb;
 import com.goku.coreui.sys.model.ext.TablePage;
 import com.goku.coreui.sys.util.BreadcrumbUtil;
 import com.goku.coreui.sys.util.DateUtil;
 import com.goku.coreui.sys.util.PageUtil;
+import com.goku.coreui.sys.util.SessionUtil;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -79,6 +82,8 @@ public class DeviceRestController {
     @RequestMapping("/edit")
     @RequiresPermissions(value={"device:query"})
     public String  edit(@RequestBody Device device){
+        SysUser user = (SysUser)SessionUtil.getSessionAttribute("USERVO");
+        device.setUpdate_user_id(user.getId());
         int result = deviceService.edit(device);
         if(result>0) {
             return JSON.toJSONString ("true");

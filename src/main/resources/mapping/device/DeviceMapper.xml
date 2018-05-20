@@ -204,7 +204,7 @@ VALUES
 		cargo_lane_19,
 		cargo_lane_20,
 		create_time,
-		user_name
+		username
         from tb_device t
         left join sys_user s on s.id = t.update_user_id
         where device_id = #{device_id,jdbcType=VARCHAR}

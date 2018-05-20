@@ -33,7 +33,7 @@ public class DeviceService {
                 }
             }
         });
-        //device.setUpdate_user_id();
+        //device.setUpdate_user_id(currentUserId);
         return deviceMapper.insert(device);
     }
 

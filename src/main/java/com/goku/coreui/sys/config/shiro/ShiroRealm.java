@@ -5,6 +5,7 @@ import com.goku.coreui.sys.mapper.ext.SysUserExtMapper;
 import com.goku.coreui.sys.model.SysMenu;
 import com.goku.coreui.sys.model.SysRole;
 import com.goku.coreui.sys.model.SysUser;
+import com.goku.coreui.sys.util.SessionUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -58,6 +59,7 @@ public class ShiroRealm extends AuthorizingRealm {
             //设置用户session
             Session session = SecurityUtils.getSubject().getSession();
             session.setAttribute(userName, user);
+            SessionUtil.setSessionAttribute("USERVO",user);
             return new SimpleAuthenticationInfo(userName,user.getPassword(),getName());
         } else {
             return null;
