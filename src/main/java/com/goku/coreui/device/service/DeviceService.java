@@ -2,9 +2,11 @@ package com.goku.coreui.device.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.goku.coreui.common.QRCodeUtils;
 import com.goku.coreui.device.mapper.DeviceMapper;
 import com.goku.coreui.device.model.Device;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -20,6 +22,12 @@ public class DeviceService {
     @Autowired
     DeviceMapper deviceMapper;
 
+    @Value("${root.img.path.qr}")
+    String qrPath;
+
+    @Value("${root.rq.url}")
+    String qrUrl;
+
     public int insert(Device device) {
         device.setDevice_id(UUID.randomUUID().toString().replaceAll("-", ""));
         device.setDevice_status("1");
@@ -34,7 +42,8 @@ public class DeviceService {
                 }
             }
         });
-        //device.setUpdate_user_id(currentUserId);
+        String url = qrUrl.replace("{deviceId}",device.getDevice_id()).replace("{deviceAddress}",device.getDevice_address());
+        QRCodeUtils.createQRCode(url,qrPath + device.getDevice_id() + ".png");
         return deviceMapper.insert(device);
     }
 
