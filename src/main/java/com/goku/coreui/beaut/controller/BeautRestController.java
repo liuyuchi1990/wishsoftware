@@ -3,24 +3,21 @@ package com.goku.coreui.beaut.controller;
 import com.alibaba.fastjson.JSON;
 import com.goku.coreui.beaut.model.Beaut;
 import com.goku.coreui.beaut.service.BeautService;
-import com.goku.coreui.prize.model.Prize;
-import com.goku.coreui.prize.service.PrizeService;
-import com.goku.coreui.sys.model.SysMenu;
+import com.goku.coreui.sys.model.ReturnResult;
 import com.goku.coreui.sys.model.ext.Breadcrumb;
 import com.goku.coreui.sys.model.ext.TablePage;
 import com.goku.coreui.sys.util.BreadcrumbUtil;
 import com.goku.coreui.sys.util.DateUtil;
 import com.goku.coreui.sys.util.PageUtil;
+import io.swagger.annotations.*;
 import org.apache.commons.collections.map.HashedMap;
-import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -28,6 +25,7 @@ import java.util.UUID;
 /**
  * Created by liwenlong on 2018/5/15.
  */
+@Api(value = "Beaut")
 @RestController
 @RequestMapping("/api/beaut")
 public class BeautRestController {
@@ -51,7 +49,6 @@ public class BeautRestController {
     }
 
     @RequestMapping("/queryPage")
-    @RequiresPermissions(value={"beaut:query"})
     public String  queryPage(
             @RequestParam(required=false) String user_name,
             @RequestParam(required=false) String begindate,
@@ -83,6 +80,13 @@ public class BeautRestController {
         }
     }
 
+
+    @ApiOperation(value = "获取img信息", response = ReturnResult.class)
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(paramType = "pageNumber", name = "pageNumber", dataType = "Integer", required = true, value = "文件名"),
+            @ApiImplicitParam(paramType = "pageSize", name = "pageSize", dataType = "Integer", required = true, value = "客户代码")})
+    @ApiResponses({@ApiResponse(code = 0, message = "success"),
+            @ApiResponse(code = 0, message = "get label info exception.")})
     @RequestMapping(value = "/queryPageList/{pageNumber}/{pageSize}", method = RequestMethod.POST)
     public String queryPageList(@PathVariable("pageNumber") Integer pageNumber,@PathVariable("pageSize") Integer pageSize){
         TablePage tp = pageUtil.getDataForPaging(beautService.queryPage(null,null,null,pageNumber,pageSize));

@@ -1,10 +1,12 @@
 package com.goku.coreui.order.mapper;
 
 import com.goku.coreui.order.model.Order;
+import com.goku.coreui.order.model.OrderInfo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by richard on 2018/5/14.
@@ -12,11 +14,13 @@ import java.util.List;
 public interface OrderMapper {
     int insert(Order order);
 
-    int edit(Order order);
+    int edit(OrderInfo orderInfo);
 
     int delete(String[] ids);
 
     Order queryById(@Param("order_id") String order_id);
+
+    Map<String, Object> queryByDeviceId(String device_id);
 
     List<Order> queryPage(@Param("user_name") String user_name, @Param("begindate") Date begindate, @Param("enddate") Date enddate, @Param("order_status") String order_status);
 }

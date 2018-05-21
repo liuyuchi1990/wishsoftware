@@ -15,7 +15,7 @@
     </insert>
 
 
-    <update id="edit" parameterType="com.goku.coreui.order.model.Order">
+    <update id="edit" parameterType="com.goku.coreui.order.model.OrderInfo">
         update tb_order
         <set>
             <if test="order_status != null">
@@ -39,6 +39,13 @@
         from tb_order t
         left join sys_user s on t.user_id = s.id
         where t.order_id = #{order_id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryByDeviceId" parameterType="java.lang.String" resultType="java.util.Map">
+select   t.order_id,t.cargo_lane
+from tb_order t
+where device_id=#{device_id,jdbcType=VARCHAR} and order_status = '3'
+order by t.create_time LIMIT 1
     </select>
 
     <select id="queryPage" resultType="com.goku.coreui.order.model.Order">

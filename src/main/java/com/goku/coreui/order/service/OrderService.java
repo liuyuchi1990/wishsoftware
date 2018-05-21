@@ -4,12 +4,14 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.goku.coreui.order.mapper.OrderMapper;
 import com.goku.coreui.order.model.Order;
+import com.goku.coreui.order.model.OrderInfo;
 import com.goku.coreui.prize.model.Prize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -25,8 +27,8 @@ public class OrderService {
         return orderMapper.insert(order);
     }
 
-    public int edit(Order order){
-        return orderMapper.edit(order);
+    public int edit(OrderInfo orderInfo){
+        return orderMapper.edit(orderInfo);
     }
 
     public int delete(String ids){
@@ -35,6 +37,10 @@ public class OrderService {
 
     public Order queryById(String order_id){
         return orderMapper.queryById(order_id);
+    }
+
+    public Map<String, Object> queryByDeviceId(String device_id){
+        return orderMapper.queryByDeviceId(device_id);
     }
 
     public PageInfo queryPage(String user_name, Date begindate, Date enddate, String order_status, int pageindex, int pagenum){

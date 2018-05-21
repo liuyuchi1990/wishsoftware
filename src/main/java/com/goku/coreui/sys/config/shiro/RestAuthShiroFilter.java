@@ -25,21 +25,22 @@ public class RestAuthShiroFilter extends AuthorizationFilter {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
         Subject subject = getSubject(servletRequest, servletResponse);
-            if(subject.getPrincipal() == null) {
-                PrintWriter out = null;
-                try{
-                    out = httpResponse.getWriter();
-                    out.append(JSON.toJSONString (401));
-                }catch(IOException e){
-                    e.printStackTrace();
-                }finally {
-                    if (out != null) {
-                        out.close();
-                    }
-                }
-                return false;
-            } else {
-                return true;
-            }
+//            if(subject.getPrincipal() == null) {
+//                PrintWriter out = null;
+//                try{
+//                    out = httpResponse.getWriter();
+//                    out.append(JSON.toJSONString (401));
+//                }catch(IOException e){
+//                    e.printStackTrace();
+//                }finally {
+//                    if (out != null) {
+//                        out.close();
+//                    }
+//                }
+//                return false;
+//            } else {
+//                return true;
+//            }
+        return true;
     }
 }
