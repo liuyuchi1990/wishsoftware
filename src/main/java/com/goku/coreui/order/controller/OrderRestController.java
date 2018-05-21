@@ -71,14 +71,22 @@ public class OrderRestController {
     }
 
 
-    @RequestMapping("/save")
-    public String save(@RequestBody Order order) {
-        int result = orderService.insert(order);
-        if (result > 0) {
-            return JSON.toJSONString("true");
+    @RequestMapping(value = "/save" , method = RequestMethod.POST)
+    public ReturnResult save(@RequestBody Order order) {
+        ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
+        Map<String, Object> map = new HashMap<>();
+        order.setOrder_status("1");
+        int rs = orderService.insert(order);
+        if (rs > 0) {
+            map.put("status","成功");
+            result.setResult(map);
         } else {
-            return JSON.toJSONString("false");
+            result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
+            result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
+            map.put("status","失败");
+            result.setResult(map);
         }
+        return result;
     }
 
     @RequestMapping("/delete")
@@ -117,6 +125,24 @@ public class OrderRestController {
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
         Map<String, Object> map = new HashMap<>();
         orderInfo.setOrder_status("4");
+        int rs = orderService.edit(orderInfo);
+        if(rs>0){
+            map.put("status","成功");
+            result.setResult(map);
+        }else{
+            result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
+            result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
+            map.put("status","失败");
+            result.setResult(map);
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/getOrderPay", method = RequestMethod.POST)
+    public ReturnResult getOrderPay(   @RequestParam(required = true) OrderInfo orderInfo) {
+        ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
+        Map<String, Object> map = new HashMap<>();
+        orderInfo.setOrder_status("3");
         int rs = orderService.edit(orderInfo);
         if(rs>0){
             map.put("status","成功");
