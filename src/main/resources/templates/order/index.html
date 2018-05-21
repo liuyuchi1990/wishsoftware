@@ -74,7 +74,7 @@
                 {field:'device_name', title: '货架名'},
                 {field:'device_address', title: '货架地址'},
                 {field:'cargo_lane', title: '货道组'},
-                {field:'create_time', title: '订单创建时间'},
+                {field:'create_time_str', title: '订单创建时间'},
                 {field:'order_status', title: '订单状态', templet: '#statusTpl'}
             ]],
             request: {
@@ -162,7 +162,7 @@
 </script>
 <!--模板 js start-->
 <script type="text/html" id="statusTpl">
-    {{#  if(d.order_status === 1){ }}
+    {{#  if(d.order_status === '1'){ }}
     <span style="color: #F581B1;">成功</span>
     {{#  } else { }}
     <span style="color:#8DB6CD;">失败</span>

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.goku.coreui.device.model.Device;
 import com.goku.coreui.device.service.DeviceService;
 import com.goku.coreui.sys.model.SysUser;
+import com.goku.coreui.sys.model.WarnInfo;
 import com.goku.coreui.sys.model.ext.Breadcrumb;
 import com.goku.coreui.sys.model.ext.TablePage;
 import com.goku.coreui.sys.util.BreadcrumbUtil;
@@ -96,6 +97,21 @@ public class DeviceRestController {
     @RequiresPermissions(value={"device:query"})
     public String  delete(@RequestBody String ids){
         int result = deviceService.delete(ids.replaceAll("\"", ""));
+        if(result>0) {
+            return JSON.toJSONString ("true");
+        }else{
+            return JSON.toJSONString ("false");
+        }
+    }
+
+    /**
+     * 预警接口
+     * @param warninfo
+     * @return
+     */
+    @RequestMapping("/getWarningInfo")
+    public String  getWarningInfo(@RequestBody WarnInfo warninfo){
+        int result = deviceService.editDeviceStatus(warninfo);
         if(result>0) {
             return JSON.toJSONString ("true");
         }else{

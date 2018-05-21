@@ -1,5 +1,6 @@
 package com.goku.coreui.order.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -12,12 +13,18 @@ public class Order {
     //机器id
     private String device_id;
 
+    private String device_name;
+
+    private String device_address;
+
     //货道集 1,2,3,4,5
-    private Date cargo_lane;
+    private String cargo_lane;
 
     private String user_id;
 
-    private Integer create_time;
+    private String user_name;
+
+    private Date create_time;
 
     // null 未处理， 1 成功 2失败
     private String order_status;
@@ -38,27 +45,51 @@ public class Order {
         this.device_id = device_id;
     }
 
-    public Date getCargo_lane() {
+    public String getCargo_lane() {
         return cargo_lane;
     }
 
-    public void setCargo_lane(Date cargo_lane) {
+    public void setCargo_lane(String cargo_lane) {
         this.cargo_lane = cargo_lane;
     }
 
     public String getUser_id() {
-        return user_id;
+        return user_name;
     }
 
     public void setUser_id(String user_id) {
-        this.user_id = user_id;
+        this.user_name = user_id;
     }
 
-    public Integer getCreate_time() {
+    public String getDevice_name() {
+        return device_name;
+    }
+
+    public void setDevice_name(String device_name) {
+        this.device_name = device_name;
+    }
+
+    public String getDevice_address() {
+        return device_address;
+    }
+
+    public void setDevice_address(String device_address) {
+        this.device_address = device_address;
+    }
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
+    }
+
+    public Date getCreate_time() {
         return create_time;
     }
 
-    public void setCreate_time(Integer create_time) {
+    public void setCreate_time(Date create_time) {
         this.create_time = create_time;
     }
 
@@ -68,5 +99,13 @@ public class Order {
 
     public void setOrder_status(String order_status) {
         this.order_status = order_status;
+    }
+
+    public String getCreate_time_str(){
+        if(this.create_time == null)
+            return null;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(this.create_time);
     }
 }

@@ -5,6 +5,8 @@ import com.github.pagehelper.PageInfo;
 import com.goku.coreui.common.QRCodeUtils;
 import com.goku.coreui.device.mapper.DeviceMapper;
 import com.goku.coreui.device.model.Device;
+import com.goku.coreui.sys.model.WarnInfo;
+import com.goku.coreui.sys.util.WxUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -43,12 +45,17 @@ public class DeviceService {
             }
         });
         String url = qrUrl.replace("{deviceId}",device.getDevice_id()).replace("{deviceAddress}",device.getDevice_address());
-        QRCodeUtils.createQRCode(url,qrPath + device.getDevice_id() + ".png");
+        String accessToken = WxUtil.getWxAccessToken();
+        QRCodeUtils.getminiqrQr(accessToken,qrPath + device.getDevice_id() + ".png",url);
         return deviceMapper.insert(device);
     }
 
     public int edit(Device device) {
         return deviceMapper.edit(device);
+    }
+
+    public int editDeviceStatus(WarnInfo warninfo) {
+        return deviceMapper.editDeviceStatus(warninfo);
     }
 
     public int delete(String ids) {

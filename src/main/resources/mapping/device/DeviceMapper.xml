@@ -61,11 +61,11 @@ VALUES
     </insert>
 
 
-    <update id="editDeviceStatus" parameterType="com.goku.coreui.device.model.Device">
+    <update id="editDeviceStatus" parameterType="com.goku.coreui.sys.model.WarnInfo">
         update tb_device
         <set>
-            <if test="device_status != null">
-                device_status = #{device_status,jdbcType=VARCHAR},
+            <if test="warnCode != null">
+                device_status = #{warnCode,jdbcType=VARCHAR},
             </if>
         </set>
         where device_id = #{device_id,jdbcType=VARCHAR}

@@ -1,6 +1,7 @@
 package com.goku.coreui.device.mapper;
 
 import com.goku.coreui.device.model.Device;
+import com.goku.coreui.sys.model.WarnInfo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -13,6 +14,8 @@ public interface DeviceMapper {
     int insert(Device device);
 
     int edit(Device device);
+
+    int editDeviceStatus(WarnInfo warninfo);
 
     int delete(String[] ids);
 

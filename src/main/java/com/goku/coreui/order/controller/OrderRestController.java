@@ -94,4 +94,11 @@ public class OrderRestController {
             return JSON.toJSONString ("false");
         }
     }
+
+    @RequestMapping("/getAllOrder")
+    public String getAllOrder() {
+        List<Breadcrumb> Breadcrumbs= breadcrumbUtil.getBreadcrumbPath("order/getListPage");
+        return JSON.toJSONString(Breadcrumbs);
+    }
+
 }

@@ -6,6 +6,7 @@ import com.goku.coreui.common.QRCodeUtils;
 import com.goku.coreui.prize.mapper.PrizeMapper;
 import com.goku.coreui.prize.model.Prize;
 import com.goku.coreui.sys.model.SysLog;
+import com.goku.coreui.sys.util.WxUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,8 +36,8 @@ public class PrizeService {
         prize.setPrize_id(id);
 
         String url = qrUrl.replace("{prizeId}",id);
-
-        QRCodeUtils.createQRCode(url,qrPath + id + ".png");
+        String accessToken = WxUtil.getWxAccessToken();
+        QRCodeUtils.getminiqrQr(accessToken,qrPath + id + ".png",url);
         return prizeMapper.insert(prize);
     }
 
