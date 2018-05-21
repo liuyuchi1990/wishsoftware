@@ -118,7 +118,7 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     public int insert(SysUser sysUser) {
-        String id = UUID.randomUUID().toString().replaceAll("-", "");
+        String id = StringUtils.isEmpty(sysUser.getId())?UUID.randomUUID().toString().replaceAll("-", ""):sysUser.getId();
         sysUser.setId(id);
         if(StringUtils.isEmpty(sysUser.getOpenId())){
             sysUser.setPassword(new Md5Hash(sysUser.getPassword(), "2").toString());

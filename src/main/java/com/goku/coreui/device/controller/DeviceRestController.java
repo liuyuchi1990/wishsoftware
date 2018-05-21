@@ -3,6 +3,8 @@ package com.goku.coreui.device.controller;
 import com.alibaba.fastjson.JSON;
 import com.goku.coreui.device.model.Device;
 import com.goku.coreui.device.service.DeviceService;
+import com.goku.coreui.sys.model.ReturnCodeEnum;
+import com.goku.coreui.sys.model.ReturnResult;
 import com.goku.coreui.sys.model.SysUser;
 import com.goku.coreui.sys.model.WarnInfo;
 import com.goku.coreui.sys.model.ext.Breadcrumb;
@@ -16,7 +18,9 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -107,13 +111,19 @@ public class DeviceRestController {
      * @return
      */
     @RequestMapping(value = "/getWarningInfo", method = RequestMethod.POST)
-    public String  getWarningInfo(@RequestBody WarnInfo warninfo){
-        int result = deviceService.editDeviceStatus(warninfo);
-        if(result>0) {
-            return JSON.toJSONString ("true");
+    public ReturnResult getWarningInfo(@RequestBody WarnInfo warninfo){
+        ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
+        int rs = deviceService.editDeviceStatus(warninfo);
+        Map<String, Object> map = new HashMap<>();
+        if(rs>0) {
+            map.put("status","成功");
+            result.setResult(map);
         }else{
-            return JSON.toJSONString ("false");
+            result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
+            result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
+            map.put("status","失败");
+            result.setResult(map);
         }
+        return result;
     }
-
 }
