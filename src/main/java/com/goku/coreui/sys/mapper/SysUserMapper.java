@@ -54,4 +54,6 @@ public interface SysUserMapper {
 
 
     int delete(String[] ids);
+
+    int  queryByOpenId(String openId);
 }

@@ -16,6 +16,27 @@ target/*
 .classpath
 .settings
 .factorypath
-org.eclipse.*
 .project
-/pom.xml
+
+
+# Maven
+target/
+
+# Eclipse
+.classpath
+.project
+.externalToolBuilders/
+.metadata
+.settings
+
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+*.log
+.idea/
+out/
+
+# Mac
+.DS_Store
+/test-output/

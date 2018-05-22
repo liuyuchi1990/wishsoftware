@@ -163,4 +163,9 @@ public class SysUserServiceImpl implements SysUserService {
         String[] idArr = ids.split(",");
         return sysUserMapper.delete(idArr);
     }
+
+    @Override
+    public int queryByOpenId(String openId) {
+        return sysUserMapper.queryByOpenId(openId);
+    }
 }

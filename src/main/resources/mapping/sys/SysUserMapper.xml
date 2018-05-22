@@ -65,6 +65,10 @@
   </delete>
 
 
+  <select id="queryByOpenId" parameterType = "string" resultType="java.lang.Integer">
+        select count(1) from sys_user where open_id = #{openId,jdbcType=VARCHAR}
+  </select>
+
 
   <insert id="insert" parameterType="com.goku.coreui.sys.model.SysUser">
     <!--
