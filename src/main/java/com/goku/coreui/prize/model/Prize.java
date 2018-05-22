@@ -11,6 +11,9 @@ public class Prize {
 
     private String prize_id;
 
+    //奖品名称
+    private String prize_name;
+
     //发货地址
     private String send_address;
 
@@ -98,5 +101,13 @@ public class Prize {
 
     public void setUser_name(String user_name) {
         this.user_name = user_name;
+    }
+
+    public String getPrize_name() {
+        return prize_name;
+    }
+
+    public void setPrize_name(String prize_name) {
+        this.prize_name = prize_name;
     }
 }
