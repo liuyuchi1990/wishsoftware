@@ -3,6 +3,7 @@ package com.goku.coreui.device.controller;
 import com.alibaba.fastjson.JSON;
 import com.goku.coreui.device.model.Device;
 import com.goku.coreui.device.service.DeviceService;
+import com.goku.coreui.order.model.Order;
 import com.goku.coreui.sys.model.ReturnCodeEnum;
 import com.goku.coreui.sys.model.ReturnResult;
 import com.goku.coreui.sys.model.SysUser;
@@ -13,11 +14,13 @@ import com.goku.coreui.sys.util.BreadcrumbUtil;
 import com.goku.coreui.sys.util.DateUtil;
 import com.goku.coreui.sys.util.PageUtil;
 import com.goku.coreui.sys.util.SessionUtil;
+import io.swagger.annotations.ApiParam;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,6 +84,25 @@ public class DeviceRestController {
         }
     }
 
+    @RequestMapping(value = "/getDeviceById", method = RequestMethod.GET)
+    public ReturnResult getDeviceById(@RequestParam(required = true) String device_id) {
+        ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
+        Device device = deviceService.queryById(device_id);
+        Arrays.asList(device.getClass().getDeclaredFields()).forEach(f -> {
+            if (f.getName().contains("cargo_lane_")) {
+                f.setAccessible(true);
+                try {
+                    f.set(device, 5);
+                    //System.out.println("属性名:" + f.getName() + " 属性值:"+ f.get(device) );
+                }catch (IllegalAccessException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+        //result.setResult(map);
+        return result;
+    }
+
     @RequestMapping("/edit")
     @RequiresPermissions(value={"device:query"})
     public String  edit(@RequestBody Device device){
@@ -111,7 +133,7 @@ public class DeviceRestController {
      * @return
      */
     @RequestMapping(value = "/getWarningInfo", method = RequestMethod.POST)
-    public ReturnResult getWarningInfo(@RequestBody WarnInfo warninfo){
+    public ReturnResult getWarningInfo(@ApiParam @RequestBody WarnInfo warninfo){
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
         int rs = deviceService.editDeviceStatus(warninfo);
         Map<String, Object> map = new HashMap<>();

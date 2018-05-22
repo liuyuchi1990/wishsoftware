@@ -26,7 +26,6 @@ import java.util.UUID;
 /**
  * Created by liwenlong on 2018/5/15.
  */
-@Api(value = "Beaut")
 @RestController
 @RequestMapping("/api/beaut")
 public class BeautRestController {
@@ -82,12 +81,7 @@ public class BeautRestController {
     }
 
 
-    @ApiOperation(value = "获取img信息", response = ReturnResult.class)
-    @ApiImplicitParams(value = {
-            @ApiImplicitParam(paramType = "pageNumber", name = "pageNumber", dataType = "Integer", required = true, value = "文件名"),
-            @ApiImplicitParam(paramType = "pageSize", name = "pageSize", dataType = "Integer", required = true, value = "客户代码")})
-    @ApiResponses({@ApiResponse(code = 0, message = "success"),
-            @ApiResponse(code = 0, message = "get label info exception.")})
+
     @RequestMapping(value = "/queryPageList/{pageNumber}/{pageSize}", method = RequestMethod.POST)
     public String queryPageList(@PathVariable("pageNumber") Integer pageNumber,@PathVariable("pageSize") Integer pageSize){
         TablePage tp = pageUtil.getDataForPaging(beautService.queryPage(null,null,null,pageNumber,pageSize));

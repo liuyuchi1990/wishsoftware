@@ -93,6 +93,7 @@ public class ShiroConfig {
         filterChainDefinitionManager.put("/lib/**","anon");
         //业务操作
         filterChainDefinitionManager.put("/api/**", "anon");//"authc,perms");
+        //ilterChainDefinitionManager.put("/api/order/interface/**", "authc");//"authc,perms");
         filterChainDefinitionManager.put("/**", "authc,perms");//"authc,perms");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionManager);
 

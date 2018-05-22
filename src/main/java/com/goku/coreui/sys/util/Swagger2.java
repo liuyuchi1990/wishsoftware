@@ -26,12 +26,11 @@ public class Swagger2 {
 	public Docket createRestApi() {
 		return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select()
 				// 扫描指定目录下的api
-				.apis(RequestHandlerSelectors.basePackage("com.kpmg")).paths(PathSelectors.any()).build();
+				.apis(RequestHandlerSelectors.basePackage("com.goku.coreui")).paths(PathSelectors.any()).build();
 	}
 
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder().title("Credit Review RESTful APIs")
 				.description("Credit Review Online RESTful APIs Desgin").version("1.0").build();
 	}
-
 }
