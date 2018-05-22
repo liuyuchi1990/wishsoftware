@@ -3,6 +3,7 @@ package com.goku.coreui.beaut.controller;
 import com.alibaba.fastjson.JSON;
 import com.goku.coreui.beaut.model.Beaut;
 import com.goku.coreui.beaut.service.BeautService;
+import com.goku.coreui.sys.model.ReturnCodeEnum;
 import com.goku.coreui.sys.model.ReturnResult;
 import com.goku.coreui.sys.model.ext.Breadcrumb;
 import com.goku.coreui.sys.model.ext.TablePage;
@@ -94,23 +95,29 @@ public class BeautRestController {
     }
 
     @RequestMapping(value = "/fabulous/{id}/{type}", method = RequestMethod.POST)
-    public String fabulous1(@PathVariable("type") String type,@PathVariable("id") String id){
-        int result = beautService.setFabulous(type,id);
+    public ReturnResult fabulous1(@PathVariable("type") String type,@PathVariable("id") String id){
+        int rs = beautService.setFabulous(type,id);
+        ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
         Map<String,Object> map = new HashedMap();
-        if(result>0) {
+        if(rs>0) {
             map.put("status","success");
             map.put("msg","修改成功");
-            return JSON.toJSONString (map);
+            result.setResult(map);
+            return result;
         }else{
             map.put("status","fail");
             map.put("msg","修改失败");
-            return JSON.toJSONString (map);
+            result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
+            result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
+            result.setResult(map);
+            return result;
         }
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String add(@RequestParam("file") MultipartFile[] files,Beaut beaut){
+    public ReturnResult add(@RequestParam("file") MultipartFile[] files,Beaut beaut){
         String id = UUID.randomUUID().toString().replaceAll("-", "");
+        ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
         beaut.setImg_id(id);
         Map<String,Object> map = new HashedMap();
 
@@ -130,13 +137,17 @@ public class BeautRestController {
             }
 
             map.put("status","success");
-            map.put("msg","添加成功");
-            return JSON.toJSONString (map);
+            map.put("msg","修改成功");
+            result.setResult(map);
+            return result;
         }catch (Exception e){
             e.printStackTrace();
             map.put("status","fail");
-            map.put("msg","添加失败");
-            return JSON.toJSONString (map);
+            map.put("msg","修改失败");
+            result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
+            result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
+            result.setResult(map);
+            return result;
         }
     }
 
