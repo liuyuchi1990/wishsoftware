@@ -83,12 +83,14 @@ public class BeautRestController {
 
 
     @RequestMapping(value = "/queryPageList/{pageNumber}/{pageSize}", method = RequestMethod.POST)
+    @ResponseBody
     public String queryPageList(@PathVariable("pageNumber") Integer pageNumber,@PathVariable("pageSize") Integer pageSize){
         TablePage tp = pageUtil.getDataForPaging(beautService.queryPage(null,null,null,pageNumber,pageSize));
         return JSON.toJSONString (tp);
     }
 
     @RequestMapping(value = "/fabulous/{id}/{type}", method = RequestMethod.POST)
+    @ResponseBody
     public ReturnResult fabulous1(@PathVariable("type") String type,@PathVariable("id") String id){
         int rs = beautService.setFabulous(type,id);
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
@@ -109,6 +111,7 @@ public class BeautRestController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @ResponseBody
     public ReturnResult add(@RequestParam("file") MultipartFile[] files,Beaut beaut){
         String id = UUID.randomUUID().toString().replaceAll("-", "");
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());

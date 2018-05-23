@@ -148,17 +148,18 @@ public class UserRestControllerImpl implements UserRestController {
         }
     }
 
-    @RequestMapping(value = "/bind", method = RequestMethod.GET)
-    public String bind(@RequestBody SysUser sysUser) {
+    @RequestMapping(value = "/bind", method = RequestMethod.POST)
+    @ResponseBody
+    public String bind(SysUser sysUser) {
         Map<String,Object> map = new HashedMap();
         int result = sysUserService.insert(sysUser);
         if(result>0) {
             map.put("status","success");
-            map.put("msg","添加成功");
+            map.put("msg","绑定成功");
             return JSON.toJSONString (map);
         }else{
             map.put("status","fail");
-            map.put("msg","添加失败");
+            map.put("msg","绑定失败");
             return JSON.toJSONString (map);
         }
     }

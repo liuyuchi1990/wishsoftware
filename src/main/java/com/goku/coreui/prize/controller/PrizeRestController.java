@@ -114,13 +114,13 @@ public class PrizeRestController {
      * @return
      */
     @RequestMapping(value = "/bind", method = RequestMethod.POST)
-    public String  bind(@RequestBody Prize prize){
+    @ResponseBody
+    public String bind( Prize prize){
         prize.setSend_time(new Date());
-
         SysUser sysUser = new SysUser();
         sysUser.setId(prize.getUser_id());
         sysUser.setAddress(prize.getSend_address());
-        sysUserMapper.updateByPrimaryKey(sysUser);
+        sysUserMapper.updateByPrimaryKeySelective(sysUser);
 
         int result = prizeService.edit(prize);
         Map<String,Object> map = new HashedMap();
