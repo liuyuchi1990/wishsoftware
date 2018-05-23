@@ -31,6 +31,10 @@ public class OrderService {
         return orderMapper.edit(orderInfo);
     }
 
+    public int updateUserIntegral(OrderInfo orderInfo){
+        return orderMapper.updateUserIntegral(orderInfo);
+    }
+
     public int delete(String ids){
         return orderMapper.delete(ids.split(","));
     }

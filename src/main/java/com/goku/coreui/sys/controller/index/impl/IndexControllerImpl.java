@@ -6,10 +6,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * Created by nbfujx on 2017/12/25.
  */
+@ApiIgnore
 @Controller
 @RequestMapping("/sys")
 public class IndexControllerImpl implements IndexController {

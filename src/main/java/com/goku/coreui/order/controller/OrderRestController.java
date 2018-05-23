@@ -2,11 +2,14 @@ package com.goku.coreui.order.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.goku.coreui.device.model.DeviceInfo;
+import com.goku.coreui.order.model.Cargo;
 import com.goku.coreui.order.model.Order;
 import com.goku.coreui.order.model.OrderInfo;
 import com.goku.coreui.order.service.OrderService;
+import com.goku.coreui.sys.config.Constants;
 import com.goku.coreui.sys.model.ReturnCodeEnum;
 import com.goku.coreui.sys.model.ReturnResult;
+import com.goku.coreui.sys.model.SysUser;
 import com.goku.coreui.sys.model.ext.Breadcrumb;
 import com.goku.coreui.sys.model.ext.TablePage;
 import com.goku.coreui.sys.util.BreadcrumbUtil;
@@ -114,15 +117,32 @@ public class OrderRestController {
     public ReturnResult getOrderFeedBack(@ApiParam @RequestBody OrderInfo orderInfo) {
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
         Map<String, Object> map = new HashMap<>();
-        orderInfo.setOrder_status("4");
+        Integer  count = 0;
+        List<Cargo> CargoLst = Arrays.asList(orderInfo.getCargo_lane());
+        for(Cargo f : CargoLst){
+            if(("true".equals(f.getStatus()))){
+                count++;
+            }
+        }
+        if(count!=CargoLst.size()){
+            orderInfo.setOrder_status("2");
+        }else{
+            orderInfo.setOrder_status("4");
+        }
+        orderInfo.setIntegral(count * Constants.Integral);
         int rs = orderService.edit(orderInfo);
-        if (rs > 0) {
+        int rs2 = orderService.updateUserIntegral(orderInfo);
+        if ((rs > 0)&&( rs2>0)) {
             map.put("status", "成功");
             result.setResult(map);
         } else {
             result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
             result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
-            map.put("status", "失败");
+            if(count!=CargoLst.size()){
+                map.put("status", "掉货失败");
+            }else{
+                map.put("status", "失败");
+            }
             result.setResult(map);
         }
         return result;

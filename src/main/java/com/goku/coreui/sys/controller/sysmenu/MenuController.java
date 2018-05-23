@@ -3,12 +3,14 @@ package com.goku.coreui.sys.controller.sysmenu;
 import com.goku.coreui.sys.config.log.LoggerInfo;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestParam;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.websocket.server.PathParam;
 
 /**
  * Created by nbfujx on 2018/1/10.
  */
+@ApiIgnore
 public interface MenuController {
     @LoggerInfo(Method = "/sys/menu/getListPage",Name = "菜单列表")
     String list(String moduleId, Model model);

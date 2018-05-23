@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
 /**
  * Created by nbfujx on 2018/1/10.
  */
+@ApiIgnore
 @RestController
 @RequestMapping("/api/sys/module")
 public class ModuleRestControllerImpl implements ModuleRestController {

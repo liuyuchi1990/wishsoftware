@@ -11,4 +11,9 @@ public class Constants {
      */
     public static final String SERCRET = "ee702e5c923782990236ce7f2decdff4";
 
+    /**
+     * 微信SERCRET
+     */
+    public static final Integer Integral = 20;
+
 }

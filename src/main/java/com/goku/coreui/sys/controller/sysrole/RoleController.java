@@ -2,10 +2,12 @@ package com.goku.coreui.sys.controller.sysrole;
 
 import com.goku.coreui.sys.config.log.LoggerInfo;
 import org.springframework.ui.Model;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * Created by nbfujx on 2018/1/23.
  */
+@ApiIgnore
 public interface RoleController {
 
     @LoggerInfo(Method = "/sys/role/getListPage",Name = "权限列表")

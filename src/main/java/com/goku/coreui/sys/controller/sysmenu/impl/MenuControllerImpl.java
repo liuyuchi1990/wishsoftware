@@ -9,12 +9,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.websocket.server.PathParam;
 
 /**
  * Created by nbfujx on 2018/1/10.
  */
+@ApiIgnore
 @Controller
 @RequestMapping("/sys/menu")
 public class MenuControllerImpl implements MenuController {

@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.websocket.server.PathParam;
 
 /**
  * Created by nbfujx on 2018/1/10.
  */
+@ApiIgnore
 @Controller
 @RequestMapping("/sys/module")
 public class ModuleControllerImpl implements ModuleController {

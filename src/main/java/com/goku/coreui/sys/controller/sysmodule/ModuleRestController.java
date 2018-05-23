@@ -3,10 +3,12 @@ package com.goku.coreui.sys.controller.sysmodule;
 import com.goku.coreui.sys.config.log.LoggerInfo;
 import com.goku.coreui.sys.model.SysMenu;
 import com.goku.coreui.sys.model.SysModule;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * Created by nbfujx on 2018/1/10.
  */
+@ApiIgnore
 public interface ModuleRestController {
     @LoggerInfo(Method = "/api/sys/module/save",Name = "模块新增")
     String  save( SysModule symodule);

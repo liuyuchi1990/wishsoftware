@@ -5,9 +5,11 @@ public class OrderInfo {
 
     private String device_id;
 
-    private int[] cargo_lane;
+    private Cargo[] cargo_lane;
 
     private String order_status;
+
+    private Integer Integral;
 
     public String getOrder_id() {
         return order_id;
@@ -25,11 +27,11 @@ public class OrderInfo {
         this.device_id = device_id;
     }
 
-    public int[] getCargo_lane() {
+    public Cargo[] getCargo_lane() {
         return cargo_lane;
     }
 
-    public void setCargo_lane(int[] cargo_lane) {
+    public void setCargo_lane(Cargo[] cargo_lane) {
         this.cargo_lane = cargo_lane;
     }
 
@@ -39,5 +41,13 @@ public class OrderInfo {
 
     public void setOrder_status(String order_status) {
         this.order_status = order_status;
+    }
+
+    public Integer getIntegral() {
+        return Integral;
+    }
+
+    public void setIntegral(Integer integral) {
+        Integral = integral;
     }
 }

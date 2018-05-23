@@ -4,6 +4,7 @@ import com.goku.coreui.sys.config.log.LoggerInfo;
 import com.goku.coreui.sys.model.SysMenu;
 import com.goku.coreui.sys.model.SysRole;
 import org.springframework.web.bind.annotation.RequestBody;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import java.util.Map;
 /**
  * Created by nbfujx on 2018/1/23.
  */
+@ApiIgnore
 public interface RoleRestController {
     @LoggerInfo(Method = "/api/sys/role/save",Name = "权限新增")
     String  save( SysRole sysRole);

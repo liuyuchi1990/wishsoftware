@@ -2,10 +2,12 @@ package com.goku.coreui.sys.controller.sysmodule;
 
 import com.goku.coreui.sys.config.log.LoggerInfo;
 import org.springframework.ui.Model;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * Created by nbfujx on 2018/1/10.
  */
+@ApiIgnore
 public interface ModuleController {
     @LoggerInfo(Method = "/sys/module/getListPage",Name = "模块列表")
     String list(Model model);

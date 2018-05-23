@@ -14,6 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -22,6 +23,7 @@ import java.util.List;
 /**
  * Created by nbfujx on 2018/1/16.
  */
+@ApiIgnore
 @SuppressWarnings("ALL")
 @RestController
 @RequestMapping("/api/sys/log")

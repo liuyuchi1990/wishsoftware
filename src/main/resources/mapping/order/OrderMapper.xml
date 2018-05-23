@@ -25,6 +25,23 @@
         where order_id = #{order_id,jdbcType=VARCHAR}
     </update>
 
+    <update id="updateUserIntegral" parameterType="com.goku.coreui.order.model.OrderInfo">
+        update sys_user
+        <set>
+            <if test="integral != null">
+                integral = #{integral,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = (
+        SELECT
+        user_id
+        FROM
+        tb_order
+        WHERE
+        order_id = #{order_id,jdbcType=VARCHAR}
+        )
+    </update>
+
     <delete id="delete">
         delete from tb_order
         where order_id in

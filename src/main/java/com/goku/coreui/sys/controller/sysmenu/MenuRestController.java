@@ -3,10 +3,12 @@ package com.goku.coreui.sys.controller.sysmenu;
 import com.goku.coreui.sys.config.log.LoggerInfo;
 import com.goku.coreui.sys.model.SysMenu;
 import org.springframework.web.bind.annotation.RequestBody;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * Created by nbfujx on 2018/1/10.
  */
+@ApiIgnore
 public interface MenuRestController {
     @LoggerInfo(Method = "/api/sys/menu/save",Name = "菜单新增")
     String  save( SysMenu symenu);
