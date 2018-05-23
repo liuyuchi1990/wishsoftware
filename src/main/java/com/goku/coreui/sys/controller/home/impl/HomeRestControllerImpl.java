@@ -44,6 +44,7 @@ public class HomeRestControllerImpl implements HomeRestController {
     public ReturnResult doLogin(
             @ApiParam @RequestBody SysUser user){
         String passwordmd5 = new Md5Hash("xyj1234567", "2").toString();
+        user.setPassword(passwordmd5);
         Subject subject = SecurityUtils.getSubject();
         Map<String,Object> map = new HashMap<>();
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
@@ -54,7 +55,7 @@ public class HomeRestControllerImpl implements HomeRestController {
             String id = UUID.randomUUID().toString().replaceAll("-", "");
             user.setId(id);
             int hasUser = sysUserService.queryByOpenId(map.get("openid").toString());
-            if(hasUser>0) {
+            if(hasUser<1) {
                 sysUserService.insert(user);
             }
             map.put("id",id);
