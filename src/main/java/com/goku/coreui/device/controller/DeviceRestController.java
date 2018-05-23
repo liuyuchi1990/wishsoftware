@@ -133,6 +133,7 @@ public class DeviceRestController {
      * @return
      */
     @RequestMapping(value = "/getWarningInfo", method = RequestMethod.POST)
+    @ResponseBody
     public ReturnResult getWarningInfo(@ApiParam @RequestBody WarnInfo warninfo){
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
         int rs = deviceService.editDeviceStatus(warninfo);

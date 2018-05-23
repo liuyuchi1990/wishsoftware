@@ -72,6 +72,7 @@ public class OrderRestController {
 
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @ResponseBody
     public ReturnResult save(@ApiParam @RequestBody Order order) {
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
         Map<String, Object> map = new HashMap<>();
@@ -90,6 +91,7 @@ public class OrderRestController {
     }
 
     @RequestMapping("/delete")
+    @ResponseBody
     public String delete(@RequestBody String ids) {
         int result = orderService.delete(ids.replaceAll("\"", ""));
         if (result > 0) {
@@ -114,6 +116,7 @@ public class OrderRestController {
 
     @ApiOperation(value = "获取掉货信息", response = OrderInfo.class)
     @RequestMapping(value = "/getOrderFeedBack", method = RequestMethod.POST)
+    @ResponseBody
     public ReturnResult getOrderFeedBack(@ApiParam @RequestBody OrderInfo orderInfo) {
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
         Map<String, Object> map = new HashMap<>();
@@ -149,6 +152,7 @@ public class OrderRestController {
     }
 
     @RequestMapping(value = "/getOrderPay", method = RequestMethod.POST)
+    @ResponseBody
     public ReturnResult getOrderPay(@RequestParam(required = true) OrderInfo orderInfo) {
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
         Map<String, Object> map = new HashMap<>();

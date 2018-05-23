@@ -126,13 +126,11 @@ public class BeautRestController {
                     MultipartFile file = files[i];
                     //保存文件
                     String fileName = saveFile(file, filePath,id);
-
                     beaut.setImg_name(fileName);
                     beaut.setImg_path(url + fileName);
                     beautService.add(beaut);
                 }
             }
-
             map.put("status","success");
             map.put("msg","修改成功");
             result.setResult(map);
@@ -167,8 +165,6 @@ public class BeautRestController {
                 String fileName = file.getOriginalFilename();
                 int index = fileName.lastIndexOf(".");
                 fileName = name + fileName.substring(index);
-
-
                 String savePath = path + fileName;
                 // 转存文件
                 file.transferTo(new File(savePath));
