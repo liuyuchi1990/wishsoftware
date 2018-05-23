@@ -117,7 +117,6 @@ public class DeviceRestController {
     }
 
     @RequestMapping("/delete")
-    @RequiresPermissions(value={"device:query"})
     public String  delete(@RequestBody String ids){
         int result = deviceService.delete(ids.replaceAll("\"", ""));
         if(result>0) {

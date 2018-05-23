@@ -43,6 +43,10 @@ public class OrderService {
         return orderMapper.queryById(order_id);
     }
 
+    public List <Map<String, Object>>  getOrderByUserId(String user_id){
+        return orderMapper.getOrderByUserId(user_id);
+    }
+
     public Map<String, Object> queryByDeviceId(String device_id){
         return orderMapper.queryByDeviceId(device_id);
     }

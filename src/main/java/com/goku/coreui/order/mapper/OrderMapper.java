@@ -22,6 +22,8 @@ public interface OrderMapper {
 
     int updateUserIntegral(OrderInfo orderInfo);
 
+    List<Map<String, Object>> getOrderByUserId(String user_id);
+
     Map<String, Object> queryByDeviceId(String device_id);
 
     List<Order> queryPage(@Param("user_name") String user_name, @Param("begindate") Date begindate, @Param("enddate") Date enddate, @Param("order_status") String order_status);

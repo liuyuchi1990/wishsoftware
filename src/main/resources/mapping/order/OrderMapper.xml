@@ -58,6 +58,13 @@
         where t.order_id = #{order_id,jdbcType=VARCHAR}
     </select>
 
+    <select id="getOrderByUserId" parameterType="java.lang.String" resultType="com.goku.coreui.order.model.Order">
+        select
+        t.order_id,t.device_id,t.cargo_lane,t.user_id,t.create_time,t.order_status
+        from tb_order t
+        where t.user_id = #{user_id,jdbcType=VARCHAR}
+    </select>
+
     <select id="queryByDeviceId" parameterType="java.lang.String" resultType="java.util.Map">
 select   t.order_id,t.cargo_lane
 from tb_order t
