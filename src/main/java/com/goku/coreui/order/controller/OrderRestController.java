@@ -170,7 +170,7 @@ public class OrderRestController {
         return result;
     }
 
-    @RequestMapping(value = "/getOrderByUserId", method = RequestMethod.POST)
+    @RequestMapping(value = "/getOrderByUserId", method = RequestMethod.GET)
     @ResponseBody
     public ReturnResult getOrderByUserId(@RequestParam(required = true) String user_id) {
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
