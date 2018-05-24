@@ -74,7 +74,15 @@
                 {field:'prize_status', title: '是否发送', templet: '#statusTpl'},
                 {field:'user_name', title: '收货人'},
                 {field:'send_time_str', title: '发送时间'},
-                {field:'send_address', title: '收获地址'}
+                {field:'send_address', title: '收获地址'},
+                {field:'prize_img_path', title: '图片',
+                    templet: function(d){
+                        if(d.prize_img_path)
+                            return '<img src="'+ d.prize_img_path +'" width="40" />';
+                        else
+                            return ''
+                    }
+                }
             ]],
             request: {
                 pageName: 'pageNumber', //页码的参数名称，默认：page
@@ -171,6 +179,7 @@
     <span style="color:#8DB6CD;">已发送</span>
     {{#  } }}
 </script>
+
 <!--模板 end-->
 
 <!--css-->

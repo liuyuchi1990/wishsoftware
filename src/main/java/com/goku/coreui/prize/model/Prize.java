@@ -29,6 +29,9 @@ public class Prize {
 
     private String user_name;
 
+    //上传图片路径
+    private String prize_img_path;
+
     public String getPrize_id() {
         return prize_id;
     }
@@ -109,5 +112,13 @@ public class Prize {
 
     public void setPrize_name(String prize_name) {
         this.prize_name = prize_name;
+    }
+
+    public String getPrize_img_path() {
+        return prize_img_path;
+    }
+
+    public void setPrize_img_path(String prize_img_path) {
+        this.prize_img_path = prize_img_path;
     }
 }

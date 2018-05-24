@@ -1,9 +1,13 @@
 package com.goku.coreui.prize.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.goku.coreui.beaut.model.Beaut;
+import com.goku.coreui.common.UploadUtils;
 import com.goku.coreui.prize.model.Prize;
 import com.goku.coreui.prize.service.PrizeService;
 import com.goku.coreui.sys.mapper.SysUserMapper;
+import com.goku.coreui.sys.model.ReturnCodeEnum;
+import com.goku.coreui.sys.model.ReturnResult;
 import com.goku.coreui.sys.model.SysMenu;
 import com.goku.coreui.sys.model.SysUser;
 import com.goku.coreui.sys.model.ext.Breadcrumb;
@@ -16,7 +20,9 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
@@ -36,6 +42,11 @@ public class PrizeRestController {
     SysUserMapper sysUserMapper;
     @Autowired
     PageUtil pageUtil;
+
+    @Value("${root.img.path.prize}")
+    String filePath;
+    @Value("${root.img.prize.url}")
+    String url;
 
     @RequestMapping("/getListPage")
     @RequiresPermissions(value={"prize:query"})
@@ -104,6 +115,40 @@ public class PrizeRestController {
             return JSON.toJSONString ("true");
         }else{
             return JSON.toJSONString ("false");
+        }
+    }
+
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    @ResponseBody
+    public ReturnResult add(@RequestParam("file") MultipartFile[] files){
+        String[] imgs = new String[files.length];
+        ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
+
+        Map<String,Object> map = new HashedMap();
+        try{
+            //判断file数组不能为空并且长度大于0
+            if(files != null && files.length > 0){
+                //循环获取file数组中得文件
+                for(int i = 0;i < files.length;i++){
+                    MultipartFile file = files[i];
+                    //保存文件
+                    String fileName = UploadUtils.saveFile(file, filePath, UUID.randomUUID().toString());
+                    imgs[i] = url + fileName;
+                }
+            }
+            map.put("status","success");
+            map.put("msg","上传成功");
+            map.put("data",imgs[0]);
+            result.setResult(map);
+            return result;
+        }catch (Exception e){
+            e.printStackTrace();
+            map.put("status","fail");
+            map.put("msg","上传失败");
+            result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
+            result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
+            result.setResult(map);
+            return result;
         }
     }
 

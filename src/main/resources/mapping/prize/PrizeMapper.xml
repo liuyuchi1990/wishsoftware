@@ -5,7 +5,7 @@
 
 
     <insert id="insert" parameterType="com.goku.coreui.prize.model.Prize">
-        insert into tb_prize (prize_id,prize_name,send_address,send_time,user_id,prize_status,prize_qr,create_time)
+        insert into tb_prize (prize_id,prize_name,send_address,send_time,user_id,prize_status,prize_qr,create_time,prize_img_path)
         value(
           #{prize_id,jdbcType=VARCHAR},
           #{prize_name,jdbcType=VARCHAR},
@@ -14,7 +14,8 @@
           #{user_id,jdbcType=VARCHAR},
           #{prize_status,jdbcType=INTEGER},
           #{prize_qr,jdbcType=VARCHAR},
-          SYSDATE()
+          SYSDATE(),
+          #{prize_img_path,jdbcType=VARCHAR}
           )
     </insert>
 
@@ -40,6 +41,9 @@
             <if test="prize_qr != null">
                 prize_qr = #{prize_qr,jdbcType=VARCHAR},
             </if>
+            <if test="prize_img_path != null">
+                prize_img_path = #{prize_img_path,jdbcType=VARCHAR},
+            </if>
         </set>
         where prize_id = #{prize_id,jdbcType=VARCHAR}
     </update>
@@ -54,7 +58,7 @@
 
     <select id="queryById" parameterType="java.lang.String" resultType="com.goku.coreui.prize.model.Prize">
         select
-            t.prize_id,t.prize_name,t.send_address,t.send_time,t.user_id,t.prize_status,t.prize_qr,s.username user_name
+            t.prize_id,t.prize_name,t.send_address,t.send_time,t.user_id,t.prize_status,t.prize_qr,t.prize_img_path,s.username user_name
         from tb_prize t
         left join sys_user s on t.user_id = s.id
         where t.prize_id = #{prize_id,jdbcType=VARCHAR}
@@ -62,7 +66,7 @@
 
     <select id="queryPage" resultType="com.goku.coreui.prize.model.Prize">
         select
-            t.prize_id,t.prize_name,t.send_address,t.send_time,t.user_id,t.prize_status,t.prize_qr,s.username user_name
+            t.prize_id,t.prize_name,t.send_address,t.send_time,t.user_id,t.prize_status,t.prize_qr,t.prize_img_path,s.username user_name
         from tb_prize t
         left join sys_user s on t.user_id = s.id
         <where>

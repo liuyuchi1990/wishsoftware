@@ -42,6 +42,18 @@
                                 </div>
                             </div>
 
+                            <div class="layui-form-item row">
+                                <label class="layui-form-label">上传图片</label>
+                                <div class="layui-input-block col-md-9">
+                                    <div class="prize_upload">
+
+                                    </div>
+                                    <button type="button" class="layui-btn" id="upload">
+                                        <i class="layui-icon">&#xe67c;</i>上传图片
+                                    </button>
+                                    <input type="hidden" name="prize_img_path" th:field="${prize.prize_img_path}"></input>
+                                </div>
+                            </div>
 
 
                             <div class="layui-form-item row">
@@ -50,6 +62,8 @@
                                     <textarea class="layui-textarea" name="send_address"   th:field="${prize.send_address}"></textarea>
                                 </div>
                             </div>
+
+
                             <div class="layui-form-item" style="margin-left:30px">
                                 <div class="layui-input-block">
                                     <button type="button" class="layui-btn" lay-submit=""  id="save" lay-filter="save">立即提交</button>
@@ -72,11 +86,22 @@
     var pageTitle=/*[[${pageTitle}]]*/;//取值
     /*]]>*/
 
-    layui.use(['layer','form', 'layedit', 'laydate'], function(){
+    var url = [[${prize.prize_img_path}]],
+        prizeUpload = $(".prize_upload");
+    console.log(url)
+    if(url){
+        prizeUpload.css({
+            "background-image" : "url("+ url +")",
+            "background-size" : '100% 100%'
+        });
+    }
+
+    layui.use(['layer','form', 'layedit', 'laydate','upload'], function(){
         var form = layui.form,
             layer = layui.layer,
             layedit = layui.layedit,
-            laydate = layui.laydate
+            laydate = layui.laydate,
+            upload = layui.upload;
 
         laydate.render({
             elem: '#sendTime', //指定元素
@@ -84,6 +109,25 @@
             value : [[${prize.send_time_str}]]
         });
         form.render();
+
+        upload.render({
+            elem: '#upload' //绑定元素
+            ,url: 'api/prize/upload/' //上传接口
+            ,done: function(res){
+                if(res.result.status == "success"){
+                    prizeUpload.css({
+                        "background-image" : "url("+ res.result.data +")",
+                        "background-size" : '100% 100%'
+                    });
+                    $("#prize_img_path").val(res.result.data);
+                }else{
+                    layer.alert(res.result.msg, {icon: 2})
+                }
+            }
+            ,error: function(){
+                layer.alert("系统异常，请联系管理员", {icon: 2})
+            }
+        });
 
 
         form.on('submit(save)',function(data){
@@ -130,5 +174,36 @@
 <style type="text/css">
     .back{
         background: #e6e3e3;
+    }
+
+    .prize_upload{
+        width: 100px;
+        height: 100px;
+        border: 1px #ccc solid;
+        position: relative;
+        float: left;
+    }
+
+    /*.prize_upload:after{
+        content: "";
+        position: absolute;
+        border-top: 1px #ccc dashed;
+        top : 50%;
+        left: 10%;
+        width: 80%;
+    }
+
+    .prize_upload:before{
+        content: "";
+        position: absolute;
+        border-left: 1px #ccc dashed;
+        height : 80%;
+        top: 10%;
+        left: 50%;
+    }*/
+
+    #upload{
+        margin-top: 27px;
+        margin-left: 20px;
     }
 </style>
