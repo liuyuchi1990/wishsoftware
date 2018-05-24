@@ -137,17 +137,17 @@ public class QRCodeUtils {
         InputStream inputStream = null;
         OutputStream outputStream = null;
         try {
-            String url = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + accessToken;
+            String url = "https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode?access_token=" + accessToken;
             Map<String, Object> param = new HashMap<>();
-            param.put("scene", "1");
+            //param.put("scene", "1");
             param.put("path", urlindex);
             param.put("width", 300);
-            param.put("auto_color", false);
+            //param.put("auto_color", false);
             Map<String, Object> line_color = new HashMap<>();
             line_color.put("r", 0);
             line_color.put("g", 0);
             line_color.put("b", 0);
-            param.put("line_color", line_color);
+            //param.put("line_color", line_color);
             System.out.println("调用生成微信URL接口传参:" + param);
             MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
             HttpEntity requestEntity = new HttpEntity(param, headers);

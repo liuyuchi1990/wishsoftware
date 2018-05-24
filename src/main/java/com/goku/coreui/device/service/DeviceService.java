@@ -46,7 +46,7 @@ public class DeviceService {
         });
         String url = qrUrl.replace("{deviceId}",device.getDevice_id()).replace("{deviceAddress}",device.getDevice_address());
         String accessToken = WxUtil.getWxAccessToken();
-        QRCodeUtils.getminiqrQr(accessToken,qrPath + device.getDevice_id() + ".png",url);
+        QRCodeUtils.getminiqrQr(accessToken,qrPath + device.getDevice_name()+ device.getDevice_id() + ".png",url);
         return deviceMapper.insert(device);
     }
 
