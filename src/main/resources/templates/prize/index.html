@@ -24,7 +24,7 @@
 
                                 <div class="col-md-3">
                                     <div class="input-group">
-                                        <span class="input-group-addon search-content">用户名</span>
+                                        <span class="input-group-addon search-content">收货人</span>
                                         <input type="text" id="user_name" name="user_name" class="form-control search-content"/>
                                     </div>
                                 </div>
@@ -71,8 +71,10 @@
             ,cols: [[
                 {type:'checkbox'},
                 {field:'prize_name', title: '奖品名称'},
+                {field:'prize_description', title: '奖品描述'},
                 {field:'prize_status', title: '是否发送', templet: '#statusTpl'},
                 {field:'user_name', title: '收货人'},
+                {field:'mobile', title: '联系人号码'},
                 {field:'send_time_str', title: '发送时间'},
                 {field:'send_address', title: '收获地址'},
                 {field:'prize_img_path', title: '图片',

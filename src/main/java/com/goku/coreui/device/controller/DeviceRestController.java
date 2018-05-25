@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.goku.coreui.device.model.Device;
 import com.goku.coreui.device.service.DeviceService;
 import com.goku.coreui.order.model.Order;
+import com.goku.coreui.sys.config.Constants;
 import com.goku.coreui.sys.model.ReturnCodeEnum;
 import com.goku.coreui.sys.model.ReturnResult;
 import com.goku.coreui.sys.model.SysUser;
@@ -100,6 +101,7 @@ public class DeviceRestController {
                 }
             }
             map.put("goods", lst);
+            map.put("price", Constants.PRICE);
             result.setResult(map);
         } catch (IllegalAccessException e) {
             result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());

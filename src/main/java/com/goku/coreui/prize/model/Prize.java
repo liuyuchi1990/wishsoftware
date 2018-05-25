@@ -29,6 +29,11 @@ public class Prize {
 
     private String user_name;
 
+    private String mobile;
+
+    //上传图片路径
+    private String prize_description;
+
     //上传图片路径
     private String prize_img_path;
 
@@ -120,5 +125,21 @@ public class Prize {
 
     public void setPrize_img_path(String prize_img_path) {
         this.prize_img_path = prize_img_path;
+    }
+
+    public String getPrize_description() {
+        return prize_description;
+    }
+
+    public void setPrize_description(String prize_description) {
+        this.prize_description = prize_description;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 }

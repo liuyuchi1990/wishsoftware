@@ -21,26 +21,26 @@
                                            class="layui-input" th:field="${prize.prize_name}" maxlength="20"></input>
                                 </div>
 
-                                <label class="layui-form-label">是否发送</label>
-                                <div class="layui-input-block col-md-4"><!--${prize.prize_status == null ? 0 : prize.prize_status}-->
-                                    <select name="prize_status" lay-verify="required">
-                                        <option value="0" th:selected="${prize.prize_status == 0}">待发送</option>
-                                        <option value="1" th:selected="${prize.prize_status == 1}">已发送</option>
-                                    </select>
-                                </div>
+                                <!--<label class="layui-form-label">是否发送</label>-->
+                                <!--<div class="layui-input-block col-md-4">&lt;!&ndash;${prize.prize_status == null ? 0 : prize.prize_status}&ndash;&gt;-->
+                                    <!--<select name="prize_status" lay-verify="required">-->
+                                        <!--<option value="0" th:selected="${prize.prize_status == 0}">待发送</option>-->
+                                        <!--<option value="1" th:selected="${prize.prize_status == 1}">已发送</option>-->
+                                    <!--</select>-->
+                                <!--</div>-->
                             </div>
 
-                            <div class="layui-form-item row">
-                                <label class="layui-form-label">收货人</label>
-                                <div class="layui-input-block col-md-4">
-                                    <input type="text" autocomplete="off" disabled="disabled" placeholder="收货人" class="layui-input" th:field="${prize.user_name}"></input>
-                                </div>
+                            <!--<div class="layui-form-item row">-->
+                                <!--&lt;!&ndash;<label class="layui-form-label">收货人</label>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<div class="layui-input-block col-md-4">&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<input type="text" autocomplete="off" disabled="disabled" placeholder="收货人" class="layui-input" th:field="${prize.user_name}"></input>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</div>&ndash;&gt;-->
 
-                                <label class="layui-form-label">发送时间</label>
-                                <div class="layui-input-block col-md-4">
-                                    <input type="text" class="layui-input" id="sendTime" name="send_time_str"></input>
-                                </div>
-                            </div>
+                                <!--&lt;!&ndash;<label class="layui-form-label">发送时间</label>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<div class="layui-input-block col-md-4">&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<input type="text" class="layui-input" id="sendTime" name="send_time_str"></input>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                            <!--</div>-->
 
                             <div class="layui-form-item row">
                                 <label class="layui-form-label">上传图片</label>
@@ -57,9 +57,9 @@
 
 
                             <div class="layui-form-item row">
-                                <label class="layui-form-label">收获地址</label>
+                                <label class="layui-form-label">奖品描述</label>
                                 <div class="layui-input-block col-md-9">
-                                    <textarea class="layui-textarea" name="send_address"   th:field="${prize.send_address}"></textarea>
+                                    <textarea class="layui-textarea" name="prize_description"   th:field="${prize.prize_description}"></textarea>
                                 </div>
                             </div>
 
@@ -136,8 +136,8 @@
 
             if(!model.prize_name){
                 return layer.alert("奖品名称不能为空", {icon: 2});
-            }else if(model.send_address.length > 100){
-                return layer.alert("收获地址输入过长", {icon: 2});
+            }else if(model.prize_description.length > 100){
+                return layer.alert("奖品输入过长", {icon: 2});
             }
 
             var url = [[${prize.prize_id}]] ? 'api/prize/edit' : 'api/prize/save';

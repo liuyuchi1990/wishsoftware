@@ -27,7 +27,7 @@ public class DeviceService {
     @Value("${root.img.path.qr}")
     String qrPath;
 
-    @Value("${root.rq.url}")
+    @Value("${root.device.url}")
     String qrUrl;
 
     public int insert(Device device) {

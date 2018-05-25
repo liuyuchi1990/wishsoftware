@@ -5,10 +5,11 @@
 
 
     <insert id="insert" parameterType="com.goku.coreui.prize.model.Prize">
-        insert into tb_prize (prize_id,prize_name,send_address,send_time,user_id,prize_status,prize_qr,create_time,prize_img_path)
+        insert into tb_prize (prize_id,prize_name,prize_description,send_address,send_time,user_id,prize_status,prize_qr,create_time,prize_img_path)
         value(
           #{prize_id,jdbcType=VARCHAR},
           #{prize_name,jdbcType=VARCHAR},
+          #{prize_description,jdbcType=VARCHAR},
           #{send_address,jdbcType=VARCHAR},
           #{send_time,jdbcType=TIMESTAMP},
           #{user_id,jdbcType=VARCHAR},
@@ -41,8 +42,11 @@
             <if test="prize_qr != null">
                 prize_qr = #{prize_qr,jdbcType=VARCHAR},
             </if>
+            <if test="prize_description != null">
+                prize_description = #{prize_description,jdbcType=VARCHAR},
+            </if>
             <if test="prize_img_path != null">
-                prize_img_path = #{prize_img_path,jdbcType=VARCHAR},
+                prize_img_path = #{prize_img_path,jdbcType=VARCHAR}
             </if>
         </set>
         where prize_id = #{prize_id,jdbcType=VARCHAR}
@@ -58,7 +62,7 @@
 
     <select id="queryById" parameterType="java.lang.String" resultType="com.goku.coreui.prize.model.Prize">
         select
-            t.prize_id,t.prize_name,t.send_address,t.send_time,t.user_id,t.prize_status,t.prize_qr,t.prize_img_path,s.username user_name
+            t.prize_id,t.prize_name,t.send_address,t.send_time,t.user_id,t.prize_status,t.prize_qr,t.prize_img_path,t.prize_description,s.username user_name,s.mobile
         from tb_prize t
         left join sys_user s on t.user_id = s.id
         where t.prize_id = #{prize_id,jdbcType=VARCHAR}
@@ -66,7 +70,7 @@
 
     <select id="queryPage" resultType="com.goku.coreui.prize.model.Prize">
         select
-            t.prize_id,t.prize_name,t.send_address,t.send_time,t.user_id,t.prize_status,t.prize_qr,t.prize_img_path,s.username user_name
+            t.prize_id,t.prize_name,t.send_address,t.send_time,t.user_id,t.prize_status,t.prize_qr,t.prize_img_path,t.prize_description,s.username user_name,s.mobile
         from tb_prize t
         left join sys_user s on t.user_id = s.id
         <where>
