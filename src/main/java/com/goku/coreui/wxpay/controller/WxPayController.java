@@ -1,6 +1,9 @@
 package com.goku.coreui.wxpay.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.goku.coreui.order.model.Order;
+import com.goku.coreui.order.model.OrderInfo;
+import com.goku.coreui.order.service.OrderService;
 import com.goku.coreui.sys.config.Constants;
 import com.goku.coreui.sys.model.PayInfo;
 import com.goku.coreui.sys.util.*;
@@ -8,11 +11,9 @@ import com.goku.coreui.sys.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.tomcat.util.bcel.classfile.Constant;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,9 +29,14 @@ import java.util.Map;
 public class WxPayController {
     private static Logger log = Logger.getLogger(WxPayController.class);
 
-    @RequestMapping(value = "/prepay", produces = "text/html;charset=UTF-8", method=RequestMethod.POST)
+    @Autowired
+    OrderService orderService;
+
+    @RequestMapping(value = "/prepay", produces = "text/html;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
-    public String prePay(String code, HttpServletRequest request) {
+    public String prePay(@RequestParam(required = false) String code,
+                         @RequestParam(required = false) String orderId,
+                         HttpServletRequest request) {
 
         String content = null;
         Map map = new HashMap();
@@ -54,7 +60,7 @@ public class WxPayController {
             log.error("openId: " + openId + ", clientIP: " + clientIP);
 
             String randomNonceStr = RandomUtils.generateMixString(32);
-            String prepayId = unifiedOrder(openId, clientIP, randomNonceStr);
+            String prepayId = unifiedOrder(openId, clientIP, randomNonceStr, orderId);
 
             log.error("prepayId: " + prepayId);
 
@@ -79,13 +85,12 @@ public class WxPayController {
     }
 
 
-
     /**
      * 调用统一下单接口
      *
      * @param openId
      */
-    private String unifiedOrder(String openId, String clientIP, String randomNonceStr) {
+    private String unifiedOrder(String openId, String clientIP, String randomNonceStr, String orderId) {
 
         try {
 
@@ -94,6 +99,7 @@ public class WxPayController {
             PayInfo payInfo = createPayInfo(openId, clientIP, randomNonceStr);
             String md5 = getSign(payInfo);
             payInfo.setSign(md5);
+            payInfo.setOut_trade_no(orderId);
 
             log.error("md5 value: " + md5);
 
@@ -126,7 +132,6 @@ public class WxPayController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return "";
     }
 
@@ -184,56 +189,52 @@ public class WxPayController {
         return CommonUtil.getMD5(sb.toString().trim()).toUpperCase();
     }
 
-//    @Override
-//    public void payCallback(HttpServletRequest request,HttpServletResponse response) {
-//        log.info("微信回调接口方法 start");
-//        log.info("微信回调接口 操作逻辑 start");
-//        String inputLine = "";
-//        String notityXml = "";
-//        try {
-//            while((inputLine = request.getReader().readLine()) != null){
-//                notityXml += inputLine;
-//            }
-//            //关闭流
-//            request.getReader().close();
-//            log.info("微信回调内容信息："+notityXml);
-//            //解析成Map
-//            Map<String,String> map = doXMLParse(notityXml);
-//            //判断 支付是否成功
-//            if("SUCCESS".equals(map.get("result_code"))){
-//                log.info("微信回调返回是否支付成功：是");
-//                //获得 返回的商户订单号
-//                String outTradeNo = map.get("out_trade_no");
-//                log.info("微信回调返回商户订单号："+outTradeNo);
-//                //访问DB
-//                WechatAppletGolfPayInfo payInfo = appletGolfPayInfoMapper.selectByPrimaryKey(outTradeNo);
-//                log.info("微信回调 根据订单号查询订单状态："+payInfo.getPayStatus());
-//                if("0".equals(payInfo.getPayStatus())){
-//                    //修改支付状态
-//                    payInfo.setPayStatus("1");
-//                    //更新Bean
-//                    int sqlRow = appletGolfPayInfoMapper.updateByPrimaryKey(payInfo);
-//                    //判断 是否更新成功
-//                    if(sqlRow == 1){
-//                        log.info("微信回调  订单号："+outTradeNo +",修改状态成功");
-//                        //封装 返回值
-//                        StringBuffer buffer = new StringBuffer();
-//                        buffer.append("<xml>");
-//                        buffer.append("<return_code>SUCCESS</return_code>");
-//                        buffer.append("<return_msg>OK</return_msg>");
-//                        buffer.append("<xml>");
-//
-//                        //给微信服务器返回 成功标示 否则会一直询问 咱们服务器 是否回调成功
-//                        PrintWriter writer = response.getWriter();
-//                        //返回
-//                        writer.print(buffer.toString());
-//                    }
-//                }
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+    @RequestMapping(value = "/getOrderByUserId", method = RequestMethod.GET)
+    public void payCallback(HttpServletRequest request,HttpServletResponse response) {
+        log.info("微信回调接口方法 start");
+        log.info("微信回调接口 操作逻辑 start");
+        String inputLine = "";
+        String notityXml = "";
+        try {
+            while((inputLine = request.getReader().readLine()) != null){
+                notityXml += inputLine;
+            }
+            //关闭流
+            request.getReader().close();
+            log.info("微信回调内容信息："+notityXml);
+            //解析成Map
+            Map<String,String> map = WxUtil.doXMLParse(notityXml);
+            //判断 支付是否成功
+            if("SUCCESS".equals(map.get("result_code"))){
+                log.info("微信回调返回是否支付成功：是");
+                //获得 返回的商户订单号
+                String outTradeNo = map.get("out_trade_no");
+                log.info("微信回调返回商户订单号："+outTradeNo);
+                //访问DB
+                OrderInfo orderInfo = new OrderInfo();
+                    //修改支付状态
+                    orderInfo.setOrder_status("3");
+                    int rs = orderService.edit(orderInfo);
+                    //判断 是否更新成功
+                    if(rs > 0){
+                        log.info("微信回调  订单号："+outTradeNo +",修改状态成功");
+                        //封装 返回值
+                        StringBuffer buffer = new StringBuffer();
+                        buffer.append("<xml>");
+                        buffer.append("<return_code>SUCCESS</return_code>");
+                        buffer.append("<return_msg>OK</return_msg>");
+                        buffer.append("<xml>");
+
+                        //给微信服务器返回 成功标示 否则会一直询问 咱们服务器 是否回调成功
+                        PrintWriter writer = response.getWriter();
+                        //返回
+                        writer.print(buffer.toString());
+                    }
+                }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
