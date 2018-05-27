@@ -29,7 +29,7 @@
         update sys_user
         <set>
             <if test="integral != null">
-                integral = #{integral,jdbcType=INTEGER},
+                integral = integral + #{integral,jdbcType=INTEGER},
             </if>
         </set>
         where id = (

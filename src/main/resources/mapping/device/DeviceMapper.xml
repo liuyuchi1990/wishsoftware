@@ -245,10 +245,10 @@ VALUES
                 and s.username LIKE #{user_name}
             </if>
             <if test="begindate != null">
-                <![CDATA[  and  t.send_time >= #{begindate,jdbcType=DATE}]]>
+                <![CDATA[  and  t.update_time >= #{begindate,jdbcType=DATE}]]>
             </if>
             <if test="enddate != null">
-                <![CDATA[  and t.send_time <= #{enddate,jdbcType=DATE}]]>
+                <![CDATA[  and t.update_time <= #{enddate,jdbcType=DATE}]]>
             </if>
             <if test="device_status != null and device_status != ''">
                and t.device_status = ${device_status}
