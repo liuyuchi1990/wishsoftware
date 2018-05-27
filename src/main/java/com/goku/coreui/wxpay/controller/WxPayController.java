@@ -189,7 +189,7 @@ public class WxPayController {
         return CommonUtil.getMD5(sb.toString().trim()).toUpperCase();
     }
 
-    @RequestMapping(value = "/getOrderByUserId", method = RequestMethod.GET)
+    @RequestMapping(value = "/payCallback", method = RequestMethod.GET)
     public void payCallback(HttpServletRequest request,HttpServletResponse response) {
         log.info("微信回调接口方法 start");
         log.info("微信回调接口 操作逻辑 start");
