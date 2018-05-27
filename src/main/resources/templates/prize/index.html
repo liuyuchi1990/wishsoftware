@@ -104,7 +104,9 @@
         });
 
         $('#refreshTable').on('click', function(){
-            var daterange = $('#createdate').val().split(' - ')
+            var daterange = $('#createdate').val().split(' - ');
+            console.log(daterange)
+
             tableIns.reload({ where: {
                     user_name:$('#user_name').val(),
                     prize_status : $("#prize_status").val(),
