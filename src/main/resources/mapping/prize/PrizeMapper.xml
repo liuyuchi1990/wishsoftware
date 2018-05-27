@@ -60,6 +60,15 @@
         </foreach>
     </delete>
 
+    <update id="send">
+        update tb_prize
+        set prize_status = 1
+        where prize_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
     <select id="queryById" parameterType="java.lang.String" resultType="com.goku.coreui.prize.model.Prize">
         select
             t.prize_id,t.prize_name,t.send_address,t.send_time,t.user_id,t.prize_status,t.prize_qr,t.prize_img_path,t.prize_description,s.username user_name,s.mobile

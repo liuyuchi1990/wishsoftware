@@ -51,6 +51,11 @@ public class PrizeService {
         return prizeMapper.delete(idArr);
     }
 
+    public int send(String ids) {
+        String[] idArr = ids.split(",");
+        return prizeMapper.send(idArr);
+    }
+
     public Prize queryById(String prize_id) {
         return prizeMapper.queryById(prize_id);
     }

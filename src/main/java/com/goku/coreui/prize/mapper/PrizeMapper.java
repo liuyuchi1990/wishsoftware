@@ -16,6 +16,8 @@ public interface PrizeMapper {
 
     int delete(String[] ids);
 
+    int send(String[] ids);
+
     Prize queryById(@Param("prize_id") String prize_id);
 
     List<Prize> queryPage(@Param("user_name") String user_name, @Param("begindate") Date begindate, @Param("enddate") Date enddate, @Param("prize_status") String prize_status);

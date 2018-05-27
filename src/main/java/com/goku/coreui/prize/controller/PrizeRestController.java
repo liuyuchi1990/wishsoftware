@@ -118,6 +118,16 @@ public class PrizeRestController {
         }
     }
 
+    @RequestMapping("/send")
+    public String  send(@RequestBody String ids){
+        int result = prizeService.send(ids.replaceAll("\"", ""));
+        if(result>0) {
+            return JSON.toJSONString ("true");
+        }else{
+            return JSON.toJSONString ("false");
+        }
+    }
+
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
     public ReturnResult add(@RequestParam("file") MultipartFile[] files){
