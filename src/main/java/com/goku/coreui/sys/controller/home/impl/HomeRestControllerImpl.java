@@ -45,6 +45,7 @@ public class HomeRestControllerImpl implements HomeRestController {
             @ApiParam @RequestBody SysUser user){
         String passwordmd5 = new Md5Hash("xyj1234567", "2").toString();
         user.setPassword(passwordmd5);
+        user.setName(user.getUsername());
         Subject subject = SecurityUtils.getSubject();
         Map<String,Object> map = new HashMap<>();
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
