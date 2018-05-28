@@ -40,4 +40,27 @@ public class Constants {
     public static final String TIME_FORMAT = "yyyyMMddHHmmss";
 
     public static final int TIME_EXPIRE = 2;  //单位是day
+
+    public static final String QR_FILE_PATH = "C:/apache-tomcat-8.5.31/webapps/imgs/qr/";
+
+    /**
+     * @Fields EN_CODING : 定义编码格式
+     */
+    public static final String EN_CODING = "UTF-8";
+
+    public static final String CONTENT_DISPOSITION = "Content-disposition";
+
+    public static final String ATTACHMENT_FILENAME = "attachment; filename=\"%s\"";
+
+    /**
+     * iso-8859-1编码格式
+     */
+    public static final String EN_CODING_ISO = "iso-8859-1";
+
+    /**
+     * gbk编码格式
+     */
+    public static final String EN_CODING_GBK = "gbk";
+
+    public static final String FILE_NAME = "fileName";
 }

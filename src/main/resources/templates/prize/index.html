@@ -43,6 +43,7 @@
                             <a class="opreate-btn  layui-btn layui-btn-sm" id="addbtn" href="#"><i class="icon-plus"></i>新增</a>
                             <a class="opreate-btn  layui-btn layui-btn-sm" id="editbtn" href="#"><i class="icon-plus"></i>修改</a>
                             <a class="opreate-btn  layui-btn layui-btn-sm" id="sendIds" href="#"><i class="icon-plus" style="width: 80px"></i>批量发送</a>
+                            <a class="opreate-btn  layui-btn layui-btn-sm" id="download" href="#"><i class="icon-plus"></i>下载</a>
                             <a class="opreate-btn layui-btn layui-btn-sm layui-btn-danger" href="#" id="deleteIds"><i class="icon-close"></i>删除</a>
                         </div>
                         <table class="layui-table table-responsive-sm" id="table" lay-filter="table"></table>
@@ -141,6 +142,15 @@
                 setUpUrl("prize/getListPage@prize/editPage?id=" + data[0].prize_id);
             }
 
+        })
+        $("#download").on("click",function(){
+            var checkStatus = table.checkStatus('table')
+                , data = checkStatus.data;
+            if (data.length != 1) {
+                layer.alert("请选择一条记录!", {icon: 0});
+            } else {
+                window.location.href = "api/device/downloadQR?fileName="+ data[0].prize_name + data[0].prize_id+'.png';
+            }
         })
 
         $("#deleteIds").on("click",function(){

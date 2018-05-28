@@ -15,19 +15,29 @@ import com.goku.coreui.sys.util.BreadcrumbUtil;
 import com.goku.coreui.sys.util.DateUtil;
 import com.goku.coreui.sys.util.PageUtil;
 import com.goku.coreui.sys.util.SessionUtil;
+import com.google.common.base.Preconditions;
 import io.swagger.annotations.ApiParam;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.lang.reflect.Field;
+import java.net.URLDecoder;
+import java.nio.file.Files;
 import java.util.*;
 
 
 @RestController
 @RequestMapping("/api/device")
 public class DeviceRestController {
+    private static final Logger logger = LoggerFactory.getLogger(DeviceRestController.class);
 
     @Autowired
     BreadcrumbUtil breadcrumbUtil;
@@ -167,5 +177,61 @@ public class DeviceRestController {
             result.setResult(map);
         }
         return result;
+    }
+
+    @ApiIgnore
+    @RequestMapping(value = "/downloadQR", method = RequestMethod.GET)
+    @ResponseBody
+    public void downloadQR(HttpServletRequest request, HttpServletResponse response,
+                                   @RequestParam(Constants.FILE_NAME) String fileName) throws IOException {
+        String userAgent = request.getHeader("User-Agent");
+        String fileNameDecode = URLDecoder.decode(fileName, Constants.EN_CODING);
+        File file = new File(Constants.QR_FILE_PATH + fileNameDecode);
+        if (file.exists()) {
+            // 设置强制下载不打开
+            response.setContentType("application/force-download");
+            // 针对IE或者以IE为内核的浏览器：
+            if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
+                try {
+                    response.setHeader(Constants.CONTENT_DISPOSITION, String.format(Constants.ATTACHMENT_FILENAME,
+                            new String(fileName.getBytes(Constants.EN_CODING_GBK), Constants.EN_CODING_ISO)));
+                } catch (UnsupportedEncodingException e) {
+                    logger.error(e.getMessage(), e);
+                    response.setHeader(Constants.CONTENT_DISPOSITION,
+                            String.format(Constants.ATTACHMENT_FILENAME, fileNameDecode));
+                }
+            } else {
+                // 非IE浏览器的处理：
+                fileNameDecode = new String(fileNameDecode.getBytes(Constants.EN_CODING), Constants.EN_CODING_ISO);
+                response.setHeader(Constants.CONTENT_DISPOSITION, String.format(Constants.ATTACHMENT_FILENAME, fileNameDecode));
+            }
+            Map<String, Object> logData = new HashMap<>();
+            logData.put(Constants.FILE_NAME, fileName);
+            output(response, file);
+        }
+    }
+
+    /**
+     * @param @param response
+     * @param @param file 设定文件
+     * @param file
+     * @return void 返回类型
+     * @throws @param response
+     * @Title: output
+     * @Description: 输出文件流
+     */
+    private void output(HttpServletResponse response, File file) {
+        byte[] buffer = new byte[1024];
+        try(FileInputStream fis = new FileInputStream(file);
+            BufferedInputStream bis = new BufferedInputStream(fis)) {
+            OutputStream os = response.getOutputStream();
+            int i = bis.read(buffer);
+            while (i != -1) {
+                os.write(buffer, 0, i);
+                i = bis.read(buffer);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 }
