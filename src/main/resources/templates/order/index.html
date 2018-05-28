@@ -72,11 +72,19 @@
             ,limits:[5,10,20,50]
             ,cols: [[
                 {type:'checkbox'},
-                {field:'user_name', title: '收货人'},
+                {field:'user_name', title: '下单人'},
                 {field:'device_name', title: '货架名'},
                 {field:'device_address', title: '货架地址'},
                 {field:'cargo_lane', title: '货道组'},
                 {field:'create_time_str', title: '订单创建时间'},
+                {field:'pay_type', title: '支付方式',templet: function(d){
+                        if(d.pay_type=='1'){
+                            return '积分';
+                        }
+                        if(d.pay_type=='0'){
+                            return '微信';
+                        }
+                    }},
                 {field:'order_status', title: '订单状态',templet: function(d){
                         if(d.order_status=='1'){
                             return '待支付';

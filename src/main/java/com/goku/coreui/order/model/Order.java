@@ -29,6 +29,9 @@ public class Order {
     // null 未处理， 1 成功 2失败
     private String order_status;
 
+    //0：微信 1：积分
+    private String pay_type;
+
     public String getOrder_id() {
         return order_id;
     }
@@ -85,6 +88,14 @@ public class Order {
         this.user_name = user_name;
     }
 
+    public String getPay_type() {
+        return pay_type;
+    }
+
+    public void setPay_type(String pay_type) {
+        this.pay_type = pay_type;
+    }
+
     public Date getCreate_time() {
         return create_time;
     }
@@ -108,4 +119,5 @@ public class Order {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(this.create_time);
     }
+
 }

@@ -10,6 +10,7 @@
           #{cargo_lane,jdbcType=VARCHAR},
           #{user_id,jdbcType=VARCHAR},
           SYSDATE(),
+          #{pay_type,jdbcType=VARCHAR},
           #{order_status,jdbcType=VARCHAR}
           )
     </insert>
@@ -52,7 +53,7 @@
 
     <select id="queryById" parameterType="java.lang.String" resultType="com.goku.coreui.order.model.Order">
         select
-            t.order_id,t.device_id,t.cargo_lane,t.user_id,t.create_time,t.order_status
+            t.order_id,t.device_id,t.cargo_lane,t.user_id,t.create_time,t.pay_type,t.order_status
         from tb_order t
         left join sys_user s on t.user_id = s.id
         where t.order_id = #{order_id,jdbcType=VARCHAR}
@@ -60,7 +61,7 @@
 
     <select id="getOrderByUserId" parameterType="java.lang.String" resultType="com.goku.coreui.order.model.Order">
         select
-        t.order_id,t.device_id,t.cargo_lane,t.user_id,t.create_time,t.order_status
+        t.order_id,t.device_id,t.cargo_lane,t.user_id,t.create_time,t.pay_type,t.order_status
         from tb_order t
         where t.user_id = #{user_id,jdbcType=VARCHAR}
     </select>
@@ -74,7 +75,7 @@ order by t.create_time LIMIT 1
 
     <select id="queryPage" resultType="com.goku.coreui.order.model.Order">
         select
-        t.order_id,t.device_id,t.cargo_lane,t.user_id,t.create_time,t.order_status,s.username user_name,d.device_name
+        t.order_id,t.device_id,t.cargo_lane,t.user_id,t.create_time,t.pay_type,t.order_status,s.username user_name,d.device_name
         ,d.device_address
         from tb_order t
         left join sys_user s on t.user_id = s.id

@@ -11,6 +11,9 @@ public class OrderInfo {
 
     private Integer Integral;
 
+    //0：微信 1：积分
+    private String pay_type;
+
     public String getOrder_id() {
         return order_id;
     }
@@ -49,5 +52,13 @@ public class OrderInfo {
 
     public void setIntegral(Integer integral) {
         Integral = integral;
+    }
+
+    public String getPay_type() {
+        return pay_type;
+    }
+
+    public void setPay_type(String pay_type) {
+        this.pay_type = pay_type;
     }
 }

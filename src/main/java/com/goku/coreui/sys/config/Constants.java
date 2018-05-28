@@ -35,7 +35,7 @@ public class Constants {
 
     public static final String DOMAIN = "https://www.xingyuanji.com";
 
-    public static final String URL_NOTIFY = Constants.DOMAIN + "/wxpay/views/payInfo.jsp";
+    public static final String URL_NOTIFY = Constants.DOMAIN + "/api/wxpay/payCallback";
 
     public static final String TIME_FORMAT = "yyyyMMddHHmmss";
 
