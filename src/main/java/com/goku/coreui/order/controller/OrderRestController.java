@@ -77,9 +77,11 @@ public class OrderRestController {
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
         Map<String, Object> map = new HashMap<>();
         order.setOrder_status("1");
+        order.setOrder_id(UUID.randomUUID().toString().replaceAll("-", ""));
         int rs = orderService.insert(order);
         if (rs > 0) {
             map.put("status", "成功");
+            map.put("orderId",order.getOrder_id());
             result.setResult(map);
         } else {
             result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());

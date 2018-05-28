@@ -23,7 +23,6 @@ public class OrderService {
     OrderMapper orderMapper;
 
     public int insert(Order order){
-        order.setOrder_id(UUID.randomUUID().toString().replaceAll("-", ""));
         return orderMapper.insert(order);
     }
 
