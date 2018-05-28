@@ -125,6 +125,16 @@ public class DeviceRestController {
         }
     }
 
+    @RequestMapping("/loadGoods")
+    public String loadGoods(@RequestBody String ids) {
+        int result = deviceService.loadGoods(ids.replaceAll("\"", ""));
+        if (result > 0) {
+            return JSON.toJSONString("true");
+        } else {
+            return JSON.toJSONString("false");
+        }
+    }
+
     @RequestMapping("/delete")
     public String delete(@RequestBody String ids) {
         int result = deviceService.delete(ids.replaceAll("\"", ""));

@@ -62,6 +62,10 @@ public class DeviceService {
         return deviceMapper.delete(ids.split(","));
     }
 
+    public int loadGoods(String ids) {
+        return deviceMapper.loadGoods(ids.split(","));
+    }
+
     public Device queryById(String device_id) {
         return deviceMapper.queryById(device_id);
     }

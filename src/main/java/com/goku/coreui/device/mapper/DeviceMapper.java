@@ -19,6 +19,8 @@ public interface DeviceMapper {
 
     int delete(String[] ids);
 
+    int loadGoods(String[] ids);
+
     Device queryById(@Param("device_id") String device_id);
 
     List<Device> queryPage(@Param("user_name") String user_name, @Param("begindate") Date begindate, @Param("enddate") Date enddate, @Param("device_status") String device_status);
