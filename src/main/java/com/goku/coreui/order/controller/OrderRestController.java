@@ -18,6 +18,7 @@ import com.goku.coreui.sys.util.PageUtil;
 import io.swagger.annotations.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
@@ -70,25 +71,39 @@ public class OrderRestController {
         return JSON.toJSONString(tp);
     }
 
-
+    /**
+     *
+     * @param order
+     * @return
+     */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
     public ReturnResult save(@ApiParam @RequestBody Order order) {
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
-        Map<String, Object> map = new HashMap<>();
-        order.setOrder_status("1");
-        order.setOrder_id(UUID.randomUUID().toString().replaceAll("-", ""));
-        int rs = orderService.insert(order);
-        if (rs > 0) {
-            map.put("status", "成功");
-            map.put("orderId",order.getOrder_id());
-            result.setResult(map);
-        } else {
+        Map<String, Object> mapLane = orderService.queryForLane(order);
+        //判断是否货道有货
+        if(mapLane.isEmpty()){
+            Map<String, Object> map = new HashMap<>();
+            order.setOrder_status("1");
+            order.setOrder_id(UUID.randomUUID().toString().replaceAll("-", ""));
+            int rs = orderService.insert(order);
+            if (rs > 0) {
+                map.put("status", "成功");
+                map.put("orderId",order.getOrder_id());
+                result.setResult(map);
+            } else {
+                result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
+                result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
+                map.put("status", "失败");
+                result.setResult(map);
+            }
+        }else{
             result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
             result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
-            map.put("status", "失败");
-            result.setResult(map);
+            mapLane.put("description", "货道无货");
+            result.setResult(mapLane);
         }
+
         return result;
     }
 
@@ -117,6 +132,7 @@ public class OrderRestController {
     }
 
     @ApiOperation(value = "获取掉货信息", response = OrderInfo.class)
+    @Transactional( rollbackFor = {Exception.class}, readOnly = false )
     @RequestMapping(value = "/getOrderFeedBack", method = RequestMethod.POST)
     @ResponseBody
     public ReturnResult getOrderFeedBack(@ApiParam @RequestBody OrderInfo orderInfo) {
@@ -124,7 +140,7 @@ public class OrderRestController {
         Map<String, Object> map = new HashMap<>();
         Integer count = 0;
         List<Cargo> CargoLst = Arrays.asList(orderInfo.getCargo_lane());
-        for (Cargo f : CargoLst) {
+        for (Cargo f : CargoLst) {;
             if (("true".equals(f.getStatus()))) {
                 count++;
             }
