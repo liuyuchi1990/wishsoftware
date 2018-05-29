@@ -22,6 +22,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -39,6 +40,8 @@ import java.util.*;
 public class DeviceRestController {
     private static final Logger logger = LoggerFactory.getLogger(DeviceRestController.class);
 
+    @Value("${root.img.path.qr}")
+    String qrPath;
     @Autowired
     BreadcrumbUtil breadcrumbUtil;
     @Autowired
@@ -186,7 +189,7 @@ public class DeviceRestController {
                                    @RequestParam(Constants.FILE_NAME) String fileName) throws IOException {
         String userAgent = request.getHeader("User-Agent");
         String fileNameDecode = URLDecoder.decode(fileName, Constants.EN_CODING);
-        File file = new File(Constants.QR_FILE_PATH + fileNameDecode);
+        File file = new File(qrPath + fileNameDecode);
         if (file.exists()) {
             // 设置强制下载不打开
             response.setContentType("application/force-download");

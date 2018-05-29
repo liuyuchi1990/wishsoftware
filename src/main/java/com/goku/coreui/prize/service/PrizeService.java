@@ -34,7 +34,7 @@ public class PrizeService {
     public int insert(Prize prize) {
         String id = UUID.randomUUID().toString().replaceAll("-", "");
         prize.setPrize_id(id);
-
+        prize.setPrize_status(0);
         String url = qrUrl.replace("{prizeId}", id);
         String accessToken = WxUtil.getWxAccessToken();
         QRCodeUtils.getminiqrQr(accessToken, qrPath + prize.getPrize_name() + id + ".png", url);

@@ -62,7 +62,7 @@
 
     <update id="send">
         update tb_prize
-        set prize_status = 1
+        set prize_status = 2
         where prize_id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id,jdbcType=VARCHAR}
