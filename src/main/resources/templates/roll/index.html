@@ -1,0 +1,237 @@
+<!--templates-->
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i> 轮播图列表
+                </div>
+                <div class="card-body">
+                    <div class=" form-horizontal">
+
+                        <div class="form-group  row">
+
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <span class="input-group-addon search-content">使用状态</span>
+                                    <select id="roll_status" name="roll_status" class="form-control search-content"
+                                            style="height: 30px;padding: 0 6px">
+                                        <option value=""></option>
+                                        <option value="0">未使用</option>
+                                        <option value="1">已使用</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <a style="margin-left:15px" class="opreate-btn layui-btn layui-btn-sm layui-btn-normal"
+                               href="#" data-type="reload" id="refreshTable"><i class="icon-magnifier"></i>查询</a>
+                            <a style="margin-left:15px" class="opreate-btn layui-btn layui-btn-sm layui-btn-primary"
+                               href="#" data-type="reset" id="resetTable"><i class="icon-refresh"></i>重置</a>
+
+                        </div>
+
+                        <div class="row">
+                            <a class="opreate-btn  layui-btn layui-btn-sm" id="addbtn" href="#"><i
+                                    class="icon-plus"></i>新增</a>
+                            <a class="opreate-btn  layui-btn layui-btn-sm" id="editbtn" href="#"><i
+                                    class="icon-plus"></i>修改</a>
+                            <a class="opreate-btn  layui-btn layui-btn-sm" id="sendIds" href="#"><i class="icon-plus"
+                                                                                                    style="width: 80px"></i>使用</a>
+                            <a class="opreate-btn layui-btn layui-btn-sm layui-btn-danger" href="#" id="deleteIds"><i
+                                    class="icon-close"></i>删除</a>
+                        </div>
+                        <table class="layui-table table-responsive-sm" id="table" lay-filter="table"></table>
+                    </div>
+                </div>
+            </div>
+            <!--/.row-->
+        </div>
+    </div>
+</div>
+
+<!--js-->
+<script th:inline="javascript">
+    layui.use(['table', 'laydate'], function () {
+        var table = layui.table,
+            $ = layui.jquery,
+            laydate = layui.laydate;
+
+
+        var opt = {
+            elem: '#table'
+            , url: 'api/roll/queryPage'
+            , height: 410
+            , page: true //开启分页,
+            , limit: 5
+            , limits: [5, 10, 20, 50]
+            , cols: [[
+                {type: 'checkbox'},
+                {field: 'roll_name', title: '轮播图名称'},
+                {field: 'roll_description', title: '轮播图描述'},
+                {
+                    field: 'roll_status', title: '轮播图状态', templet: function (d) {
+                        if (d.roll_status==1){
+                            return '已使用';
+                        }
+                        if (d.roll_status==0){
+                            return '未使用';
+                        }
+                    }
+                },
+                {
+                    field: 'roll_img_path', title: '图片',
+                    templet: function (d) {
+                        if (d.roll_img_path)
+                            return '<img src="' + d.roll_img_path + '" width="40" />';
+                        else
+                            return ''
+                    }
+                }
+            ]],
+            request: {
+                pageName: 'pageNumber', //页码的参数名称，默认：page
+                limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            },
+            response: {
+                countName: 'total', //数据总数的字段名称，默认：count
+                dataName: 'rows' //数据列表的字段名称，默认：data
+            }
+        };
+        var tableIns = table.render(opt);
+
+        //日期范围
+        laydate.render({
+            elem: '#createdate'
+            , range: true
+        });
+
+        $('#refreshTable').on('click', function () {
+            var daterange = $('#createdate').val().split(' - ');
+            console.log(daterange)
+
+            tableIns.reload({
+                where: {
+                    user_name: $('#user_name').val(),
+                    roll_status: $("#roll_status").val(),
+                    begindate: daterange[0],
+                    enddate: daterange[1]
+                }
+            });
+        });
+
+        $('#resetTable').on('click', function () {
+            $('#user_name').val("");
+            $('#createdate').val("");
+            $('#roll_status').val("");
+            tableIns.reload({
+                where: {
+                    user_name: "",
+                    roll_status: "",
+                    begindate: "",
+                    enddate: ""
+                }
+            });
+        });
+
+        $('#addbtn').on('click', function () {
+            setUpUrl("roll/getListPage@roll/addPage");
+        });
+
+        $("#editbtn").on("click", function () {
+            var checkStatus = table.checkStatus('table')
+                , data = checkStatus.data;
+            if (data.length != 1) {
+                layer.alert("请选择一条记录!", {icon: 0});
+            } else {
+                setUpUrl("roll/getListPage@roll/editPage?id=" + data[0].roll_id);
+            }
+
+        })
+        $("#download").on("click", function () {
+            var checkStatus = table.checkStatus('table')
+                , data = checkStatus.data;
+            if (data.length != 1) {
+                layer.alert("请选择一条记录!", {icon: 0});
+            } else {
+                window.location.href = "api/device/downloadQR?fileName=" + data[0].roll_name + data[0].roll_id + '.png';
+            }
+        })
+
+        $("#deleteIds").on("click", function () {
+            var checkStatus = table.checkStatus('table'),
+                data = checkStatus.data;
+            if (data.length == 0) {
+                layer.alert("请选择一条记录!", {icon: 0});
+            } else {
+                layer.alert('请确认是否删除该轮播图!', {
+                    icon: 3,
+                    btn: ['确认'],
+                    yes: function (index) {
+                        layer.close(index);
+                        postJSON("api/roll/delete", data.map(item => item.roll_id).join(",")).catch(error => {
+                        })
+                            .then(value => {
+                                var result = JSON.parse(value);
+                                if (result == true) {
+                                    layer.alert('该轮播图删除成功!', {
+                                        icon: 6, btn: ['确认'], yes: function (index) {
+                                            layer.close(index);
+                                            var tabOpt = table.render(opt);
+                                            tabOpt.reload();
+                                        }
+                                    });
+                                } else {
+                                    layer.alert("轮播图除失败!", {icon: 2});
+                                }
+                            });
+                    }
+                })
+            }
+
+        });
+        $("#sendIds").on("click", function () {
+            var checkStatus = table.checkStatus('table'),
+                data = checkStatus.data;
+            if (data.length == 0) {
+                layer.alert("请选择一条记录!", {icon: 0});
+            } else {
+                layer.alert('请确认是否使用!', {
+                    icon: 3,
+                    btn: ['确认'],
+                    yes: function (index) {
+                        layer.close(index);
+                        postJSON("api/roll/send", data.map(item => item.roll_id).join(",")).catch(error => {
+                        })
+                            .then(value => {
+                                var result = JSON.parse(value);
+                                if (result == true) {
+                                    var tabOpt = table.render(opt);
+                                    tabOpt.reload();
+                                } else {
+                                    layer.alert("修改使用状态失败!", {icon: 2});
+                                }
+                            });
+                    }
+                })
+                data[0].device_id
+            }
+
+        })
+    });
+
+</script>
+<!--模板 js start-->
+<!--模板 end-->
+
+<!--css-->
+<style type="text/css">
+    .search-content {
+        height: 30px;
+        margin-bottom: 5px;
+    }
+
+    .opreate-btn {
+        width: 60px;
+        margin: 0 0 10px 15px;
+        text-decoration: none;
+    }
+</style>

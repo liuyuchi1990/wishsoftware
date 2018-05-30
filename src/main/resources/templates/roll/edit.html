@@ -1,0 +1,189 @@
+<!--templates-->
+<div class="animated fadeIn" >
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header" th:inline="text">
+                    <i class="fa fa-align-justify"></i> [[${pageTitle}]]
+                </div>
+                <div class="card-body">
+                    <div class=" form-horizontal">
+                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                            <legend>轮播图基本信息</legend>
+                        </fieldset>
+                        <form  id="rollform" class="layui-form">
+                            <input type="hidden" name="roll_id" th:field="${roll.roll_id}"></input>
+
+                            <div class="layui-form-item row">
+                                <label class="layui-form-label">轮播图名称</label>
+                                <div class="layui-input-block col-md-4">
+                                    <input type="text" name="roll_name" autocomplete="off" placeholder="轮播图名称"
+                                           class="layui-input" th:field="${roll.roll_name}" maxlength="20"></input>
+                                </div>
+
+                                <!--<label class="layui-form-label">是否发送</label>-->
+                                <!--<div class="layui-input-block col-md-4">&lt;!&ndash;${roll.roll_status == null ? 0 : roll.roll_status}&ndash;&gt;-->
+                                    <!--<select name="roll_status" lay-verify="required">-->
+                                        <!--<option value="0" th:selected="${roll.roll_status == 0}">待发送</option>-->
+                                        <!--<option value="1" th:selected="${roll.roll_status == 1}">已发送</option>-->
+                                    <!--</select>-->
+                                <!--</div>-->
+                            </div>
+                            <div class="layui-form-item row">
+                                <label class="layui-form-label">上传图片</label>
+                                <div class="layui-input-block col-md-9">
+                                    <div class="roll_upload">
+
+                                    </div>
+                                    <button type="button" class="layui-btn" id="upload">
+                                        <i class="layui-icon">&#xe67c;</i>上传图片
+                                    </button>
+                                    <input type="hidden" name="roll_img_path" th:field="${roll.roll_img_path}"></input>
+                                </div>
+                            </div>
+
+
+                            <div class="layui-form-item row">
+                                <label class="layui-form-label">轮播图描述</label>
+                                <div class="layui-input-block col-md-9">
+                                    <textarea class="layui-textarea" name="roll_description"   th:field="${roll.roll_description}"></textarea>
+                                </div>
+                            </div>
+
+
+                            <div class="layui-form-item" style="margin-left:30px">
+                                <div class="layui-input-block">
+                                    <button type="button" class="layui-btn" lay-submit=""  id="save" lay-filter="save">立即提交</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!--/.row-->
+        </div>
+    </div>
+</div>
+
+<!--js-->
+<script th:inline="javascript">
+
+    /*<![CDATA[*/
+    var pageTitle=/*[[${pageTitle}]]*/;//取值
+    /*]]>*/
+
+    var url = [[${roll.roll_img_path}]],
+        rollUpload = $(".roll_upload");
+    if(url){
+        rollUpload.css({
+            "background-image" : "url("+ url +")",
+            "background-size" : '100% 100%'
+        });
+    }
+
+    layui.use(['layer','form', 'layedit', 'laydate','upload'], function(){
+        var form = layui.form,
+            layer = layui.layer,
+            layedit = layui.layedit,
+            laydate = layui.laydate,
+            upload = layui.upload;
+        form.render();
+
+        upload.render({
+            elem: '#upload' //绑定元素
+            ,url: 'api/roll/upload/' //上传接口
+            ,done: function(res){
+                if(res.result.status == "success"){
+                    rollUpload.css({
+                        "background-image" : "url("+ res.result.data +")",
+                        "background-size" : '100% 100%'
+                    });
+                    $("#roll_img_path").val(res.result.data);
+                }else{
+                    layer.alert(res.result.msg, {icon: 2})
+                }
+            }
+            ,error: function(){
+                layer.alert("系统异常，请联系管理员", {icon: 2})
+            }
+        });
+
+
+        form.on('submit(save)',function(data){
+            var from= $("#rollform");
+            var model= serializeObject(from);
+
+            if(!model.roll_name){
+                return layer.alert("轮播图名称不能为空", {icon: 2});
+            }else if(model.roll_description.length > 100){
+                return layer.alert("轮播图输入过长", {icon: 2});
+            }
+
+            var url = [[${roll.roll_id}]] ? 'api/roll/edit' : 'api/roll/save';
+            postJSON(url,model).catch(error => {})
+                .then(value =>{
+                    if(value==undefined) {
+                        layer.alert(pageTitle+"失败!", {icon: 2});
+                    }else{
+                        var result=JSON.parse(value);
+                        if (result == true) {
+                            layer.alert( pageTitle+'成功!',{
+                                icon: 6
+                                ,btn: ['确认']
+                                ,yes: function(index) {
+                                    layer.close(index);
+                                    setUpUrl("roll/getListPage");
+                                }
+                            });
+                        } else {
+                            layer.alert(pageTitle+"失败!", {icon: 2});
+                        }
+                    }
+                });
+
+            return false;
+        });
+    });
+
+</script>
+<!--模板 js start-->
+<!--模板 end-->
+
+<!--css-->
+<style type="text/css">
+    .back{
+        background: #e6e3e3;
+    }
+
+    .roll_upload{
+        width: 100px;
+        height: 100px;
+        border: 1px #ccc solid;
+        position: relative;
+        float: left;
+    }
+
+    /*.roll_upload:after{
+        content: "";
+        position: absolute;
+        border-top: 1px #ccc dashed;
+        top : 50%;
+        left: 10%;
+        width: 80%;
+    }
+
+    .roll_upload:before{
+        content: "";
+        position: absolute;
+        border-left: 1px #ccc dashed;
+        height : 80%;
+        top: 10%;
+        left: 50%;
+    }*/
+
+    #upload{
+        margin-top: 27px;
+        margin-left: 20px;
+    }
+</style>

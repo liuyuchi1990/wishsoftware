@@ -6,12 +6,15 @@ import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 
 import javax.servlet.http.HttpServletRequest;
 import org.dom4j.Element;
+
+import java.beans.PropertyDescriptor;
 import java.io.Writer;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -108,6 +111,38 @@ public class CommonUtil {
         } catch (Exception e) {
             throw new Exception("MD5加密出现错误");
         }
+    }
+
+    /**
+     * 验证实体对象是否为空
+     * 如果对象属性为空，则判断该对象为空。
+     *
+     * @param bean
+     * @return
+     */
+    public static boolean isEmpty(Object bean) {
+        PropertyDescriptor origDescriptors[] = PropertyUtils.getPropertyDescriptors(bean);
+        for (PropertyDescriptor origDescriptor : origDescriptors) {
+            String name = origDescriptor.getName();
+            if ("class".equals(name)) {
+                continue;
+            }
+            if (PropertyUtils.isReadable(bean, name)) {
+                try {
+                    Object value = PropertyUtils.getSimpleProperty(bean, name);
+                    if (value == null) {
+                        continue;
+                    } else {
+                        return false;
+                    }
+                } catch (java.lang.IllegalArgumentException ie) {
+                    ;
+                } catch (Exception e) {
+                    ;
+                }
+            }
+        }
+        return true;
     }
 
 }
