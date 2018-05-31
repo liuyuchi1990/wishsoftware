@@ -47,10 +47,12 @@ public class DelayOrderComponent{
                         //orderService.closeOverTimeOrder(message.getOrderId());
                     } catch (Exception e) {
                         e.printStackTrace();
+                        break;
                     }
                 }
             }
         });
+        System.out.println("run+++++++++++++++++");
     }
 
     /**加入延迟消息队列**/
@@ -90,10 +92,13 @@ public class DelayOrderComponent{
                         System.out.println(new Date()+"  处理延迟消息:  "+ JSON.toJSONString(message));
                     } catch (Exception e) {
                         e.printStackTrace();
+                        break;
                     }
                 }
             }
         });
+
+        System.out.println("run+++++++++++++++++");
     }
 
 }

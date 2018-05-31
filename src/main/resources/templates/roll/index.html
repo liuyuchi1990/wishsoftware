@@ -105,15 +105,9 @@
         });
 
         $('#refreshTable').on('click', function () {
-            var daterange = $('#createdate').val().split(' - ');
-            console.log(daterange)
-
             tableIns.reload({
                 where: {
-                    user_name: $('#user_name').val(),
-                    roll_status: $("#roll_status").val(),
-                    begindate: daterange[0],
-                    enddate: daterange[1]
+                    roll_status: $("#roll_status").val()
                 }
             });
         });
