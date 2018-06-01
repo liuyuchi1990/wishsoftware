@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 
 public class OrderMessage implements Delayed {
-    private final static long DELAY = 1*60*1000L;//默认延迟15分钟
+    private final static long DELAY = 2*60*1000L;//默认延迟2分钟
 
     private final String orderId;//订单号
 

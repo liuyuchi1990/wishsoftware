@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.goku.coreui.common.QRCodeUtils;
 import com.goku.coreui.device.mapper.DeviceMapper;
 import com.goku.coreui.device.model.Device;
+import com.goku.coreui.order.model.Order;
 import com.goku.coreui.sys.model.WarnInfo;
 import com.goku.coreui.sys.util.WxUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,40 @@ public class DeviceService {
         String accessToken = WxUtil.getWxAccessToken();
         QRCodeUtils.getminiqrQr(accessToken,qrPath + device.getDevice_name()+ device.getDevice_id() + ".png",url);
         return deviceMapper.insert(device);
+    }
+
+    public int rollback(Order order) {
+        Device device = new Device();
+        device.setDevice_id(order.getDevice_id());
+        Arrays.asList(device.getClass().getDeclaredFields()).forEach(f -> {
+            if (f.getName().contains("cargo_lane_")&&(Arrays.asList(order.getCargo_lane().split(",")).contains(f.getName().replace("cargo_lane_","")))) {
+                f.setAccessible(true);
+                try {
+                    f.set(device, 1);
+                    //System.out.println("属性名:" + f.getName() + " 属性值:"+ f.get(device) );
+                }catch (IllegalAccessException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+        return deviceMapper.rollback(device);
+    }
+
+    public int release(Order order) {
+        Device device = new Device();
+        device.setDevice_id(order.getDevice_id());
+        Arrays.asList(device.getClass().getDeclaredFields()).forEach(f -> {
+            if (f.getName().contains("cargo_lane_")&&(Arrays.asList(order.getCargo_lane().split(",")).contains(f.getName().replace("cargo_lane_","")))) {
+                f.setAccessible(true);
+                try {
+                    f.set(device, -1);
+                    //System.out.println("属性名:" + f.getName() + " 属性值:"+ f.get(device) );
+                }catch (IllegalAccessException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+        return deviceMapper.rollback(device);
     }
 
     public int edit(Device device) {

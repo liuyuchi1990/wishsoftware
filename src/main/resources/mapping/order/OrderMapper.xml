@@ -3,7 +3,7 @@
 <mapper namespace="com.goku.coreui.order.mapper.OrderMapper">
 
     <insert id="insert" parameterType="com.goku.coreui.order.model.Order">
-        insert into tb_order (order_id,device_id,cargo_lane,user_id,create_time,order_status)
+        insert into tb_order (order_id,device_id,cargo_lane,user_id,create_time,pay_type,order_status)
         value(
           #{order_id,jdbcType=VARCHAR},
           #{device_id,jdbcType=VARCHAR},
@@ -43,34 +43,40 @@
         )
     </update>
 
-    <delete id="delete">
-        delete from tb_order
+    <update id="delete">
+        update tb_order set delflag = 1
         where order_id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id,jdbcType=VARCHAR}
         </foreach>
-    </delete>
+    </update>
 
     <select id="queryById" parameterType="java.lang.String" resultType="com.goku.coreui.order.model.Order">
         select
             t.order_id,t.device_id,t.cargo_lane,t.user_id,t.create_time,t.pay_type,t.order_status
         from tb_order t
         left join sys_user s on t.user_id = s.id
-        where t.order_id = #{order_id,jdbcType=VARCHAR}
+        where t.order_id = #{order_id,jdbcType=VARCHAR} and delflag!=1
     </select>
 
     <select id="getOrderByUserId" parameterType="java.lang.String" resultType="com.goku.coreui.order.model.Order">
         select
         t.order_id,t.device_id,t.cargo_lane,t.user_id,t.create_time,t.pay_type,t.order_status
         from tb_order t
-        where t.user_id = #{user_id,jdbcType=VARCHAR}
+        where t.user_id = #{user_id,jdbcType=VARCHAR} and delflag!=1
     </select>
 
     <select id="queryByDeviceId" parameterType="java.lang.String" resultType="java.util.Map">
 select   t.order_id,t.cargo_lane
 from tb_order t
-where device_id=#{device_id,jdbcType=VARCHAR} and order_status = '3'
+where device_id=#{device_id,jdbcType=VARCHAR} and order_status = '3' and delflag!=1
 order by t.create_time LIMIT 1
+    </select>
+
+    <select id="queryForLane" parameterType="java.lang.String" resultType="java.util.Map">
+        select   t.*
+        from tb_device t
+        where t.device_id=#{device_id,jdbcType=VARCHAR}
     </select>
 
     <select id="queryPage" resultType="com.goku.coreui.order.model.Order">
@@ -94,6 +100,7 @@ order by t.create_time LIMIT 1
             <if test="order_status != null and order_status != ''">
                and t.order_status = ${order_status}
             </if>
+
         </where>
 
         order by  create_time desc

@@ -58,7 +58,7 @@ public class OrderService {
     public Map<String, Object> queryForLane(Order order) {
         Map<String, Object> resMap = new HashMap<>();
         List<String> laneLst = Arrays.asList(order.getCargo_lane().split(","));
-        Map<String, Object> map = orderMapper.queryByDeviceId(order.getDevice_id());
+        Map<String, Object> map = orderMapper.queryForLane(order.getDevice_id());
         for (String lane : laneLst) {
             if (Integer.parseInt(map.get("cargo_lane_" + lane).toString()) > 0) {
                 //resMap.put(lane, "true");

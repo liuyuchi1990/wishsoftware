@@ -2,11 +2,13 @@ package com.goku.coreui.order.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.goku.coreui.device.model.DeviceInfo;
+import com.goku.coreui.device.service.DeviceService;
 import com.goku.coreui.order.model.Cargo;
 import com.goku.coreui.order.model.Order;
 import com.goku.coreui.order.model.OrderInfo;
 import com.goku.coreui.order.service.OrderService;
 import com.goku.coreui.sys.config.Constants;
+import com.goku.coreui.sys.model.OrderMessage;
 import com.goku.coreui.sys.model.ReturnCodeEnum;
 import com.goku.coreui.sys.model.ReturnResult;
 import com.goku.coreui.sys.model.SysUser;
@@ -23,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.DelayQueue;
+import java.util.concurrent.Executors;
 
 @Api(value = "Order")
 @RestController
@@ -33,6 +37,8 @@ public class OrderRestController {
     BreadcrumbUtil breadcrumbUtil;
     @Autowired
     OrderService orderService;
+    @Autowired
+    DeviceService deviceService;
     @Autowired
     PageUtil pageUtil;
 
@@ -72,7 +78,6 @@ public class OrderRestController {
     }
 
     /**
-     *
      * @param order
      * @return
      */
@@ -80,24 +85,56 @@ public class OrderRestController {
     @ResponseBody
     public ReturnResult save(@ApiParam @RequestBody Order order) {
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
+        final DelayQueue<OrderMessage> delayQueue = new DelayQueue<OrderMessage>();
+        long time = System.currentTimeMillis();
         Map<String, Object> mapLane = orderService.queryForLane(order);
         //判断是否货道有货
-        if(mapLane.isEmpty()){
+        if (mapLane.isEmpty()) {
             Map<String, Object> map = new HashMap<>();
             order.setOrder_status("1");
             order.setOrder_id(UUID.randomUUID().toString().replaceAll("-", ""));
             int rs = orderService.insert(order);
-            if (rs > 0) {
+            int rs2 = deviceService.release(order);
+            if (rs > 0&&rs2>0) {
                 map.put("status", "成功");
-                map.put("orderId",order.getOrder_id());
+                map.put("orderId", order.getOrder_id());
                 result.setResult(map);
+                delayQueue.add(new OrderMessage(order.getOrder_id(), time,"60秒后执行"));
+                /**启动一个线程，处理延迟订单消息**/
+                Executors.newSingleThreadExecutor().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        OrderMessage message = null;
+                        while (!delayQueue.isEmpty()) {
+                            try {
+                                message = delayQueue.take();
+                                if(message!=null){
+                                    Order order = orderService.queryById(message.getOrderId());
+                                    OrderInfo orderInfo = new OrderInfo();
+                                    orderInfo.setOrder_id(order.getOrder_id());
+                                    if("1".equals(order.getOrder_status())){//订单仍未支付，释放货物
+                                        deviceService.rollback(order);
+                                        orderInfo.setOrder_status("5");
+                                        orderService.edit(orderInfo);
+                                    }else{
+
+                                    }
+                                }
+                                System.out.println(new Date() + "  处理延迟消息:  " + JSON.toJSONString(message));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                break;
+                            }
+                        }
+                    }
+                });
             } else {
                 result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
                 result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
                 map.put("status", "失败");
                 result.setResult(map);
             }
-        }else{
+        } else {
             result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
             result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
             mapLane.put("description", "货道无货");
@@ -132,7 +169,7 @@ public class OrderRestController {
     }
 
     @ApiOperation(value = "获取掉货信息", response = OrderInfo.class)
-    @Transactional( rollbackFor = {Exception.class}, readOnly = false )
+    @Transactional(rollbackFor = {Exception.class}, readOnly = false)
     @RequestMapping(value = "/getOrderFeedBack", method = RequestMethod.POST)
     @ResponseBody
     public ReturnResult getOrderFeedBack(@ApiParam @RequestBody OrderInfo orderInfo) {
@@ -140,7 +177,8 @@ public class OrderRestController {
         Map<String, Object> map = new HashMap<>();
         Integer count = 0;
         List<Cargo> CargoLst = Arrays.asList(orderInfo.getCargo_lane());
-        for (Cargo f : CargoLst) {;
+        for (Cargo f : CargoLst) {
+            ;
             if (("true".equals(f.getStatus()))) {
                 count++;
             }

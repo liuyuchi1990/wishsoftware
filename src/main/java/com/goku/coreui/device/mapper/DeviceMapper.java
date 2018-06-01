@@ -13,6 +13,10 @@ import java.util.List;
 public interface DeviceMapper {
     int insert(Device device);
 
+    int rollback(Device device);
+
+    int release(Device device);
+
     int edit(Device device);
 
     int editDeviceStatus(WarnInfo warninfo);
