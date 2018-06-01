@@ -20,6 +20,7 @@
                                         <option value="2">失败</option>
                                         <option value="3">支付成功未收货</option>
                                         <option value="4">成功收货</option>
+                                        <option value="5">订单超时</option>
                                     </select>
                                 </div>
                             </div>
@@ -97,6 +98,9 @@
                         }
                         if(d.order_status=='4'){
                             return '成功收货';
+                        }
+                        if(d.order_status=='5'){
+                            return '订单超时';
                         }
                     }}
             ]],

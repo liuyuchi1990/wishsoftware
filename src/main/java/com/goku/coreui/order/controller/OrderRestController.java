@@ -78,11 +78,13 @@ public class OrderRestController {
     }
 
     /**
+     * 订单生成
      * @param order
      * @return
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
+    @Transactional(rollbackFor=Exception.class)
     public ReturnResult save(@ApiParam @RequestBody Order order) {
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
         final DelayQueue<OrderMessage> delayQueue = new DelayQueue<OrderMessage>();
