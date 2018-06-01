@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.tomcat.util.bcel.classfile.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
@@ -190,47 +191,49 @@ public class WxPayController {
     }
 
     @RequestMapping(value = "/payCallback", method = RequestMethod.GET)
-    public void payCallback(HttpServletRequest request,HttpServletResponse response) {
+    @Transactional(rollbackFor = {Exception.class}, readOnly = false)
+    public void payCallback(HttpServletRequest request, HttpServletResponse response) {
         log.info("微信回调接口方法 start");
         log.info("微信回调接口 操作逻辑 start");
         String inputLine = "";
         String notityXml = "";
         try {
-            while((inputLine = request.getReader().readLine()) != null){
+            while ((inputLine = request.getReader().readLine()) != null) {
                 notityXml += inputLine;
             }
             //关闭流
             request.getReader().close();
-            log.info("微信回调内容信息："+notityXml);
+            log.info("微信回调内容信息：" + notityXml);
             //解析成Map
-            Map<String,String> map = WxUtil.doXMLParse(notityXml);
+            Map<String, String> map = WxUtil.doXMLParse(notityXml);
             //判断 支付是否成功
-            if("SUCCESS".equals(map.get("result_code"))){
+            if ("SUCCESS".equals(map.get("result_code"))) {
                 log.info("微信回调返回是否支付成功：是");
                 //获得 返回的商户订单号
                 String outTradeNo = map.get("out_trade_no");
-                log.info("微信回调返回商户订单号："+outTradeNo);
+                log.info("微信回调返回商户订单号：" + outTradeNo);
                 //访问DB
                 OrderInfo orderInfo = new OrderInfo();
-                    //修改支付状态
-                    orderInfo.setOrder_status("3");
-                    int rs = orderService.edit(orderInfo);
-                    //判断 是否更新成功
-                    if(rs > 0){
-                        log.info("微信回调  订单号："+outTradeNo +",修改状态成功");
-                        //封装 返回值
-                        StringBuffer buffer = new StringBuffer();
-                        buffer.append("<xml>");
-                        buffer.append("<return_code>SUCCESS</return_code>");
-                        buffer.append("<return_msg>OK</return_msg>");
-                        buffer.append("<xml>");
+                //修改支付状态
+                orderInfo.setOrder_status("3");
+                orderInfo.setOrder_id(outTradeNo);
+                int rs = orderService.edit(orderInfo);
+                //判断 是否更新成功
+                if (rs > 0) {
+                    log.info("微信回调  订单号：" + outTradeNo + ",修改状态成功");
+                    //封装 返回值
+                    StringBuffer buffer = new StringBuffer();
+                    buffer.append("<xml>");
+                    buffer.append("<return_code>SUCCESS</return_code>");
+                    buffer.append("<return_msg>OK</return_msg>");
+                    buffer.append("<xml>");
 
-                        //给微信服务器返回 成功标示 否则会一直询问 咱们服务器 是否回调成功
-                        PrintWriter writer = response.getWriter();
-                        //返回
-                        writer.print(buffer.toString());
-                    }
+                    //给微信服务器返回 成功标示 否则会一直询问 咱们服务器 是否回调成功
+                    PrintWriter writer = response.getWriter();
+                    //返回
+                    writer.print(buffer.toString());
                 }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {

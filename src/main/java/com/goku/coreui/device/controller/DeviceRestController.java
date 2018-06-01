@@ -49,6 +49,7 @@ public class DeviceRestController {
     @Autowired
     PageUtil pageUtil;
 
+    @ApiIgnore
     @RequestMapping("/getListPage")
     @RequiresPermissions(value = {"device:query"})
     public String list() {
@@ -56,6 +57,7 @@ public class DeviceRestController {
         return JSON.toJSONString(Breadcrumbs);
     }
 
+    @ApiIgnore
     @RequestMapping("/addPage")
     @RequiresPermissions(value = {"device:query"})
     public String addPage() {
@@ -70,7 +72,7 @@ public class DeviceRestController {
         return JSON.toJSONString(Breadcrumbs);
     }
 
-
+    @ApiIgnore
     @RequestMapping("/queryPage")
     @RequiresPermissions(value = {"device:query"})
     public String queryPage(

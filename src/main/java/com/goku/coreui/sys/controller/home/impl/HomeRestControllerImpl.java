@@ -20,6 +20,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +42,7 @@ public class HomeRestControllerImpl implements HomeRestController {
     SysUserService sysUserService;
 
     @RequestMapping(value = "/doLogin", method = RequestMethod.POST)
+    @Transactional(rollbackFor = {Exception.class}, readOnly = false)
     public ReturnResult doLogin(
             @ApiParam @RequestBody SysUser user){
         String passwordmd5 = new Md5Hash("xyj1234567", "2").toString();

@@ -22,6 +22,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -42,6 +43,7 @@ public class OrderRestController {
     @Autowired
     PageUtil pageUtil;
 
+    @ApiIgnore
     @RequestMapping("/getListPage")
     @RequiresPermissions(value = {"order:query"})
     public String list() {
@@ -49,6 +51,7 @@ public class OrderRestController {
         return JSON.toJSONString(Breadcrumbs);
     }
 
+    @ApiIgnore
     @RequestMapping("/addPage")
     @RequiresPermissions(value = {"order:query"})
     public String addPage() {
@@ -56,6 +59,7 @@ public class OrderRestController {
         return JSON.toJSONString(Breadcrumbs);
     }
 
+    @ApiIgnore
     @RequestMapping("/editPage")
     @RequiresPermissions(value = {"order:query"})
     public String editPage() {
@@ -64,6 +68,7 @@ public class OrderRestController {
     }
 
 
+    @ApiIgnore
     @RequestMapping(value = "/queryPage", method = RequestMethod.GET)
     @RequiresPermissions(value = {"order:query"})
     public String queryPage(
@@ -180,7 +185,6 @@ public class OrderRestController {
         Integer count = 0;
         List<Cargo> CargoLst = Arrays.asList(orderInfo.getCargo_lane());
         for (Cargo f : CargoLst) {
-            ;
             if (("true".equals(f.getStatus()))) {
                 count++;
             }

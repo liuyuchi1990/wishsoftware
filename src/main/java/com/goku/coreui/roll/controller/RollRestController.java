@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Date;
 import java.util.List;
@@ -44,6 +45,7 @@ public class RollRestController {
     @Value("${root.img.roll.url}")
     String url;
 
+    @ApiIgnore
     @RequestMapping("/getListPage")
     @RequiresPermissions(value={"roll:query"})
     public String list() {
@@ -51,6 +53,7 @@ public class RollRestController {
         return JSON.toJSONString(Breadcrumbs);
     }
 
+    @ApiIgnore
     @RequestMapping("/addPage")
     @RequiresPermissions(value={"roll:query"})
     public String  addPage() {
@@ -58,6 +61,7 @@ public class RollRestController {
         return JSON.toJSONString(Breadcrumbs);
     }
 
+    @ApiIgnore
     @RequestMapping("/editPage")
     @RequiresPermissions(value={"roll:query"})
     public String editPage() {
@@ -66,7 +70,7 @@ public class RollRestController {
     }
 
 
-
+    @ApiIgnore
     @RequestMapping("/queryPage")
     @RequiresPermissions(value={"roll:query"})
     public String  queryPage(
