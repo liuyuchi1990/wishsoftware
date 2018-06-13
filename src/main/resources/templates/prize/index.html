@@ -17,8 +17,8 @@
                                     <select id="prize_status" name="prize_status" class="form-control search-content"
                                             style="height: 30px;padding: 0 6px">
                                         <option value=""></option>
-                                        <option value="0">未绑定</option>
-                                        <option value="1">已绑定</option>
+                                        <option value="0">未兑奖</option>
+                                        <option value="1">已兑奖</option>
                                         <option value="2">已发货</option>
                                     </select>
                                 </div>
@@ -88,10 +88,10 @@
                 {
                     field: 'prize_status', title: '奖品状态', templet: function (d) {
                         if (d.prize_status==1){
-                            return '已绑定';
+                            return '已兑奖';
                         }
                         if (d.prize_status==0){
-                            return '未绑定';
+                            return '未兑奖';
                         }
                         if (d.prize_status==2){
                             return '已发货';

@@ -130,6 +130,15 @@ public class SysUser {
     //地址
     private String address;
 
+    //地址
+    private String address_3;
+
+    //地址
+    private String address_1;
+
+    //地址
+    private String address_2;
+
     //积分
     private Integer integral;
 
@@ -540,5 +549,27 @@ public class SysUser {
         this.roleId = roleId;
     }
 
+    public String getAddress_3() {
+        return address_3;
+    }
 
+    public void setAddress_3(String address_3) {
+        this.address_3 = address_3;
+    }
+
+    public String getAddress_1() {
+        return address_1;
+    }
+
+    public void setAddress_1(String address_1) {
+        this.address_1 = address_1;
+    }
+
+    public String getAddress_2() {
+        return address_2;
+    }
+
+    public void setAddress_2(String address_2) {
+        this.address_2 = address_2;
+    }
 }

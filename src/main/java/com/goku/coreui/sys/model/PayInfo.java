@@ -5,23 +5,23 @@ import java.io.Serializable;
 public class PayInfo implements Serializable {
 
     private String appid;
-    private String mch_id;
+    private String attach;
+    private String body;
     private String device_info; //设备号，小程序传"WEB"
+    private String mch_id;
     private String nonce_str;
+    private String notify_url;
     private String sign;
     private String sign_type;  //签名类型
-    private String body;
-    //private String detail;
-    private String attach;
+    private String openid;
     private String out_trade_no;
-    private int total_fee;
     private String spbill_create_ip;
+    private int total_fee;
     private String time_start;
     private String time_expire;
-    private String notify_url;
     private String trade_type; //交易类型,JSAPI
     private String limit_pay;  //指定支付方式，no_credit
-    private String openid;
+
 
     public String getAppid() {
         return appid;

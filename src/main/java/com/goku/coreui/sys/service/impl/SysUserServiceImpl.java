@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -159,6 +160,11 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
+    public int editUser(SysUser sysUser) {
+        return sysUserMapper.updateByPrimaryKeySelective(sysUser);
+    }
+
+    @Override
     public int delete(String ids) {
         String[] idArr = ids.split(",");
         return sysUserMapper.delete(idArr);
@@ -167,5 +173,10 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public int queryByOpenId(String openId) {
         return sysUserMapper.queryByOpenId(openId);
+    }
+
+    @Override
+    public Map queryById(String id) {
+        return sysUserMapper.queryById(id);
     }
 }

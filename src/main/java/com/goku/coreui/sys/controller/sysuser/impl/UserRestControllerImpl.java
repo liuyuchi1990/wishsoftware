@@ -3,9 +3,7 @@ package com.goku.coreui.sys.controller.sysuser.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.goku.coreui.sys.controller.sysuser.UserRestController;
-import com.goku.coreui.sys.model.SysMenu;
-import com.goku.coreui.sys.model.SysRole;
-import com.goku.coreui.sys.model.SysUser;
+import com.goku.coreui.sys.model.*;
 import com.goku.coreui.sys.model.ext.Breadcrumb;
 import com.goku.coreui.sys.model.ext.TablePage;
 import com.goku.coreui.sys.service.SysUserService;
@@ -150,19 +148,41 @@ public class UserRestControllerImpl implements UserRestController {
 
     @RequestMapping(value = "/bind", method = RequestMethod.POST)
     @ResponseBody
-    public String bind(SysUser sysUser) {
+    public ReturnResult bind(@RequestBody SysUser sysUser) {
+        ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
         Map<String,Object> map = new HashedMap();
-        int result = sysUserService.insert(sysUser);
-        if(result>0) {
-            map.put("status","success");
-            map.put("msg","绑定成功");
-            return JSON.toJSONString (map);
+        int rs = sysUserService.editUser(sysUser);
+        if(rs>0) {
+            map.put("status","绑定成功");
+            result.setResult(map);
+            return result;
         }else{
-            map.put("status","fail");
-            map.put("msg","绑定失败");
-            return JSON.toJSONString (map);
+            result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
+            result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
+            map.put("status","绑定失败");
+            return result;
         }
     }
+
+
+    @RequestMapping(value = "/queryUserById", method = RequestMethod.GET)
+    @ResponseBody
+    public ReturnResult queryUserById(@RequestParam(required = true) String user_id) {
+        ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
+        Map<String,Object> map = new HashedMap();
+        try{
+            map = sysUserService.queryById(user_id);
+            result.setResult(map);
+            return result;
+        }catch (Exception e){
+            result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
+            result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
+            map.put("status","查询失败");
+            return result;
+        }
+    }
+
+
 
     @RequestMapping("/delete")
     @RequiresRoles("admin_sys")

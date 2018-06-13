@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,8 +36,9 @@ public class WxPayController {
 
     @RequestMapping(value = "/prepay", produces = "text/html;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
-    public String prePay(@RequestParam(required = false) String code,
-                         @RequestParam(required = false) String orderId,
+    public String prePay(@RequestParam(required = true) String code,
+                         @RequestParam(required = true) String orderId,
+                         @RequestParam(required = true) Double total_fee,
                          HttpServletRequest request) {
 
         String content = null;
@@ -49,7 +51,9 @@ public class WxPayController {
         log.error("\n======================================================");
         log.error("code: " + code);
 
-        String openId = WxUtil.getSessionKeyOropenid(code).get("openid").toString();
+        //String openId = WxUtil.getSessionKeyOropenid(code).get("openid").toString();
+
+        String openId = "o3j4J4-G15Mgj8zrmDE-lQpw3jBs";
         if (StringUtils.isBlank(openId)) {
             result = false;
             info = "获取到openId为空";
@@ -61,7 +65,7 @@ public class WxPayController {
             log.error("openId: " + openId + ", clientIP: " + clientIP);
 
             String randomNonceStr = RandomUtils.generateMixString(32);
-            String prepayId = unifiedOrder(openId, clientIP, randomNonceStr, orderId);
+            String prepayId = unifiedOrder(openId, clientIP, randomNonceStr, orderId,total_fee);
 
             log.error("prepayId: " + prepayId);
 
@@ -91,17 +95,15 @@ public class WxPayController {
      *
      * @param openId
      */
-    private String unifiedOrder(String openId, String clientIP, String randomNonceStr, String orderId) {
+    private String unifiedOrder(String openId, String clientIP, String randomNonceStr, String orderId,double total_fee) {
 
         try {
 
             String url = Constants.URL_UNIFIED_ORDER;
 
-            PayInfo payInfo = createPayInfo(openId, clientIP, randomNonceStr);
+            PayInfo payInfo = createPayInfo(openId, clientIP, randomNonceStr,orderId,total_fee);
             String md5 = getSign(payInfo);
             payInfo.setSign(md5);
-            payInfo.setOut_trade_no(orderId);
-
             log.error("md5 value: " + md5);
 
             String xml = CommonUtil.payInfoToXML(payInfo);
@@ -136,7 +138,7 @@ public class WxPayController {
         return "";
     }
 
-    private PayInfo createPayInfo(String openId, String clientIP, String randomNonceStr) {
+    private PayInfo createPayInfo(String openId, String clientIP, String randomNonceStr,String orderId,double total_fee) {
 
         Date date = new Date();
         String timeStart = TimeUtils.getFormatTime(date, Constants.TIME_FORMAT);
@@ -150,10 +152,15 @@ public class WxPayController {
         payInfo.setDevice_info("WEB");
         payInfo.setNonce_str(randomNonceStr);
         payInfo.setSign_type("MD5");  //默认即为MD5
-        payInfo.setBody("JSAPI支付测试");
-        payInfo.setAttach("支付测试4luluteam");
-        payInfo.setOut_trade_no(randomOrderId);
-        payInfo.setTotal_fee(1);
+        payInfo.setBody("JSAPI");
+        payInfo.setAttach("4luluteam");
+        payInfo.setOut_trade_no(orderId);
+        //微信价格最小单位分 转换为整数
+        DecimalFormat df = new DecimalFormat("#######.##");
+        total_fee = total_fee * 100;
+        total_fee = Math.ceil(total_fee);
+        String price = df.format(total_fee);
+        payInfo.setTotal_fee(Integer.parseInt(price));
         payInfo.setSpbill_create_ip(clientIP);
         payInfo.setTime_start(timeStart);
         payInfo.setTime_expire(timeExpire);
@@ -161,7 +168,6 @@ public class WxPayController {
         payInfo.setTrade_type("JSAPI");
         payInfo.setLimit_pay("no_credit");
         payInfo.setOpenid(openId);
-
         return payInfo;
     }
 
@@ -170,17 +176,13 @@ public class WxPayController {
         sb.append("appid=" + payInfo.getAppid())
                 .append("&attach=" + payInfo.getAttach())
                 .append("&body=" + payInfo.getBody())
-                .append("&device_info=" + payInfo.getDevice_info())
-                .append("&limit_pay=" + payInfo.getLimit_pay())
+                .append("&detail=" + payInfo.getDevice_info())
                 .append("&mch_id=" + payInfo.getMch_id())
                 .append("&nonce_str=" + payInfo.getNonce_str())
                 .append("&notify_url=" + payInfo.getNotify_url())
                 .append("&openid=" + payInfo.getOpenid())
                 .append("&out_trade_no=" + payInfo.getOut_trade_no())
-                .append("&sign_type=" + payInfo.getSign_type())
                 .append("&spbill_create_ip=" + payInfo.getSpbill_create_ip())
-                .append("&time_expire=" + payInfo.getTime_expire())
-                .append("&time_start=" + payInfo.getTime_start())
                 .append("&total_fee=" + payInfo.getTotal_fee())
                 .append("&trade_type=" + payInfo.getTrade_type())
                 .append("&key=" + Constants.APP_KEY);
