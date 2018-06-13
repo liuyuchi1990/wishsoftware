@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -58,6 +59,10 @@ public class PrizeService {
 
     public Prize queryById(String prize_id) {
         return prizeMapper.queryById(prize_id);
+    }
+
+    public List<Map<String,Object>> queryByUserId(String user_id) {
+        return prizeMapper.queryByUserId(user_id);
     }
 
     public PageInfo queryPage(String user_name, Date begindate, Date enddate, String prize_status, int pageindex, int pagenum) {

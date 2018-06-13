@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liwenlong on 2018/5/14.
@@ -19,6 +20,8 @@ public interface PrizeMapper {
     int send(String[] ids);
 
     Prize queryById(@Param("prize_id") String prize_id);
+
+    List<Map<String,Object>> queryByUserId(String user_id);
 
     List<Prize> queryPage(@Param("user_name") String user_name, @Param("begindate") Date begindate, @Param("enddate") Date enddate, @Param("prize_status") String prize_status);
 

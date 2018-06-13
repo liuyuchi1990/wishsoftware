@@ -77,6 +77,14 @@
         where t.prize_id = #{prize_id,jdbcType=VARCHAR}
     </select>
 
+    <select id="queryByUserId" parameterType="java.lang.String" resultType="com.goku.coreui.prize.model.Prize">
+        select
+        t.prize_id,t.prize_name,t.send_address,t.send_time,t.user_id,t.prize_status,t.prize_qr,t.prize_img_path,t.prize_description,s.username user_name,s.mobile
+        from tb_prize t
+        left join sys_user s on t.user_id = s.id
+        where t.user_id = #{user_id,jdbcType=VARCHAR}
+    </select>
+
     <select id="queryPage" resultType="com.goku.coreui.prize.model.Prize">
         select
             t.prize_id,t.prize_name,t.send_address,t.send_time,t.user_id,t.prize_status,t.prize_qr,t.prize_img_path,t.prize_description,s.username user_name,s.mobile

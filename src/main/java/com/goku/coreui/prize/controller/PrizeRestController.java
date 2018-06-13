@@ -16,6 +16,7 @@ import com.goku.coreui.sys.util.BreadcrumbUtil;
 import com.goku.coreui.sys.util.DateUtil;
 import com.goku.coreui.sys.util.PageUtil;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -25,10 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 
 @RestController
@@ -194,5 +192,30 @@ public class PrizeRestController {
         }
     }
 
+
+    @RequestMapping(value = "/getPrizeByUserId", method = RequestMethod.POST)
+    @ResponseBody
+    public ReturnResult getPrizeByUserId(@RequestBody Prize prize) {
+        ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
+        Map<String, Object> map = new HashMap<>();
+        try {
+            if(StringUtils.isNotEmpty(prize.getPrize_id())) {
+                Prize res = prizeService.queryById(prize.getPrize_id());
+                map.put("data", res);
+                result.setResult(map);
+            }
+            if(StringUtils.isNotEmpty(prize.getUser_id())) {
+                List<Map<String,Object>> res = prizeService.queryByUserId(prize.getUser_id());
+                map.put("data", res);
+                result.setResult(map);
+            }
+        } catch (Exception e) {
+            result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
+            result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
+            map.put("status", "失败");
+            result.setResult(map);
+        }
+        return result;
+    }
 
 }
