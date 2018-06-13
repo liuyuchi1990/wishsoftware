@@ -57,7 +57,7 @@ public interface SysUserMapper {
 
     int delete(String[] ids);
 
-    int  queryByOpenId(String openId);
+    SysUser  queryByOpenId(String openId);
 
     Map queryById(String id);
 }

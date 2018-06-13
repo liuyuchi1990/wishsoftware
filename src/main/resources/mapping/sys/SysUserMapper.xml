@@ -81,8 +81,8 @@
   </delete>
 
 
-  <select id="queryByOpenId" parameterType = "string" resultType="java.lang.Integer">
-        select count(1) from sys_user where open_id = #{openId,jdbcType=VARCHAR}
+  <select id="queryByOpenId" parameterType = "string" resultMap="BaseResultMap">
+        select * from sys_user where open_id = #{openId,jdbcType=VARCHAR}
   </select>
 
 

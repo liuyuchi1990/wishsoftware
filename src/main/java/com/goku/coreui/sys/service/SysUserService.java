@@ -23,6 +23,6 @@ public interface SysUserService {
     int insert(SysUser sysUser);
     int edit(SysUser user);
     int delete(String ids);
-    int queryByOpenId(String openId);
+    SysUser queryByOpenId(String openId);
     Map queryById(String id);
 }

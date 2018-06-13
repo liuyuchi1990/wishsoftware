@@ -171,7 +171,7 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public int queryByOpenId(String openId) {
+    public SysUser queryByOpenId(String openId) {
         return sysUserMapper.queryByOpenId(openId);
     }
 

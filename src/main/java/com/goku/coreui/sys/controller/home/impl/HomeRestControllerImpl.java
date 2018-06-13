@@ -57,11 +57,14 @@ public class HomeRestControllerImpl implements HomeRestController {
             user.setOpenId(map.get("openid").toString());
             String id = UUID.randomUUID().toString().replaceAll("-", "");
             user.setId(id);
-            int hasUser = sysUserService.queryByOpenId(map.get("openid").toString());
-            if(hasUser<1) {
+            SysUser hasUser = sysUserService.queryByOpenId(map.get("openid").toString());
+            if(hasUser==null) {
                 sysUserService.insert(user);
+                map.put("id",id);
+            }else{
+                map.put("id",hasUser.getId());
             }
-            map.put("id",id);
+
             subject.login(token);
             result.setResult(map);
             return result;
