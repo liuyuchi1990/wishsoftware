@@ -27,7 +27,7 @@ public class Constants {
     //交易类型，小程序支付的固定值为JSAPI
     public static final String TRADETYPE = "JSAPI";
 
-    public static final String APP_KEY = "xyj185568014781qaz2wsx3edc4r";
+    public static final String APP_KEY = "xyj185568014781qaz2wsx3edc4rfv5t";
 
     public static final String MCH_ID = "1504738871";  //商户号
 

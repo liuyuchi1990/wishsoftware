@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -51,9 +52,9 @@ public class WxPayController {
         log.error("\n======================================================");
         log.error("code: " + code);
 
-        //String openId = WxUtil.getSessionKeyOropenid(code).get("openid").toString();
+        String openId = WxUtil.getSessionKeyOropenid(code).get("openid").toString();
 
-        String openId = "o3j4J4-G15Mgj8zrmDE-lQpw3jBs";
+        //String openId = "o3j4J4-G15Mgj8zrmDE-lQpw3jBs";
         if (StringUtils.isBlank(openId)) {
             result = false;
             info = "获取到openId为空";
@@ -61,6 +62,8 @@ public class WxPayController {
             openId = openId.replace("\"", "").trim();
 
             String clientIP = CommonUtil.getClientIp(request);
+
+            //clientIP = "222.12.47.12";
 
             log.error("openId: " + openId + ", clientIP: " + clientIP);
 
@@ -176,20 +179,27 @@ public class WxPayController {
         sb.append("appid=" + payInfo.getAppid())
                 .append("&attach=" + payInfo.getAttach())
                 .append("&body=" + payInfo.getBody())
-                .append("&detail=" + payInfo.getDevice_info())
+                .append("&device_info=" + payInfo.getDevice_info())
+                .append("&limit_pay=" + payInfo.getLimit_pay())
                 .append("&mch_id=" + payInfo.getMch_id())
                 .append("&nonce_str=" + payInfo.getNonce_str())
                 .append("&notify_url=" + payInfo.getNotify_url())
                 .append("&openid=" + payInfo.getOpenid())
                 .append("&out_trade_no=" + payInfo.getOut_trade_no())
+                .append("&sign_type=" + payInfo.getSign_type())
                 .append("&spbill_create_ip=" + payInfo.getSpbill_create_ip())
+                .append("&time_expire=" + payInfo.getTime_expire())
+                .append("&time_start=" + payInfo.getTime_start())
                 .append("&total_fee=" + payInfo.getTotal_fee())
                 .append("&trade_type=" + payInfo.getTrade_type())
                 .append("&key=" + Constants.APP_KEY);
 
         log.error("排序后的拼接参数：" + sb.toString());
 
-        return CommonUtil.getMD5(sb.toString().trim()).toUpperCase();
+        MessageDigest md5 = MessageDigest.getInstance("MD5");
+        md5.reset();
+        md5.update(sb.toString().toString().getBytes("UTF-8"));
+        return byteToStr(md5.digest()).toUpperCase();
     }
 
     @RequestMapping(value = "/payCallback", method = RequestMethod.GET)
@@ -241,5 +251,24 @@ public class WxPayController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private String byteToStr(byte[] byteArray) {
+        String strDigest = "";
+        for (int i = 0; i < byteArray.length; i++) {
+            strDigest += this.byteToHexStr(byteArray[i]);
+        }
+        return strDigest;
+    }
+    private String byteToHexStr(byte bytes) {
+        char[] Digit = {
+                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+        };
+        char[] tempArr = new char[2];
+        tempArr[0] = Digit[(bytes >>> 4) & 0X0F];
+        tempArr[1] = Digit[bytes & 0X0F];
+
+        String s = new String(tempArr);
+        return s;
     }
 }
