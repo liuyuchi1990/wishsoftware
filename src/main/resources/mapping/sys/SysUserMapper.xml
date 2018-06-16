@@ -55,7 +55,7 @@
     -->
     select
     s.id, s.username, s.password, s.name, s.sex, s.status, s.orgid, s.deptid,s.email, s.idcard, s.is_admin, s.sort,
-    s.mobile,s.open_id,s.address,s.integral,s.longitude,s.latitude,ur.role_id,ifnull(sum(ti.fabulous),0) likes
+    s.mobile,s.open_id,s.address,s.address_1,s.address_2,s.address_3,s.integral,s.longitude,s.latitude,ur.role_id,ifnull(sum(ti.fabulous),0) likes
     from sys_user s
     left join sys_user_role ur on s.id = ur.user_id
     left join tb_imgs ti on ti.user_id = s.id

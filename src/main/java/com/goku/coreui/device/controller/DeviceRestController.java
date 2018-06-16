@@ -117,6 +117,8 @@ public class DeviceRestController {
             }
             map.put("goods", lst);
             map.put("price", Constants.PRICE);
+            map.put("description",device.getDevice_name());
+            map.put("status",device.getDevice_status());
             result.setResult(map);
         } catch (IllegalAccessException e) {
             result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
