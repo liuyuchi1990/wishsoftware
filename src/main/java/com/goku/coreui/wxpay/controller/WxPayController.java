@@ -6,6 +6,10 @@ import com.goku.coreui.order.model.OrderInfo;
 import com.goku.coreui.order.service.OrderService;
 import com.goku.coreui.sys.config.Constants;
 import com.goku.coreui.sys.model.PayInfo;
+import com.goku.coreui.sys.model.ReturnCodeEnum;
+import com.goku.coreui.sys.model.ReturnResult;
+import com.goku.coreui.sys.model.SysUser;
+import com.goku.coreui.sys.service.SysUserService;
 import com.goku.coreui.sys.util.*;
 
 import org.apache.commons.lang3.StringUtils;
@@ -34,27 +38,29 @@ public class WxPayController {
 
     @Autowired
     OrderService orderService;
+    @Autowired
+    SysUserService sysUserService;
 
-    @RequestMapping(value = "/prepay", produces = "text/html;charset=UTF-8", method = RequestMethod.POST)
+    @RequestMapping(value = "/prepay", method = RequestMethod.POST)
     @ResponseBody
-    public String prePay(@RequestParam(required = true) String code,
-                         @RequestParam(required = true) String orderId,
-                         @RequestParam(required = true) Double total_fee,
-                         HttpServletRequest request) {
+    public ReturnResult prePay(@RequestParam(required = true) String user_id,
+                               @RequestParam(required = true) String orderId,
+                               @RequestParam(required = true) Double total_fee,
+                               HttpServletRequest request)throws Exception {
 
         String content = null;
         Map map = new HashMap();
         ObjectMapper mapper = new ObjectMapper();
-
+        ReturnResult rs = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
         boolean result = true;
         String info = "";
 
         log.error("\n======================================================");
-        log.error("code: " + code);
+        log.error("code: " + user_id);
 
-        String openId = WxUtil.getSessionKeyOropenid(code).get("openid").toString();
+        Map<String,Object> mp = sysUserService.queryById(user_id);
 
-        //String openId = "o3j4J4-G15Mgj8zrmDE-lQpw3jBs";
+        String openId = mp.get("open_id").toString();
         if (StringUtils.isBlank(openId)) {
             result = false;
             info = "获取到openId为空";
@@ -73,23 +79,31 @@ public class WxPayController {
             log.error("prepayId: " + prepayId);
 
             if (StringUtils.isBlank(prepayId)) {
+                rs.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
+                rs.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
                 result = false;
                 info = "出错了，未获取到prepayId";
             } else {
-                map.put("prepayId", prepayId);
+                map.put("package", "prepay_id="+prepayId);
                 map.put("nonceStr", randomNonceStr);
+                map.put("timestamp",System.currentTimeMillis()/1000+"");
+                map.put("paySign",getSecondSign(prepayId,System.currentTimeMillis()/1000+"",randomNonceStr));
             }
         }
 
         try {
             map.put("result", result);
             map.put("info", info);
-            content = mapper.writeValueAsString(map);
+            //content = mapper.writeValueAsString(map);
         } catch (Exception e) {
+            rs.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
+            rs.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
+            rs.setResult(map);
             e.printStackTrace();
+            return rs;
         }
-
-        return content;
+        rs.setResult(map);
+        return rs;
     }
 
 
@@ -194,6 +208,21 @@ public class WxPayController {
                 .append("&trade_type=" + payInfo.getTrade_type())
                 .append("&key=" + Constants.APP_KEY);
 
+        log.error("排序后的拼接参数：" + sb.toString());
+
+        MessageDigest md5 = MessageDigest.getInstance("MD5");
+        md5.reset();
+        md5.update(sb.toString().toString().getBytes("UTF-8"));
+        return byteToStr(md5.digest()).toUpperCase();
+    }
+
+    private String getSecondSign(String prepay_id,String time,String noncestr) throws Exception {
+        StringBuffer sb = new StringBuffer();
+        sb.append("appid=" + Constants.APPID)
+                .append("&nonceStr=" + Constants.MCH_ID)
+                .append("&package=prepay_id=" + prepay_id)
+                .append("&signType=MD5&timeStamp=" + time)
+                .append("&key=" + Constants.APP_KEY);
         log.error("排序后的拼接参数：" + sb.toString());
 
         MessageDigest md5 = MessageDigest.getInstance("MD5");

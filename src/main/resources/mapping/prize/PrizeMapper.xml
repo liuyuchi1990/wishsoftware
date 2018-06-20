@@ -46,8 +46,9 @@
                 prize_description = #{prize_description,jdbcType=VARCHAR},
             </if>
             <if test="prize_img_path != null">
-                prize_img_path = #{prize_img_path,jdbcType=VARCHAR}
+                prize_img_path = #{prize_img_path,jdbcType=VARCHAR},
             </if>
+            update_time =  SYSDATE()
         </set>
         where prize_id = #{prize_id,jdbcType=VARCHAR}
     </update>

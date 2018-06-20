@@ -113,7 +113,7 @@ public class BeautRestController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public ReturnResult add(@RequestParam("file") MultipartFile[] files,Beaut beaut){
+    public ReturnResult add(@RequestParam("file") MultipartFile file,@RequestBody Beaut beaut){
         String id = UUID.randomUUID().toString().replaceAll("-", "");
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
         beaut.setImg_id(id);
@@ -121,17 +121,17 @@ public class BeautRestController {
 
         try{
             //判断file数组不能为空并且长度大于0
-            if(files != null && files.length > 0){
-                //循环获取file数组中得文件
-                for(int i = 0;i < files.length;i++){
-                    MultipartFile file = files[i];
+//            if(files != null && files.length > 0){
+//                //循环获取file数组中得文件
+//                for(int i = 0;i < files.length;i++){
+//                    MultipartFile file = files[i];
                     //保存文件
                     String fileName = UploadUtils.saveFile(file, filePath, id);
                     beaut.setImg_name(fileName);
                     beaut.setImg_path(url + fileName);
                     beautService.add(beaut);
-                }
-            }
+//                }
+//            }
             map.put("status","success");
             map.put("msg","修改成功");
             result.setResult(map);

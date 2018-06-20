@@ -177,17 +177,25 @@ public class PrizeRestController {
         sysUser.setId(prize.getUser_id());
         Map<String, Object> map = new HashedMap();
         sysUser.setAddress(prize.getSend_address());
-        try {
-            sysUserMapper.updateByPrimaryKeySelective(sysUser);
-            prize.setPrize_status(1);
-            int rs = prizeService.edit(prize);
-            map.put("status", "绑定成功");
-            result.setResult(map);
-            return result;
-        } catch (Exception e) {
+        Prize pr = prizeService.queryById(prize.getPrize_id());
+        if ("1".equals(pr.getPrize_status())) {
+            try {
+                sysUserMapper.updateByPrimaryKeySelective(sysUser);
+                prize.setPrize_status(1);
+                int rs = prizeService.edit(prize);
+                map.put("status", "兑奖成功");
+                result.setResult(map);
+                return result;
+            } catch (Exception e) {
+                result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
+                result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
+                map.put("status", "兑奖失败");
+                return result;
+            }
+        } else {
             result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
             result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
-            map.put("status", "绑定失败");
+            map.put("status", "奖品已经兑奖");
             return result;
         }
     }
@@ -199,13 +207,13 @@ public class PrizeRestController {
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
         Map<String, Object> map = new HashMap<>();
         try {
-            if(StringUtils.isNotEmpty(prize.getPrize_id())) {
+            if (StringUtils.isNotEmpty(prize.getPrize_id())) {
                 Prize res = prizeService.queryById(prize.getPrize_id());
                 map.put("data", res);
                 result.setResult(map);
             }
-            if(StringUtils.isNotEmpty(prize.getUser_id())) {
-                List<Map<String,Object>> res = prizeService.queryByUserId(prize.getUser_id());
+            if (StringUtils.isNotEmpty(prize.getUser_id())) {
+                List<Map<String, Object>> res = prizeService.queryByUserId(prize.getUser_id());
                 map.put("data", res);
                 result.setResult(map);
             }
