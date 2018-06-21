@@ -151,14 +151,20 @@ public class OrderRestController {
         return result;
     }
 
-    @RequestMapping("/delete")
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
     @ResponseBody
-    public String delete(@RequestBody String ids) {
-        int result = orderService.delete(ids.replaceAll("\"", ""));
-        if (result > 0) {
-            return JSON.toJSONString("true");
+    public ReturnResult delete(@RequestParam String ids) {
+        ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
+        Map<String, Object> map = new HashMap<>();
+        int rs = orderService.delete(ids.replaceAll("\"", ""));
+        if (rs > 0) {
+            map.put("status", "成功");
+            return result;
         } else {
-            return JSON.toJSONString("false");
+            result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
+            result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
+            map.put("status", "失败");
+            return result;
         }
     }
 

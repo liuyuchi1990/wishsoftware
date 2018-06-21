@@ -218,8 +218,8 @@ public class WxPayController {
 
     private String getSecondSign(String prepay_id,String time,String noncestr) throws Exception {
         StringBuffer sb = new StringBuffer();
-        sb.append("appid=" + Constants.APPID)
-                .append("&nonceStr=" + Constants.MCH_ID)
+        sb.append("appd=" + Constants.APPID)
+                .append("&nonceStr=" + noncestr)
                 .append("&package=prepay_id=" + prepay_id)
                 .append("&signType=MD5&timeStamp=" + time)
                 .append("&key=" + Constants.APP_KEY);
