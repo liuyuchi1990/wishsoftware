@@ -153,14 +153,17 @@ public class OrderRestController {
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     @ResponseBody
+    @Transactional(rollbackFor=Exception.class)
     public ReturnResult delete(@RequestParam String ids) {
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
         Map<String, Object> map = new HashMap<>();
-        int rs = orderService.delete(ids.replaceAll("\"", ""));
-        if (rs > 0) {
+        Order order = orderService.queryById(ids);
+        try{
+            orderService.delete(ids.replaceAll("\"", ""));
+            deviceService.rollback(order);
             map.put("status", "成功");
             return result;
-        } else {
+        } catch(Exception e) {
             result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
             result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
             map.put("status", "失败");

@@ -61,9 +61,11 @@ public class WxPayController {
         Map<String,Object> mp = sysUserService.queryById(user_id);
 
         String openId = mp.get("open_id").toString();
-        if (StringUtils.isBlank(openId)) {
+        Order od = orderService.queryById(orderId);
+        //判断订单状态是否正常
+        if (StringUtils.isBlank(openId)||("5".equals(od.getOrder_status()))) {
             result = false;
-            info = "获取到openId为空";
+            info = "订单超时";
         } else {
             openId = openId.replace("\"", "").trim();
 
@@ -218,7 +220,7 @@ public class WxPayController {
 
     private String getSecondSign(String prepay_id,String time,String noncestr) throws Exception {
         StringBuffer sb = new StringBuffer();
-        sb.append("appd=" + Constants.APPID)
+        sb.append("appId=" + Constants.APPID)
                 .append("&nonceStr=" + noncestr)
                 .append("&package=prepay_id=" + prepay_id)
                 .append("&signType=MD5&timeStamp=" + time)
@@ -231,7 +233,7 @@ public class WxPayController {
         return byteToStr(md5.digest()).toUpperCase();
     }
 
-    @RequestMapping(value = "/payCallback", method = RequestMethod.GET)
+    @RequestMapping(value = "/payCallback", method = RequestMethod.POST)
     @Transactional(rollbackFor = {Exception.class}, readOnly = false)
     public void payCallback(HttpServletRequest request, HttpServletResponse response) {
         log.info("微信回调接口方法 start");
