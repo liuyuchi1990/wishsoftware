@@ -14,6 +14,7 @@ import com.goku.coreui.sys.model.ReturnResult;
 import com.goku.coreui.sys.model.SysUser;
 import com.goku.coreui.sys.model.ext.Breadcrumb;
 import com.goku.coreui.sys.model.ext.TablePage;
+import com.goku.coreui.sys.service.SysUserService;
 import com.goku.coreui.sys.util.BreadcrumbUtil;
 import com.goku.coreui.sys.util.DateUtil;
 import com.goku.coreui.sys.util.PageUtil;
@@ -38,6 +39,8 @@ public class OrderRestController {
     BreadcrumbUtil breadcrumbUtil;
     @Autowired
     OrderService orderService;
+    @Autowired
+    SysUserService sysUserService;
     @Autowired
     DeviceService deviceService;
     @Autowired
@@ -228,14 +231,14 @@ public class OrderRestController {
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
         Map<String, Object> map = new HashMap<>();
         orderInfo.setOrder_status("3");
+        orderInfo.setPay_type("1");
+        Map user = sysUserService.queryById(orderInfo.getUser_id());
+        try{
         int rs = orderService.edit(orderInfo);
-        if ("0".equals(orderInfo.getPay_type())) {
-            int rs2 = orderService.updateUserIntegral(orderInfo);
-        }
-        if (rs > 0) {
+        int rs2 = orderService.updateUserIntegral(orderInfo);
             map.put("status", "成功");
             result.setResult(map);
-        } else {
+        } catch (Exception e) {
             result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
             result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
             map.put("status", "失败");

@@ -113,12 +113,13 @@ public class BeautRestController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public ReturnResult add(@RequestParam("file") MultipartFile file,@RequestParam String user_id,
-                            Beaut beaut){
+    public ReturnResult add(@RequestParam("file") MultipartFile file
+                            ){
         String id = UUID.randomUUID().toString().replaceAll("-", "");
+        Beaut beaut = new Beaut();
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
         beaut.setImg_id(id);
-        beaut.setUser_id(user_id);
+        //beaut.setUser_id(user_id);
         Map<String,Object> map = new HashedMap();
 
         try{

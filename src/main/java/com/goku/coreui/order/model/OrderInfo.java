@@ -9,6 +9,8 @@ public class OrderInfo {
 
     private String order_status;
 
+    private String user_id;
+
     private Integer Integral;
 
     //0：微信 1：积分
@@ -60,5 +62,13 @@ public class OrderInfo {
 
     public void setPay_type(String pay_type) {
         this.pay_type = pay_type;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 }

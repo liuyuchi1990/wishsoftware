@@ -259,6 +259,7 @@ public class WxPayController {
                 OrderInfo orderInfo = new OrderInfo();
                 //修改支付状态
                 orderInfo.setOrder_status("3");
+                orderInfo.setPay_type("0");
                 orderInfo.setOrder_id(outTradeNo);
                 int rs = orderService.edit(orderInfo);
                 //判断 是否更新成功
