@@ -87,12 +87,13 @@ public class OrderRestController {
 
     /**
      * 订单生成
+     *
      * @param order
      * @return
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public ReturnResult save(@ApiParam @RequestBody Order order) {
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
         final DelayQueue<OrderMessage> delayQueue = new DelayQueue<OrderMessage>();
@@ -105,11 +106,11 @@ public class OrderRestController {
             order.setOrder_id(UUID.randomUUID().toString().replaceAll("-", ""));
             int rs = orderService.insert(order);
             int rs2 = deviceService.release(order);
-            if (rs > 0&&rs2>0) {
+            if (rs > 0 && rs2 > 0) {
                 map.put("status", "成功");
                 map.put("orderId", order.getOrder_id());
                 result.setResult(map);
-                delayQueue.add(new OrderMessage(order.getOrder_id(), time,"60秒后执行"));
+                delayQueue.add(new OrderMessage(order.getOrder_id(), time, "60秒后执行"));
                 /**启动一个线程，处理延迟订单消息**/
                 Executors.newSingleThreadExecutor().execute(new Runnable() {
                     @Override
@@ -118,15 +119,15 @@ public class OrderRestController {
                         while (!delayQueue.isEmpty()) {
                             try {
                                 message = delayQueue.take();
-                                if(message!=null){
+                                if (message != null) {
                                     Order order = orderService.queryById(message.getOrderId());
                                     OrderInfo orderInfo = new OrderInfo();
                                     orderInfo.setOrder_id(order.getOrder_id());
-                                    if("1".equals(order.getOrder_status())){//订单仍未支付，释放货物
+                                    if ("1".equals(order.getOrder_status())) {//订单仍未支付，释放货物
                                         deviceService.rollback(order);
                                         orderInfo.setOrder_status("5");
                                         orderService.edit(orderInfo);
-                                    }else{
+                                    } else {
 
                                     }
                                 }
@@ -156,17 +157,17 @@ public class OrderRestController {
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     @ResponseBody
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public ReturnResult delete(@RequestParam String ids) {
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
         Map<String, Object> map = new HashMap<>();
         Order order = orderService.queryById(ids);
-        try{
+        try {
             orderService.delete(ids.replaceAll("\"", ""));
             deviceService.rollback(order);
             map.put("status", "成功");
             return result;
-        } catch(Exception e) {
+        } catch (Exception e) {
             result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
             result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
             map.put("status", "失败");
@@ -233,15 +234,23 @@ public class OrderRestController {
         orderInfo.setOrder_status("3");
         orderInfo.setPay_type("1");
         Map user = sysUserService.queryById(orderInfo.getUser_id());
-        try{
-        int rs = orderService.edit(orderInfo);
-        int rs2 = orderService.updateUserIntegral(orderInfo);
-            map.put("status", "成功");
-            result.setResult(map);
-        } catch (Exception e) {
+        if (Integer.parseInt(user.get("integral").toString()) > orderInfo.getIntegral()) {
+            try {
+                int rs = orderService.edit(orderInfo);
+                int rs2 = orderService.minusUserIntegral(orderInfo);
+                map.put("status", "成功");
+                result.setResult(map);
+            } catch (Exception e) {
+                result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
+                result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
+                map.put("status", "失败");
+                result.setResult(map);
+            }
+
+        } else {
             result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
             result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
-            map.put("status", "失败");
+            map.put("status", "积分不够");
             result.setResult(map);
         }
         return result;

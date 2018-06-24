@@ -22,6 +22,8 @@ public interface OrderMapper {
 
     int updateUserIntegral(OrderInfo orderInfo);
 
+    int minusUserIntegral(OrderInfo orderInfo);
+
     List<Map<String, Object>> getOrderByUserId(String user_id);
 
     Map<String, Object> queryByDeviceId(String device_id);
