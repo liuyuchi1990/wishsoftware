@@ -102,7 +102,7 @@ public class BeautRestController {
 
     @RequestMapping(value = "/fabulous/{id}/{type}", method = RequestMethod.POST)
     @ResponseBody
-    public ReturnResult fabulous1(@PathVariable("type") String type, @PathVariable("id") String id) {
+    public ReturnResult fabulous(@PathVariable("type") String type, @PathVariable("id") String id) {
         int rs = beautService.setFabulous(type, id);
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
         Map<String, Object> map = new HashedMap();

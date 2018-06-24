@@ -66,6 +66,11 @@ public class RollService {
         return page;
     }
 
+    public List<Roll> queryPage() {
+        List<Roll> list = rollMapper.queryPage(null, null, null, "1");
+        return list;
+    }
+
     private void removeQr(String[] ids) {
         for (int i = 0; i < ids.length; i++) {
             File file = new File(qrPath + ids[i] + ".png");

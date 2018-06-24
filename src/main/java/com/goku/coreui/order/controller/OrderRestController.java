@@ -264,6 +264,7 @@ public class OrderRestController {
         try {
             List<Map<String, Object>> res = orderService.getOrderByUserId(user_id);
             map.put("data", res);
+            map.put("price",Constants.PRICE);
             result.setResult(map);
         } catch (Exception e) {
             result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());

@@ -161,4 +161,26 @@ public class RollRestController {
             return result;
         }
     }
+
+    @RequestMapping(value = "/queryList", method = RequestMethod.POST)
+    @ResponseBody
+    public ReturnResult queryPageList() {
+        ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
+        Map<String, Object> map = new HashedMap();
+        try {
+            List<Roll> rlist = rollService.queryPage();
+            map.put("status", "success");
+            map.put("data", rlist);
+            result.setResult(map);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", "fail");
+            map.put("msg", "修改失败");
+            result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
+            result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
+            result.setResult(map);
+            return result;
+        }
+    }
 }
