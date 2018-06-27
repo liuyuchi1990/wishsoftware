@@ -117,7 +117,7 @@ order by t.create_time LIMIT 1
             <if test="order_status != null and order_status != ''">
                and t.order_status = ${order_status}
             </if>
-
+            and t.delflag!=1
         </where>
 
         order by  create_time desc

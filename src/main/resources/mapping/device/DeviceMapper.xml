@@ -277,26 +277,26 @@ VALUES
 
 	<update id="loadGoods">
 		update tb_device
-		set cargo_lane_1 = 5,
-		cargo_lane_2= 5,
-		cargo_lane_3= 5,
-		cargo_lane_4= 5,
-		cargo_lane_5= 5,
-		cargo_lane_6= 5,
-		cargo_lane_7= 5,
-		cargo_lane_8= 5,
-		cargo_lane_9= 5,
-		cargo_lane_10= 5,
-		cargo_lane_11= 5,
-		cargo_lane_12= 5,
-		cargo_lane_13= 5,
-		cargo_lane_14= 5,
-		cargo_lane_15= 5,
-		cargo_lane_16= 5,
-		cargo_lane_17= 5,
-		cargo_lane_18= 5,
-		cargo_lane_19= 5,
-		cargo_lane_20= 5
+		set cargo_lane_1 = 3,
+		cargo_lane_2= 3,
+		cargo_lane_3= 3,
+		cargo_lane_4= 3,
+		cargo_lane_5= 3,
+		cargo_lane_6= 3,
+		cargo_lane_7= 3,
+		cargo_lane_8= 3,
+		cargo_lane_9= 3,
+		cargo_lane_10= 3,
+		cargo_lane_11= 3,
+		cargo_lane_12= 3,
+		cargo_lane_13= 3,
+		cargo_lane_14= 3,
+		cargo_lane_15= 3,
+		cargo_lane_16= 3,
+		cargo_lane_17= 3,
+		cargo_lane_18= 3,
+		cargo_lane_19= 3,
+		cargo_lane_20= 3
 		where device_id in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id,jdbcType=VARCHAR}

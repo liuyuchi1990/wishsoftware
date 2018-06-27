@@ -38,7 +38,7 @@ public class DeviceService {
             if (f.getName().contains("cargo_lane_")) {
                 f.setAccessible(true);
                 try {
-                    f.set(device, 5);
+                    f.set(device, 3);
                     //System.out.println("属性名:" + f.getName() + " 属性值:"+ f.get(device) );
                 }catch (IllegalAccessException e){
                     e.printStackTrace();
@@ -76,6 +76,7 @@ public class DeviceService {
                 f.setAccessible(true);
                 try {
                     f.set(device, -1);
+
                     //System.out.println("属性名:" + f.getName() + " 属性值:"+ f.get(device) );
                 }catch (IllegalAccessException e){
                     e.printStackTrace();

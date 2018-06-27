@@ -178,7 +178,7 @@ public class PrizeRestController {
         Map<String, Object> map = new HashedMap();
         sysUser.setAddress(prize.getSend_address());
         Prize pr = prizeService.queryById(prize.getPrize_id());
-        if ("1".equals(pr.getPrize_status())) {
+        if ("0".equals(pr.getPrize_status()+"")) {
             try {
                 sysUserMapper.updateByPrimaryKeySelective(sysUser);
                 prize.setPrize_status(1);
