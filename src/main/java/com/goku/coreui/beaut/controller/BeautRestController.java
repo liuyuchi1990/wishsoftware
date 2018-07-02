@@ -66,7 +66,7 @@ public class BeautRestController {
             @RequestParam(required = false) String begindate,
             @RequestParam(required = false) String enddate,
             @RequestParam int pageNumber, @RequestParam int pageSize) {
-        TablePage tp = pageUtil.getDataForPaging(beautService.queryPage(user_name, DateUtil.StrtoDate(begindate, "yyyy-MM-dd"), DateUtil.StrtoDate(enddate, "yyyy-MM-dd"), pageNumber, pageSize));
+        TablePage tp = pageUtil.getDataForPaging(beautService.queryPage(user_name,null, DateUtil.StrtoDate(begindate, "yyyy-MM-dd"), DateUtil.StrtoDate(enddate, "yyyy-MM-dd"), pageNumber, pageSize));
         return JSON.toJSONString(tp);
     }
 
@@ -92,11 +92,22 @@ public class BeautRestController {
         }
     }
 
+    @RequestMapping("/approvalImgStatus")
+    @RequiresPermissions(value = {"beaut:query"})
+    public String approvalImgStatus(@RequestBody String ids) {
+        int result = beautService.approvalImgStatus(ids.replaceAll("\"", ""));
+        if (result > 0) {
+            return JSON.toJSONString("true");
+        } else {
+            return JSON.toJSONString("false");
+        }
+    }
+
 
     @RequestMapping(value = "/queryPageList/{pageNumber}/{pageSize}", method = RequestMethod.POST)
     @ResponseBody
     public String queryPageList(@PathVariable("pageNumber") Integer pageNumber, @PathVariable("pageSize") Integer pageSize) {
-        TablePage tp = pageUtil.getDataForPaging(beautService.queryPage(null, null, null, pageNumber, pageSize));
+        TablePage tp = pageUtil.getDataForPaging(beautService.queryPage(null, "2", null,null, pageNumber, pageSize));
         return JSON.toJSONString(tp);
     }
 

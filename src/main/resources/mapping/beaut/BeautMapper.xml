@@ -4,14 +4,17 @@
 
     <select id="queryPage" resultType="com.goku.coreui.beaut.model.Beaut">
         select
-           t.img_id,t.img_name,t.img_path,t.img_status,t.create_time,
+           t.img_id,t.img_name,t.img_path,t.img_status,t.create_time,t.img_status,
            t.fabulous, s.username user_name
         from tb_imgs t
         left join sys_user s on s.id = t.user_id
-        where img_status = 1
+        where img_status != 0
         <if test="user_name != null and user_name != ''">
             <bind name="user_name" value="'%' + user_name + '%'" />
             and s.username LIKE #{user_name}
+        </if>
+        <if test="status != null">
+            <![CDATA[  and  img_status= #{status,jdbcType=DATE}]]>
         </if>
         <if test="begindate != null">
             <![CDATA[  and  t.create_time >= #{begindate,jdbcType=DATE}]]>
@@ -33,6 +36,15 @@
     <update id="delImgStatus">
         update tb_imgs
         set img_status = 0
+        where img_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
+    <update id="approvalImgStatus">
+        update tb_imgs
+        set img_status = 2
         where img_id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id,jdbcType=VARCHAR}

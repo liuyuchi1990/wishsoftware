@@ -18,7 +18,9 @@ public interface BeautMapper {
 
     int delete(String[] ids);
 
-    List<Beaut> queryPage(@Param("user_name") String user_name, @Param("begindate") Date begindate, @Param("enddate") Date enddate);
+    int approvalImgStatus(String[] ids);
+
+    List<Beaut> queryPage(@Param("user_name") String user_name,@Param("status") String status, @Param("begindate") Date begindate, @Param("enddate") Date enddate);
 
     int setFabulous(@Param("type") String type, @Param("id") String id);
 }

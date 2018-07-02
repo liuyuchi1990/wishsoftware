@@ -21,9 +21,9 @@ public class BeautService {
     @Autowired
     BeautMapper beautMapper;
 
-    public PageInfo queryPage(String user_name, Date begindate, Date enddate,int pageindex, int pagenum){
+    public PageInfo queryPage(String user_name,String status, Date begindate, Date enddate,int pageindex, int pagenum){
         PageHelper.startPage(pageindex, pagenum);
-        List<Beaut> list = beautMapper.queryPage(user_name,begindate,enddate);
+        List<Beaut> list = beautMapper.queryPage(user_name,status,begindate,enddate);
         PageInfo page = new PageInfo(list);
         return page;
     }
@@ -38,6 +38,10 @@ public class BeautService {
 
     public int delImgStatus(String ids){
         return beautMapper.delImgStatus(ids.split(","));
+    }
+
+    public int approvalImgStatus(String ids){
+        return beautMapper.approvalImgStatus(ids.split(","));
     }
 
     public int setFabulous(String type,String id){
