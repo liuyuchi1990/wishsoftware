@@ -362,9 +362,13 @@ VALUES
 		t.cargo_lane_18,
 		t.cargo_lane_19,
 		t.cargo_lane_20,
+		IFNULL(sum(o.total_price),0) total_money,
+		IFNULL(sum(ot.total_price),0) today_money,
 		t.create_time,s.username update_user
         from tb_device t
         left join sys_user s on t.update_user_id = s.id
+		left join tb_order o on t.device_id = o.device_id
+		left join (select total_price,device_id from tb_order where  to_days(create_time)=TO_DAYS(now()) ) ot on ot.device_id = t.device_id
         <where>
             <if test="user_name != null and user_name != ''">
                 <bind name="user_name" value="'%' + user_name + '%'" />
@@ -380,6 +384,7 @@ VALUES
                and t.device_status = ${device_status}
             </if>
         </where>
+		GROUP BY t.device_id
         order by  create_time desc
     </select>
 </mapper>

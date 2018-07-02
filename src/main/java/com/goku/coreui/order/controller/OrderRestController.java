@@ -104,6 +104,7 @@ public class OrderRestController {
             Map<String, Object> map = new HashMap<>();
             order.setOrder_status("1");
             order.setOrder_id(UUID.randomUUID().toString().replaceAll("-", ""));
+            order.setTotal_price(order.getCargo_lane().split(",").length * Constants.PRICE);
             int rs = orderService.insert(order);
             int rs2 = deviceService.release(order);
             if (rs > 0 && rs2 > 0) {

@@ -24,6 +24,8 @@ public class Order {
 
     private String user_name;
 
+    private Double total_price;
+
     private Date create_time;
 
     // null 未处理， 1 成功 2失败
@@ -120,4 +122,11 @@ public class Order {
         return sdf.format(this.create_time);
     }
 
+    public Double getTotal_price() {
+        return total_price;
+    }
+
+    public void setTotal_price(Double total_price) {
+        this.total_price = total_price;
+    }
 }

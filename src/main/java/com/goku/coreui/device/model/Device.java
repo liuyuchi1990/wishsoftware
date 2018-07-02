@@ -31,6 +31,8 @@ public class Device {
     private Integer cargo_lane_18;
     private Integer cargo_lane_19;
     private Integer cargo_lane_20;
+    private Double total_money;
+    private Double today_money;
     private String create_time;
     private String update_user;
     private String update_time;
@@ -258,5 +260,21 @@ public class Device {
 
     public void setUpdate_user(String update_user) {
         this.update_user = update_user;
+    }
+
+    public Double getTotal_money() {
+        return total_money;
+    }
+
+    public void setTotal_money(Double total_money) {
+        this.total_money = total_money;
+    }
+
+    public Double getToday_money() {
+        return today_money;
+    }
+
+    public void setToday_money(Double today_money) {
+        this.today_money = today_money;
     }
 }

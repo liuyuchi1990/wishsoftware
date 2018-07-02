@@ -1,5 +1,6 @@
 package com.goku.coreui.prize.service;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.goku.coreui.common.QRCodeUtils;
@@ -7,15 +8,13 @@ import com.goku.coreui.prize.mapper.PrizeMapper;
 import com.goku.coreui.prize.model.Prize;
 import com.goku.coreui.sys.model.SysLog;
 import com.goku.coreui.sys.util.WxUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by liwenlong on 2018/5/14.
@@ -68,6 +67,13 @@ public class PrizeService {
     public PageInfo queryPage(String user_name, Date begindate, Date enddate, String prize_status, int pageindex, int pagenum) {
         PageHelper.startPage(pageindex, pagenum);
         List<Prize> list = prizeMapper.queryPage(user_name, begindate, enddate, prize_status);
+        for(Prize pr : list){
+            if(StringUtils.isNotEmpty(pr.getSend_address())){
+                Map mp = JSON.parseObject(pr.getSend_address());
+                pr.setSend_address(mp.get("address").toString());
+                pr.setMobile(mp.get("phone").toString());
+            }
+        }
         PageInfo page = new PageInfo(list);
         return page;
     }
