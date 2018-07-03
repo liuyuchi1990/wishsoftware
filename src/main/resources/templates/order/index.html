@@ -77,6 +77,14 @@
                 {field:'device_name', title: '货架名'},
                 {field:'device_address', title: '货架地址'},
                 {field:'cargo_lane', title: '货道组'},
+                {field:'total_price', title: '订单金额',templet: function(d){
+                        if(d.total_price==''||d.total_price==null){
+                            return '0元';
+                        }else{
+                            return d.total_price + '元';
+                        }
+
+                    }},
                 {field:'create_time_str', title: '订单创建时间'},
                 {field:'pay_type', title: '支付方式',templet: function(d){
                         if(d.pay_type=='1'){

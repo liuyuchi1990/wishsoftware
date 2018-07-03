@@ -171,7 +171,7 @@ public class WxPayController {
         payInfo.setDevice_info("WEB");
         payInfo.setNonce_str(randomNonceStr);
         payInfo.setSign_type("MD5");  //默认即为MD5
-        payInfo.setBody("JSAPI");
+        payInfo.setBody("猩愿机");
         payInfo.setAttach("4luluteam");
         payInfo.setOut_trade_no(orderId);
         //微信价格最小单位分 转换为整数

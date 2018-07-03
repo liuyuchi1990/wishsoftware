@@ -62,7 +62,7 @@
                 {field:'img_path', title: '图片', templet: '#imgTpl'},
                 {field:'user_name', title: '上传用户'},
                 {field:'create_time_str', title: '上传时间'},
-                {field:'img_status', title: '上传时间',templet: function(d){
+                {field:'img_status', title: '审批状态',templet: function(d){
                         if(d.img_status=='1'){
                             return '未审批';
                         }
