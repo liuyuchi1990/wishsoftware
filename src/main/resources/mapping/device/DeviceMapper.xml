@@ -380,12 +380,13 @@ VALUES
 		tb_order
 		WHERE
 		to_days(create_time) = TO_DAYS(now())
-		AND device_id = tb.device_id
+		AND device_id = tb.device_id AND delflag = 0
 		),
 		0
 		) today_money
 		FROM
 		tb_order tb
+		where delflag = 0
 		GROUP BY
 		tb.device_id
 		) o ON t.device_id = o.device_id
