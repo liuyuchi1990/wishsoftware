@@ -386,7 +386,7 @@ VALUES
 		) today_money
 		FROM
 		tb_order tb
-		where delflag = 0
+		where order_status in (3,4)
 		GROUP BY
 		tb.device_id
 		) o ON t.device_id = o.device_id
