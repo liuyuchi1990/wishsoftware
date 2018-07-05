@@ -72,6 +72,7 @@ public class PrizeService {
                 Map mp = JSON.parseObject(pr.getSend_address());
                 pr.setSend_address(mp.get("address").toString());
                 pr.setMobile(mp.get("phone").toString());
+                pr.setUser_name(mp.get("name").toString());
             }
         }
         PageInfo page = new PageInfo(list);

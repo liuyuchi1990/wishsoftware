@@ -177,6 +177,10 @@ public class PrizeRestController {
         sysUser.setId(prize.getUser_id());
         Map<String, Object> map = new HashedMap();
         sysUser.setAddress(prize.getSend_address());
+        if(StringUtils.isNotEmpty(prize.getSend_address())){
+            Map mp = JSON.parseObject(prize.getSend_address());
+            prize.setUser_name(mp.get("name").toString());
+        }
         Prize pr = prizeService.queryById(prize.getPrize_id());
         if ("0".equals(pr.getPrize_status()+"")) {
             try {
