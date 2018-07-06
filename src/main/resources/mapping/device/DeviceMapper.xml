@@ -380,7 +380,7 @@ VALUES
 		tb_order
 		WHERE
 		to_days(create_time) = TO_DAYS(now())
-		AND device_id = tb.device_id AND delflag = 0
+		AND device_id = tb.device_id AND order_status in (3,4)
 		),
 		0
 		) today_money
