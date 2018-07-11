@@ -181,9 +181,15 @@ public class OrderRestController {
                                     @RequestParam(required = false) String networkStatus,
                                     @RequestParam(required = false) String temperature) {
         ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
-        Map<String, Object> map = orderService.queryByDeviceId(device_id);
+        Map<String, Object> map = new HashMap<>();
+        map = orderService.queryByDeviceId(device_id);
         Date day = new Date();
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+        if(map==null){
+            map = new HashMap<>();
+            map.put("order_id","");
+            map.put("cargo_lane","");
+        }
         map.put("timeStamp", df.format(day));
         result.setResult(map);
         return result;

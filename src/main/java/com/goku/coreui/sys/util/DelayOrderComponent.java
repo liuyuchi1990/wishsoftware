@@ -40,7 +40,7 @@ public class DelayOrderComponent{
             @Override
             public void run() {
                 OrderMessage message = null;
-                while (true) {
+                while (!delayQueue.isEmpty()) {
                     try {
                         message = delayQueue.take();
                         //处理超时订单
@@ -86,7 +86,7 @@ public class DelayOrderComponent{
             @Override
             public void run() {
                 OrderMessage message = null;
-                while (true) {
+                while (!delayQueue.isEmpty()) {
                     try {
                         message = delayQueue.take();
                         System.out.println(new Date()+"  处理延迟消息:  "+ JSON.toJSONString(message));
