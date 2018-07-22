@@ -21,6 +21,7 @@ import com.goku.coreui.sys.util.PageUtil;
 import io.swagger.annotations.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -177,6 +178,7 @@ public class OrderRestController {
     }
 
     @RequestMapping(value = "/getAllOrder", method = RequestMethod.GET)
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public ReturnResult getAllOrder(@RequestParam(required = true) String device_id,
                                     @RequestParam(required = false) String networkStatus,
                                     @RequestParam(required = false) String temperature) {
@@ -215,12 +217,13 @@ public class OrderRestController {
             orderInfo.setOrder_status("4");
         }
         orderInfo.setIntegral(count * Constants.Integral);
-        int rs = orderService.edit(orderInfo);
-        int rs2 = orderService.updateUserIntegral(orderInfo);
-        if ((rs > 0) && (rs2 > 0)) {
+
+        try{
+            int rs = orderService.edit(orderInfo);
+            int rs2 = orderService.updateUserIntegral(orderInfo);
             map.put("status", "成功");
             result.setResult(map);
-        } else {
+        } catch (Exception e){
             result.setCode(ReturnCodeEnum.SYSTEM_ERROR.getCode());
             result.setMsg(ReturnCodeEnum.SYSTEM_ERROR.getMessage());
             if (count != CargoLst.size()) {

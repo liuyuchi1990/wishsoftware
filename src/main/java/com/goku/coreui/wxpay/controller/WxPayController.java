@@ -257,13 +257,19 @@ public class WxPayController {
                 log.info("微信回调返回商户订单号：" + outTradeNo);
                 //访问DB
                 OrderInfo orderInfo = new OrderInfo();
+                Order order = orderService.queryById(outTradeNo);
                 //修改支付状态
                 orderInfo.setOrder_status("3");
                 orderInfo.setPay_type("0");
                 orderInfo.setOrder_id(outTradeNo);
-                int rs = orderService.edit(orderInfo);
+
+
+                int rs = 1;
+                if("1".equals(order.getOrder_status())) {
+                    rs = orderService.edit(orderInfo);
+                }
                 //判断 是否更新成功
-                if (rs > 0) {
+                if ((rs > 0)||("1".equals(order.getOrder_status()))) {
                     log.info("微信回调  订单号：" + outTradeNo + ",修改状态成功");
                     //封装 返回值
                     StringBuffer buffer = new StringBuffer();
