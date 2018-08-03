@@ -20,7 +20,7 @@ public class Constants {
     /**
      * 微信单次货物购买价格
      */
-    public static final Double PRICE = 0.01;
+    public static final Double PRICE = 20.00;
 
     //签名方式，固定值
     public static final String SIGNTYPE = "MD5";
