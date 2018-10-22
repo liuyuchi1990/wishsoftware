@@ -18,6 +18,7 @@ import com.goku.coreui.sys.service.SysUserService;
 import com.goku.coreui.sys.util.BreadcrumbUtil;
 import com.goku.coreui.sys.util.DateUtil;
 import com.goku.coreui.sys.util.PageUtil;
+import com.goku.coreui.sys.util.ThreadPoolManager;
 import io.swagger.annotations.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,9 @@ public class OrderRestController {
     DeviceService deviceService;
     @Autowired
     PageUtil pageUtil;
+
+    @Autowired
+    ThreadPoolManager tpm;
 
     @ApiIgnore
     @RequestMapping("/getListPage")
@@ -284,4 +288,17 @@ public class OrderRestController {
         }
         return result;
     }
+
+    @RequestMapping(value = "/pool", method = RequestMethod.GET)
+    @ResponseBody
+    public ReturnResult pool() {
+        ReturnResult result = new ReturnResult(ReturnCodeEnum.SUCCESS.getCode(), ReturnCodeEnum.SUCCESS.getMessage());
+        Map<String, Object> map = new HashMap<>();
+        for (int i = 0; i < 5000; i++) {
+            //模拟并发500条记录
+            tpm.processOrders(Integer.toString(i));
+        }
+        return result;
+    }
+
 }
